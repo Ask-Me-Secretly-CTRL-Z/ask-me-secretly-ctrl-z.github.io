@@ -1,0 +1,39 @@
+window.__auth = {};
+
+window.__auth.signInWithGoogle = function () {
+  var result;
+  try {
+    result = window.__fb.auth.signInWithPopup(window.__fb.provider);
+  } catch (e) {
+    return Promise.reject(e);
+  }
+
+  return result.then(function (result) {
+    return result.user;
+  }).catch(function (error) {
+    if (error.code === 'auth/popup-blocked' || 
+        error.code === 'auth/cancelled-popup-request' ||
+        (error.message && error.message.indexOf('popup') !== -1)) {
+      return window.__fb.auth.signInWithRedirect(window.__fb.provider);
+    }
+    throw error;
+  });
+};
+
+window.__auth.signOut = function () {
+  return window.__fb.auth.signOut().catch(function (error) {
+    window.__errors.handle(error);
+  });
+};
+
+window.__auth.onStateChanged = function (callback) {
+  return window.__fb.auth.onAuthStateChanged(callback);
+};
+
+window.__auth.getCurrentUser = function () {
+  return window.__fb.auth.currentUser;
+};
+
+window.__auth.updateDisplayName = function (uid, name) {
+  return name;
+};

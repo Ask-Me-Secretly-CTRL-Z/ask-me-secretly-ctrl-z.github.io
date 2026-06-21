@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Mastery · إتقان الجيت — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1e293b; color: #e2e8f0; padding: 18px 22px; border-radius: 12px; direction: ltr; text-align: left; overflow-x: auto; margin: 15px 0; font-size: 0.85rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>Git Mastery · إتقان الجيت</h1></div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> Git is the backbone of modern software development. Whether you work solo or in a team of 100, mastering Git will save you hours of frustration. Created by Linus Torvalds in 2005, Git is now used by over 90% of developers worldwide. This guide covers everything from daily commands to advanced workflows that professional teams use.</p>
+            <p><strong>العربية:</strong> Git هو العمود الفقري لتطوير البرمجيات الحديث. سواء كنت تعمل منفردًا أو في فريق من 100، إتقان الجيت سيوفر لك ساعات من الإحباط. أنشأه لينوس تورفالدس في 2005، ويستخدمه الآن أكثر من 90% من المطورين عالميًا. هذا الدليل يغطي كل شيء من الأوامر اليومية إلى سير العمل المتقدم الذي تستخدمه الفرق المحترفة.</p>
+
+            <h2>Essential Commands · الأوامر الأساسية</h2>
+            <p><strong>English:</strong> These commands will cover 90% of your daily Git usage. Master them before moving to advanced topics. Each command has a specific purpose and understanding when to use each one is key to Git proficiency.</p>
+            <p><strong>العربية:</strong> هذه الأوامر ستغطي 90% من استخدامك اليومي لـ Git. أتقنها قبل الانتقال للمواضيع المتقدمة. كل أمر له غرض محدد وفهم متى تستخدم كل منها هو مفتاح إتقان Git.</p>
+            <pre><code># Starting a project
+git init                    # Initialize a new repository
+git clone &lt;url&gt;             # Copy an existing repository
+
+# Daily workflow
+git status                  # Check what's changed
+git add &lt;file&gt;              # Stage specific file
+git add .                   # Stage all changes
+git commit -m "message"     # Save staged changes
+git log --oneline           # View commit history
+git diff                    # See unstaged changes
+git diff --staged           # See staged changes
+
+# Branching
+git branch                  # List branches
+git branch &lt;name&gt;           # Create a new branch
+git checkout &lt;branch&gt;       # Switch to a branch
+git checkout -b &lt;name&gt;      # Create and switch to new branch
+git merge &lt;branch&gt;          # Merge a branch into current
+
+# Remote operations
+git push origin &lt;branch&gt;    # Push commits to remote
+git pull origin &lt;branch&gt;    # Pull latest from remote
+git fetch                   # Download remote data without merging
+git remote -v               # List remote repositories</code></pre>
+
+            <h2>Branching Strategies · استراتيجيات الفروع</h2>
+            <p><strong>English:</strong> Choosing the right branching strategy is critical for team productivity. Here are the three most popular approaches with their pros and cons, so you can choose what fits your team's workflow.</p>
+            <p><strong>العربية:</strong> اختيار استراتيجية الفروع المناسبة أمر حاسم لإنتاجية الفريق. إليك الطرق الثلاث الأكثر شيوعًا مع إيجابياتها وسلبياتها، لتختار ما يناسب سير عمل فريقك.</p>
+            <p><strong>English:</strong> Git Flow uses <code>main</code>, <code>develop</code>, <code>feature/</code>, <code>release/</code>, and <code>hotfix/</code> branches. It's comprehensive but complex — best for large teams with scheduled releases. GitHub Flow keeps it simpler — <code>main</code> and feature branches with PR reviews. Everything in main is deployable. GitLab Flow adds environment branches (<code>staging</code>, <code>production</code>) for more control. For most teams, GitHub Flow is the sweet spot: simple enough to follow, powerful enough for production.</p>
+            <p><strong>العربية:</strong> Git Flow يستخدم فروع <code>main</code> و <code>develop</code> و <code>feature/</code> و <code>release/</code> و <code>hotfix/</code>. شامل لكنه معقد — الأفضل للفرق الكبيرة مع إصدارات مجدولة. GitHub Flow أبسط — <code>main</code> وفروع feature مع مراجعات PR. كل شيء في main قابل للنشر. GitLab Flow يضيف فروع بيئة (<code>staging</code>، <code>production</code>) لمزيد من التحكم. لمعظم الفرق، GitHub Flow هو النقطة المثلى: بسيط بما يكفي للمتابعة، قوي بما يكفي للإنتاج.</p>
+            <pre><code># GitHub Flow example
+git checkout -b feature/user-auth
+# ... make changes ...
+git add .
+git commit -m "Add user authentication"
+git push origin feature/user-auth
+# Create PR on GitHub, get reviews, merge to main
+git checkout main
+git pull origin main
+git branch -d feature/user-auth  # Clean up local branch</code></pre>
+
+            <h2>Merge Conflicts · صراعات الدمج</h2>
+            <p><strong>English:</strong> Conflicts happen when two people edit the same line in a file. Git can't automatically decide which version to keep. Don't panic — conflicts are normal and resolvable. Use <code>git mergetool</code> or resolve manually in your editor. The conflict markers look like this:</p>
+            <p><strong>العربية:</strong> تحدث صراعات عندما يعدل شخصان نفس السطر في ملف. Git لا يمكنه تحديد أي نسخة يحتفظ بها تلقائيًا. لا داعي للذعر — الصراعات طبيعية وقابلة للحل. استخدم <code>git mergetool</code> أو حلّها يدويًا في المحرر. علامات الصراع تبدو هكذا:</p>
+            <pre><code># Conflict markers in a file
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+console.log("This is my version");
+=======
+console.log("This is their version");
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature-branch
+
+# To resolve: edit the file, remove markers, keep the correct version
+console.log("This is the resolved version");
+
+# After resolving:
+git add resolved-file.js
+git commit -m "Resolve merge conflict in resolved-file.js"</code></pre>
+            <p><strong>English:</strong> Best practices to avoid conflicts: communicate with your team about who's working on what, pull frequently (<code>git pull --rebase</code>), keep feature branches short-lived (merge within 1-2 days), break large features into smaller, independent tasks, and use code owners to assign responsibility for specific files.</p>
+            <p><strong>العربية:</strong> أفضل الممارسات لتجنب الصراعات: تواصل مع فريقك حول من يعمل على ماذا، اسحب التحديثات باستمرار (<code>git pull --rebase</code>)، ابقِ فروع الميزات قصيرة العمر (ادمج خلال 1-2 يوم)، قسم الميزات الكبيرة إلى مهام أصغر مستقلة، واستخدم مالكي الكود لتعيين مسؤولية ملفات محددة.</p>
+
+            <h2>Undoing Changes · التراجع عن التغييرات</h2>
+            <p><strong>English:</strong> Everyone makes mistakes. Git provides several escape hatches depending on how far back you need to go. Understanding the difference between these commands prevents accidental data loss.</p>
+            <p><strong>العربية:</strong> الجميع يخطئ. Git يوفر عدة مخارج للطوارئ حسب المدى الذي تحتاج للعودة إليه. فهم الفرق بين هذه الأوامر يمنع فقدان البيانات العرضي.</p>
+            <pre><code># Discard unstaged changes
+git restore &lt;file&gt;
+git checkout -- &lt;file&gt;       # Older syntax
+
+# Unstage a file (keep changes)
+git restore --staged &lt;file&gt;
+git reset HEAD &lt;file&gt;        # Older syntax
+
+# Amend the last commit (fix message or add forgotten files)
+git commit --amend -m "Fixed message"
+
+# Reset to a previous commit (careful!)
+git reset --soft HEAD~1      # Keep changes staged
+git reset --mixed HEAD~1     # Keep changes unstaged (default)
+git reset --hard HEAD~1      # Delete changes completely (dangerous!)
+
+# Revert a commit (safe for shared branches)
+git revert &lt;commit-hash&gt;     # Creates a new commit that undoes changes</code></pre>
+
+            <h2>Advanced Tips · نصائح متقدمة</h2>
+            <p><strong>English:</strong> These commands separate beginners from experts. Use them to maintain a clean history, debug efficiently, and work smarter. Practice these in a throwaway repository before using them on important work.</p>
+            <p><strong>العربية:</strong> هذه الأوامر تفصل المبتدئين عن الخبراء. استخدمها للحفاظ على تاريخ نظيف وتصحيح الأخطاء بكفاءة والعمل بذكاء. تدرب عليها في مستودع تجريبي قبل استخدامها في عمل مهم.</p>
+            <pre><code># Interactive rebase - clean up commit history
+git rebase -i HEAD~5   # Squash, reorder, edit last 5 commits
+
+# Cherry-pick - apply specific commits to current branch
+git cherry-pick &lt;commit-hash&gt;
+
+# Stash - save unfinished work temporarily
+git stash                # Save changes
+git stash list           # View stashes
+git stash pop            # Apply and remove latest stash
+git stash apply stash@{2} # Apply specific stash without removing
+
+# Bisect - find the commit that introduced a bug
+git bisect start
+git bisect bad           # Current commit is broken
+git bisect good &lt;hash&gt;   # This commit was working
+# Git will checkout commits for you to test
+git bisect good          # or: git bisect bad
+git bisect reset         # When done
+
+# Git log visualizations
+git log --graph --oneline --all --decorate
+
+# Find who changed what in a file
+git blame &lt;file&gt;</code></pre>
+            <p><strong>English:</strong> Interactive rebase (<code>git rebase -i</code>) is your most powerful tool for maintaining a clean git history. Use it to squash "WIP" and "fix" commits into meaningful, well-described commits before pushing to shared branches. A clean history makes code reviews easier and debugging faster.</p>
+            <p><strong>العربية:</strong> rebase التفاعلي (<code>git rebase -i</code>) هو أقوى أداة لك للحفاظ على تاريخ Git نظيف. استخدمه لدمج commits التجريبية وإصلاحات الأخطاء في commits ذات معنى ووصف جيد قبل الدفع إلى الفروع المشتركة. التاريخ النظيف يجعل مراجعة الكود أسهل وتصحيح الأخطاء أسرع.</p>
+
+            <h2>GitHub Collaboration · التعاون على GitHub</h2>
+            <p><strong>English:</strong> Modern development is collaborative. Learn the GitHub flow: fork the repository, create a feature branch, make changes, push, and open a Pull Request. Write descriptive PR titles and templates. Request reviews from teammates and address feedback. Use GitHub Issues for tracking work and Projects for sprint planning. Protect your main branch with branch protection rules — require PR reviews, status checks, and up-to-date branches before merging.</p>
+            <p><strong>العربية:</strong> التطوير الحديث تعاوني. تعلم تدفق GitHub: انسخ المستودع (fork)، أنشئ فرع ميزة، أجرِ تغييرات، ادفع، وافتح طلب سحب (PR). اكتب عناوين وصفية لطلبات السحب. اطلب مراجعات من زملائك وتعامل مع الملاحظات. استخدم Issues لتتبع العمل و Projects لتخطيط السباقات. احمِ فرعك الرئيسي بقواعد حماية الفروع — تطلب مراجعات PR وفحوصات الحالة.</p>
+
+            <h2>Git Config & Aliases · إعدادات Git والاختصارات</h2>
+            <p><strong>English:</strong> Customize Git with aliases to speed up your workflow. These aliases turn long commands into short ones — instead of typing <code>git log --graph --oneline --all --decorate</code>, just type <code>git lg</code>. Set up your identity, default editor, and line ending preferences once and forget about them:</p>
+            <p><strong>العربية:</strong> خصص Git باختصارات لتسريع سير عملك. هذه الاختصارات تحول الأوامر الطويلة إلى قصيرة — بدلاً من كتابة <code>git log --graph --oneline --all --decorate</code>، اكتب فقط <code>git lg</code>. هيّئ هويتك ومحررك الافتراضي وتفضيلات نهايات الأسطر مرة واحدة:</p>
+            <pre><code># Basic configuration
+git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global core.editor "code --wait"
+git config --global init.defaultBranch main
+
+# Useful aliases
+git config --global alias.lg "log --graph --oneline --all --decorate"
+git config --global alias.s "status -s"
+git config --global alias.cm "commit -m"
+git config --global alias.co "checkout"
+git config --global alias.br "branch"
+git config --global alias.df "diff"
+git config --global alias.dfs "diff --staged"
+git config --global alias.unstage "restore --staged"
+git config --global alias.last "log -1 HEAD"
+git config --global alias.undo "reset --soft HEAD~1"
+
+# After this, you can type:
+git s          # instead of git status -s
+git lg         # instead of git log --graph --oneline --all --decorate
+git cm "fix"   # instead of git commit -m "fix"
+git undo       # undo last commit (keep changes)</code></pre>
+            <p><strong>English:</strong> These aliases alone can save you hundreds of keystrokes per day. Share your aliases with your team by committing a <code>.gitconfig</code> template to your repository. You can also configure Git hooks — scripts that run automatically on certain events. A pre-commit hook can run linting and tests before allowing a commit, preventing bad code from entering the repository.</p>
+            <p><strong>العربية:</strong> هذه الاختصارات وحدها يمكنها توفير مئات الضغطات يوميًا. شارك اختصاراتك مع فريقك بحفظ قالب <code>.gitconfig</code> في مستودعك. يمكنك أيضًا تكوين hooks في Git — نصوص برمجية تعمل تلقائيًا عند أحداث معينة. pre-commit hook يمكنه تشغيل فحص الكود والاختبارات قبل السماح بالـ commit، مما يمنع الكود السيئ من دخول المستودع.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> Git mastery comes with practice. Start with the basic add-commit-push cycle, then gradually incorporate branching, merging, and rebasing into your workflow. Use <code>git rebase -i</code> to clean up history, <code>git cherry-pick</code> to apply specific commits, <code>git stash</code> to save unfinished work, and <code>git bisect</code> to find the commit that introduced a bug. The best Git users are the ones who make the most mistakes — because they learn what each command actually does. Don't be afraid to experiment in a safe branch.</p>
+            <p><strong>العربية:</strong> إتقان Git يأتي مع الممارسة. ابدأ بدورة add-commit-push الأساسية، ثم أدرج تدريجيًا الفروع والدمج و rebase في سير عملك. أفضل مستخدمي Git هم أولئك الذين يرتكبون معظم الأخطاء — لأنهم يتعلمون ماذا يفعل كل أمر فعليًا. لا تخف من التجربة في فرع آمن.</p>
+        </div>
+    </div>
+</body>
+</html>

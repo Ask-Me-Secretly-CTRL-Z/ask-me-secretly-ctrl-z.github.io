@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Performance Tips · تحسين أداء جافاسكريبت — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1e293b; color: #e2e8f0; padding: 18px 22px; border-radius: 12px; direction: ltr; text-align: left; overflow-x: auto; margin: 15px 0; font-size: 0.85rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>JavaScript Performance Tips · تحسين أداء جافاسكريبت</h1></div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> JavaScript powers the modern web, but poorly written JS can kill your page performance. Slow JavaScript impacts user experience, conversion rates, SEO rankings, and accessibility. Studies show that a 1-second delay in page load can reduce conversions by 7%. This guide covers proven techniques to keep your code fast and efficient, from everyday optimizations to advanced profiling.</p>
+            <p><strong>العربية:</strong> JavaScript تشغل الويب الحديث، لكن الكود السيئ يمكن أن يقتل أداء صفحتك. جافاسكريبت البطيئة تؤثر على تجربة المستخدم ومعدلات التحويل وترتيب محركات البحث والوصول. الدراسات تظهر أن تأخير ثانية واحدة في تحميل الصفحة يمكن أن يقلل التحويلات بنسبة 7%. هذا الدليل يغطي تقنيات مجربة للحفاظ على سرعة وكفاءة كودك.</p>
+
+            <h2>Profiling Tools · أدوات القياس</h2>
+            <p><strong>English:</strong> Before optimizing, measure. Chrome DevTools Performance tab records a timeline of your app's activity — network requests, JavaScript execution, rendering, and painting. Use the Memory tab to detect leaks and heap growth. The Coverage tab shows unused CSS and JS code. For React apps, use the React DevTools Profiler. For production monitoring, use tools like Sentry Performance, Lighthouse CI, or Web Vitals library:</p>
+            <p><strong>العربية:</strong> قبل التحسين، قس. علامة التبويب Performance في Chrome DevTools تسجل جدولاً زمنيًا لنشاط تطبيقك — طلبات الشبكة وتنفيذ JavaScript والتصيير والرسم. استخدم علامة Memory لاكتشاف التسريبات ونمو الكومة. علامة Coverage تظهر كود CSS و JS غير المستخدم. لتطبيقات React، استخدم React DevTools Profiler. للمراقبة في الإنتاج، استخدم أدوات مثل Sentry Performance:</p>
+            <pre><code>// Web Vitals library - measure real user performance
+import { onCLS, onFCP, onLCP, onTTFB } from "web-vitals";
+
+function sendToAnalytics(metric) {
+  console.log(`Metric: ${metric.name}, Value: ${metric.value}`);
+  // Send to your analytics service
+  navigator.sendBeacon("/analytics", JSON.stringify(metric));
+}
+
+onCLS(sendToAnalytics);  // Cumulative Layout Shift
+onFCP(sendToAnalytics);  // First Contentful Paint
+onLCP(sendToAnalytics);  // Largest Contentful Paint
+onTTFB(sendToAnalytics); // Time to First Byte
+
+// Performance API for custom measurements
+performance.mark("start-task");
+// ... do work ...
+performance.mark("end-task");
+performance.measure("task-duration", "start-task", "end-task");
+
+const measures = performance.getEntriesByType("measure");
+console.log("Task took:", measures[0].duration, "ms");</code></pre>
+
+            <h2>Debouncing & Throttling · التحكم في التنفيذ</h2>
+            <p><strong>English:</strong> Debouncing delays a function until after a period of inactivity — perfect for search inputs and autocomplete. Throttling limits execution to once every interval — ideal for scroll, resize, and mousemove handlers. Here are production-ready implementations you can copy directly into your codebase:</p>
+            <p><strong>العربية:</strong> Debouncing يؤخر تنفيذ الوظيفة حتى فترة من عدم النشاط — مثالي لحقول البحث والإكمال التلقائي. Throttling يحدد التنفيذ مرة كل فترة — مثالي لمعالجات التمرير وتغيير الحجم وحركة الفأرة. إليك تطبيقات جاهزة للإنتاج يمكنك نسخها مباشرة:</p>
+            <pre><code>// Debounce - waits until activity stops
+function debounce(fn, delay = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Throttle - limits execution rate
+function throttle(fn, limit = 100) {
+  let inThrottle = false;
+  return (...args) => {
+    if (!inThrottle) {
+      fn(...args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
+    }
+  };
+}
+
+// Usage
+const handleSearch = debounce((e) => {
+  console.log("Searching:", e.target.value);
+  // API call here
+}, 400);
+
+const handleScroll = throttle(() => {
+  console.log("Scroll position:", window.scrollY);
+  // Update UI here
+}, 200);
+
+document.querySelector("#search").addEventListener("input", handleSearch);
+window.addEventListener("scroll", handleScroll);</code></pre>
+
+            <h2>DOM Batching · تجميع التعديلات</h2>
+            <p><strong>English:</strong> Every DOM manipulation triggers layout recalculation. Read properties like offsetHeight trigger layout (forced reflow) if there are pending writes. Always batch your DOM reads and writes separately. Use DocumentFragment for batch element creation and avoid reading offset properties inside write loops — this pattern, called "layout thrashing," is one of the most common performance killers:</p>
+            <p><strong>العربية:</strong> كل تعديل في DOM يعيد حساب التخطيط. قراءة خصائص مثل offsetHeight تشغل إعادة التخطيط إذا كانت هناك كتابات معلقة. اقرأ واكتب في دفعات منفصلة دائمًا. استخدم DocumentFragment لإنشاء العناصر المجمعة وتجنب قراءة خصائص offset داخل حلقات الكتابة — هذا النمط، المسمى "layout thrashing"، هو أحد أكثر مسببات مشاكل الأداء شيوعًا:</p>
+            <pre><code>// ❌ Bad - layout thrashing
+const items = document.querySelectorAll(".item");
+for (let i = 0; i &lt; items.length; i++) {
+  const height = items[i].offsetHeight; // Read (triggers layout)
+  items[i].style.height = height + 10 + "px"; // Write (invalidates layout)
+}
+
+// ✅ Good - batch reads then writes
+const items = document.querySelectorAll(".item");
+const heights = [];
+for (let i = 0; i &lt; items.length; i++) {
+  heights.push(items[i].offsetHeight); // All reads first
+}
+for (let i = 0; i &lt; items.length; i++) {
+  items[i].style.height = heights[i] + 10 + "px"; // All writes after
+}
+
+// ✅ Best - use DocumentFragment for creating elements
+const fragment = document.createDocumentFragment();
+for (const item of data) {
+  const li = document.createElement("li");
+  li.textContent = item.name;
+  fragment.appendChild(li);
+}
+list.appendChild(fragment); // Single DOM operation</code></pre>
+
+            <h2>Lazy Loading · التحميل البطيء</h2>
+            <p><strong>English:</strong> Load what you need when you need it. Modern browsers support native lazy loading for images with <code>loading="lazy"</code>. For JavaScript, use dynamic <code>import()</code> to split bundles. For infinite scroll and intersection-based triggers, use Intersection Observer — it's more performant than scroll event listeners because it runs asynchronously outside the main thread:</p>
+            <p><strong>العربية:</strong> حمّل ما تحتاج عندما تحتاجه. المتصفحات الحديثة تدعم التحميل البطيء الأصلي للصور بـ <code>loading="lazy"</code>. لجافاسكريبت، استخدم <code>import()</code> الديناميكي لتقسيم الحزم. للتمرير اللانهائي والمشغلات القائمة على التقاطع، استخدم Intersection Observer — إنه أكثر أداءً من مستمعي حدث التمرير:</p>
+            <pre><code>// Native lazy loading for images
+&lt;img src="hero.jpg" loading="lazy" alt="Hero" /&gt;
+
+// Dynamic imports - code splitting
+button.addEventListener("click", async () => {
+  const { showModal } = await import("./modal.js");
+  showModal();
+});
+
+// Intersection Observer for infinite scroll
+const observer = new IntersectionObserver(
+  (entries) => {
+    if (entries[0].isIntersecting) {
+      loadMoreItems();
+    }
+  },
+  { threshold: 0.1, rootMargin: "200px" }
+);
+
+// Observe the sentinel element
+observer.observe(document.querySelector("#sentinel"));
+
+// Lazy load images with Intersection Observer
+const imageObserver = new IntersectionObserver((entries) => {
+  entries.forEach((entry) => {
+    if (entry.isIntersecting) {
+      const img = entry.target;
+      img.src = img.dataset.src;
+      img.removeAttribute("data-src");
+      imageObserver.unobserve(img);
+    }
+  });
+});
+
+document.querySelectorAll("img[data-src]").forEach((img) => {
+  imageObserver.observe(img);
+});</code></pre>
+
+            <h2>Memory Management · إدارة الذاكرة</h2>
+            <p><strong>English:</strong> Memory leaks cause apps to slow down over time and eventually crash. Common sources: forgotten event listeners (especially on removed DOM elements), setInterval/setTimeout that aren't cleared, closures holding references to large objects, detached DOM elements referenced in JavaScript, and growing caches without limits. Use WeakMap and WeakSet for collections that should be garbage collected when their keys are no longer referenced:</p>
+            <p><strong>العربية:</strong> تسرب الذاكرة يسبب بطء التطبيقات بمرور الوقت وتعطلها في النهاية. المصادر الشائعة: مستمعي الأحداث المنسيين (خاصة على عناصر DOM المحذوفة)، setInterval/setTimeout غير المُنظفة، closures التي تحتفظ بمراجع لكائنات كبيرة، عناصر DOM المنفصلة المُشار إليها في JavaScript، وذاكرة التخزين المؤقتة المتزايدة بدون حدود. استخدم WeakMap و WeakSet للمجموعات التي يجب أن تُجمع:</p>
+            <pre><code>// Clean up event listeners
+class Component {
+  constructor(element) {
+    this.element = element;
+    this.boundHandler = this.handleClick.bind(this);
+    element.addEventListener("click", this.boundHandler);
+  }
+
+  destroy() {
+    this.element.removeEventListener("click", this.boundHandler);
+    this.element = null;
+  }
+}
+
+// Clear timers
+const timer = setInterval(() => updateUI(), 1000);
+// Later:
+clearInterval(timer);
+
+// Use WeakMap to avoid preventing garbage collection
+const cache = new WeakMap();
+
+function processUser(user) {
+  if (!cache.has(user)) {
+    cache.set(user, heavyComputation(user));
+  }
+  return cache.get(user);
+}
+// When 'user' is no longer referenced, the entry is automatically removed
+
+// Limit cache size
+class LRUCache {
+  constructor(limit = 100) {
+    this.cache = new Map();
+    this.limit = limit;
+  }
+  get(key) {
+    if (!this.cache.has(key)) return undefined;
+    const value = this.cache.get(key);
+    this.cache.delete(key);
+    this.cache.set(key, value); // Move to end (most recent)
+    return value;
+  }
+  set(key, value) {
+    if (this.cache.size >= this.limit) {
+      const firstKey = this.cache.keys().next().value;
+      this.cache.delete(firstKey);
+    }
+    this.cache.set(key, value);
+  }
+}</code></pre>
+
+            <h2>Async Patterns · الأنماط غير المتزامنة</h2>
+            <p><strong>English:</strong> JavaScript is single-threaded, so blocking the main thread freezes the UI. Use Web Workers for CPU-intensive tasks like image processing, data parsing, or encryption. Use requestIdleCallback for non-critical tasks. For heavy computations, break them into smaller chunks with requestAnimationFrame or setTimeout(0) to yield to the browser between chunks:</p>
+            <p><strong>العربية:</strong> JavaScript أحادية الخيط، لذا حظر الخيط الرئيسي يجمد واجهة المستخدم. استخدم Web Workers للمهام كثيفة المعالجة مثل معالجة الصور أو تحليل البيانات أو التشفير. استخدم requestIdleCallback للمهام غير الحرجة. للمهام الحسابية الثقيلة، قسمها إلى أجزاء أصغر:</p>
+            <pre><code>// Web Worker example
+// worker.js
+self.onmessage = (e) => {
+  const result = heavyComputation(e.data);
+  self.postMessage(result);
+};
+
+// main.js
+const worker = new Worker("worker.js");
+worker.postMessage(largeDataSet);
+worker.onmessage = (e) => {
+  console.log("Computation result:", e.data);
+};
+
+// requestIdleCallback for non-critical tasks
+requestIdleCallback(() => {
+  preloadNextPage();
+}, { timeout: 2000 });
+
+// Chunk work to avoid blocking
+function processLargeArray(array, chunkSize = 1000) {
+  let index = 0;
+  function processChunk() {
+    const end = Math.min(index + chunkSize, array.length);
+    for (let i = index; i &lt; end; i++) {
+      processItem(array[i]);
+    }
+    index = end;
+    if (index &lt; array.length) {
+      requestAnimationFrame(processChunk); // Yield to UI
+    }
+  }
+  processChunk();
+}</code></pre>
+
+            <h2>Build Optimization · تحسين البناء</h2>
+            <p><strong>English:</strong> Modern bundlers like Vite, webpack, and Turbopack optimize your code for production. Enable tree shaking (removes unused code), code splitting (loads only what's needed per page), minification (terser/esbuild), and scope hoisting. Use <code>--report</code> or <code>webpack-bundle-analyzer</code> to visualize your bundle composition. Remove large libraries where possible — prefer <code>date-fns</code> over <code>moment.js</code> (200KB vs 16KB), <code>lodash-es</code> for tree-shakeable lodash, and use native Array/Date methods instead of utility libraries.</p>
+            <p><strong>العربية:</strong> أدوات التجميع الحديثة مثل Vite و webpack و Turbopack تحسّن كودك للإنتاج. فعّل tree shaking (يزيل الكود غير المستخدم) وتقسيم الكود (يحمل فقط ما هو مطلوب لكل صفحة) والتصغير (terser/esbuild) و scope hoisting. استخدم <code>--report</code> أو <code>webpack-bundle-analyzer</code> لتصور تكوين حزمتك. أزل المكتبات الكبيرة حيثما أمكن — فضّل <code>date-fns</code> على <code>moment.js</code> (200KB مقابل 16KB).</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> JavaScript performance is a continuous practice. Measure with profilers before optimizing, debounce and throttle event handlers, batch DOM operations, lazy load everything you can, manage memory carefully, and use async patterns to keep the main thread free. The Pareto principle applies — 80% of performance gains come from 20% of optimizations: reducing DOM operations, optimizing images, lazy loading, and efficient data structures. Start with the biggest bottlenecks and work your way down.</p>
+            <p><strong>العربية:</strong> أداء JavaScript هو ممارسة مستمرة. قِس باستخدام برامج القياس قبل التحسين، طبق debounce و throttle على معالجات الأحداث، جمّع عمليات DOM، حمّل بالتأكيد المتأخر كل ما يمكنك، أدر الذاكرة بعناية، واستخدم الأنماط غير المتزامنة لإبقاء الخيط الرئيسي حرًا. مبدأ باريتو ينطبق — 80% من تحسينات الأداء تأتي من 20% من التحسينات: تقليل عمليات DOM وتحسين الصور والتحميل البطيء وهياكل البيانات الفعالة. ابدأ بأكبر الاختناقات واعمل في طريقك للأسفل.</p>
+        </div>
+    </div>
+</body>
+</html>

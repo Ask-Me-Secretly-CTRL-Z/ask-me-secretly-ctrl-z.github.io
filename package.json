@@ -1,0 +1,19 @@
+{
+  "name": "aura-anonymous-qa",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+   "scripts": {
+     "dev": "vite",
+     "start": "vite",
+     "build": "vite build",
+     "preview": "vite preview"
+   },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "firebase": "^10.7.1",
+    "html2canvas": "^1.4.1"
+  }
+}

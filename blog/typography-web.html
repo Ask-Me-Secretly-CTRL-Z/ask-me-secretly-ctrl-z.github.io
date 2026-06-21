@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typography for the Web · الطباعة للويب — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>Typography for the Web · الطباعة للويب</h1></div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> Typography is 95% of web design. The right font choices and spacing can make or break a website. Master these principles for beautiful, readable text. Good typography guides the reader effortlessly through content, establishes visual hierarchy, and communicates brand personality — all without the user consciously noticing it.</p>
+            <p><strong>العربية:</strong> الطباعة هي 95% من تصميم الويب. اختيارات الخطوط والمسافات الصحيحة يمكن أن تصنع أو تحطم موقعًا. أتقن هذه المبادئ لنص جميل وقابل للقراءة. الطباعة الجيدة توجه القارئ بسهولة عبر المحتوى وتؤسس تسلسلاً هرميًا بصريًا.</p>
+
+            <h2>Font Pairing · تزاوج الخطوط</h2>
+            <p><strong>English:</strong> Use no more than 2-3 fonts. Pair a serif heading with a sans-serif body, or use different weights of the same family. Google Fonts recommends: Playfair Display + Source Sans Pro (elegant editorial), Inter + Merriweather (modern readability), Roboto + Noto Serif (balanced neutral), and Poppins + Lora (contemporary contrast). For Arabic, pair a modern sans like Tajawal or Cairo with a classic serif like Noto Naskh Arabic for editorial content.</p>
+            <p><strong>English:</strong> Font pairing principles: contrast is key — pair a bold, display heading font with a light, airy body font. Match the mood — a playful brand should pair two friendly fonts, not mix playful with ultra-serious. Consider x-height alignment — fonts with similar x-heights pair more harmoniously. Avoid pairing two fonts that are too similar (two neutral sans-serifs) or too different (a delicate script with a heavy slab). Always test your pair in context: headline + paragraph + button.</p>
+            <p><strong>العربية:</strong> استخدم خطين كحد أقصى. مبادئ تزاوج الخطوط: التباين هو المفتاح — زاوج خط عناوين جريء مع خط جسم خفيف. طابق المزاج — العلامة التجارية المرحة تحتاج خطين ودودين. ضع في الاعتبار ارتفاع الحرف x. اختبر تزاوجك دائمًا في السياق: عنوان + فقرة + زر.</p>
+
+            <h2>Size & Scale · الحجم والمقياس</h2>
+            <p><strong>English:</strong> Use a modular scale for consistency. A 1.25 ratio works well: body 16px → h6 20px → h5 25px → h4 31px → h3 39px → h2 49px → h1 61px. A 1.333 ratio (perfect fourth) creates more dramatic hierarchy: 16 → 21 → 28 → 37 → 49 → 65 → 87. Use CSS clamp() for fluid typography: <code>font-size: clamp(1rem, 2.5vw, 2rem);</code> This ensures text scales smoothly between a minimum and maximum size without breakpoints.</p>
+            <p><strong>English:</strong> Establish clear naming for your type scale in your design system: Display (largest, for hero sections), H1-H6 (headings), Subtitle (medium emphasis), Body (primary reading text), Body Small (secondary text), Caption (smallest, for image captions and metadata), Overline (uppercase, letter-spaced, for labels and eyebrow text), and Button (usually same as Body but uppercase or bold). Each level needs defined font-size, line-height, letter-spacing, and font-weight.</p>
+            <p><strong>العربية:</strong> استخدم مقياسًا نمطيًا للاتساق. النسبة 1.25 أو 1.333 تعمل بشكل جيد. استخدم clamp() للتحجيم السائل: <code>font-size: clamp(1rem, 2.5vw, 2rem);</code> حدد تسميات واضحة في نظام التصميم الخاص بك: Display، H1-H6، Body، Caption، Overline. كل مستوى يحتاج حجم خط وارتفاع سطر وتباعد أحرف محدد.</p>
+
+            <h2>Line Height & Length · ارتفاع السطر وطوله</h2>
+            <p><strong>English:</strong> Line height of 1.5-1.6 for body text improves readability. Keep line length between 50-75 characters per line — shorter lines fatigue the eye from excessive scanning, longer lines cause readers to lose their place. For Arabic, use 2.0-2.2 line height due to character complexity and taller ascenders. Headings can be tighter at 1.1-1.3 line height with shorter line length since they're read more slowly.</p>
+            <p><strong>English:</strong> Measure (line length) is controlled by container width and font size. A common approach: set max-width on text containers using <code>max-width: 65ch</code> (65 character units). This automatically limits line length regardless of font size. For responsive design, reduce line height on small screens (limited space) and increase on large screens (wider reading distance). Test readability on both desktop and mobile before finalizing.</p>
+            <p><strong>العربية:</strong> ارتفاع السطر 1.5-1.6 للنصوص يحسن القراءة. اجعل طول السطر بين 50-75 حرفًا. للعربية، استخدم ارتفاع سطر 2.0-2.2 لتعقيد الحروف. العناوين يمكن أن تكون أضيق عند 1.1-1.3. تحكم في طول السطر باستخدام <code>max-width: 65ch</code>.</p>
+
+            <h2>Web Font Loading · تحميل خطوط الويب</h2>
+            <p><strong>English:</strong> Web fonts impact performance significantly. Use the <code>font-display: swap</code> CSS property to show text in a fallback font immediately while the web font loads, then swap when ready. This prevents invisible text (FOUT — Flash of Invisible Text) and keeps content readable. Preload your primary font files with <code>link rel="preload"</code> in the HTML head for faster loading.</p>
+            <p><strong>English:</strong> Optimize font loading: subset your fonts to include only the characters you need (latin + arabic only, not all Latin Extended), use woff2 format (30% smaller than woff), host fonts locally or use a CDN like Google Fonts with display=swap parameter. Limit to 2-3 font families with 3-4 weights each — each additional weight adds 100-300KB. For Arabic fonts, file sizes are typically 2-3x larger than Latin fonts due to the larger character set and contextual forms.</p>
+            <p><strong>العربية:</strong> خطوط الويب تؤثر على الأداء بشكل كبير. استخدم <code>font-display: swap</code> لإظهار النص بخط بديل فورًا أثناء تحميل خط الويب. حمل الخطوط الأولية مسبقًا باستخدام preload. قسم الخطوط لتشمل الأحرف التي تحتاجها فقط. استخدم صيغة woff2 الأصغر حجمًا. الخطوط العربية أكبر بـ 2-3 مرات من اللاتينية.</p>
+
+            <h2>Responsive Typography · الطباعة المتجاوبة</h2>
+            <p><strong>English:</strong> Responsive typography adapts to every screen size. Use fluid type with <code>clamp()</code>: <code>font-size: clamp(1rem, 0.75rem + 1.5vw, 1.5rem);</code> for body text that scales from 16px to 24px based on viewport. For headings, use more aggressive scaling: <code>clamp(2rem, 1rem + 4vw, 4rem);</code> — this creates dramatic hero text on large screens without overflowing on mobile.</p>
+            <p><strong>English:</strong> Adjust spacing responsively too. Reduce letter-spacing on small screens where space is tight. Reduce paragraph margins on mobile. Consider that users on mobile devices often read in shorter bursts, so shorter line lengths (40-55 characters) work better. On large screens (1200px+), increase font sizes by 10-20% for comfortable reading at typical viewing distances. Test every breakpoint by reading actual content — not just checking pixel values.</p>
+            <p><strong>العربية:</strong> الطباعة المتجاوبة تتكيف مع كل حجم شاشة. استخدم clamp() للنص السائل الذي يتدرج من 16px إلى 24px حسب حجم الشاشة. ضبط المسافات بشكل متجاوب أيضًا — قلل المسافات على الشاشات الصغيرة. اختبر كل نقطة قطع بقراءة المحتوى الفعلي.</p>
+
+            <h2>Arabic Typography · الطباعة العربية</h2>
+            <p><strong>English:</strong> Arabic typography has unique considerations. The script is cursive with 28 letters that change shape based on position (initial, medial, final, isolated). This means font files are substantially larger. Use fonts designed specifically for the web like Tajawal, Cairo, Noto Naskh Arabic, or Almarai. These have been optimized for screen rendering and include proper Arabic character handling including ligatures and diacritics (Tashkeel).</p>
+            <p><strong>English:</strong> For bilingual designs, pair Arabic and Latin fonts carefully. Choose fonts from the same designer where possible — many foundries now produce matched Arabic/Latin typefaces. Ensure both scripts have similar visual weight: if the Latin font is light and airy, the Arabic pair should match. Pay attention to baseline alignment — Arabic script has a different baseline than Latin, so manual vertical adjustment may be needed.</p>
+            <p><strong>العربية:</strong> الطباعة العربية لها اعتبارات فريدة. الخط متصل بـ 28 حرفًا تتغير أشكالها حسب الموضع. استخدم خطوطًا مصممة خصيصًا للويب مثل Tajawal و Cairo و Noto Naskh Arabic. للتصاميم ثنائية اللغة، اختر خطوطًا عربية ولاتينية بعناية من نفس المصمم إن أمكن. تأكد من التوازن البصري بين النصين.</p>
+
+            <h2>Practical Tips · نصائح عملية</h2>
+            <p><strong>English:</strong> Test all font sizes on real devices — a size that looks great on a 27" monitor can be unreadable on a phone. Use a baseline grid (every element aligns to a 4px or 8px grid) for vertical rhythm. Set default margins and padding for all typographic elements. Define at least 2 font stacks in CSS: primary web font + system font fallback. Use <code>text-rendering: optimizeLegibility</code> for improved kerning on supported browsers. Audit your typography yearly — brand guidelines evolve.</p>
+            <p><strong>English:</strong> Document your typography system completely: font family, weight, size, line-height, letter-spacing, and usage context for each text style. Include both Arabic and Latin specifications. Add responsive breakpoints, color rules, and examples of correct and incorrect usage. Share this as a design token file that developers can import directly into their code. Good typography is invisible — when done right, users never think about it. They just read.</p>
+            <p><strong>العربية:</strong> اختبر أحجام الخطوط على أجهزة حقيقية. استخدم شبكة أساسية لتناسق رأسي. حدد 2 على الأقل من أكوام الخطوط في CSS. استخدم <code>text-rendering: optimizeLegibility</code>. وثق نظام الطباعة الخاص بك بالكامل: عائلة الخط والوزن والحجم وارتفاع السطر للمطورين. الطباعة الجيدة غير مرئية — المستخدمون يقرؤون ببساطة.</p>
+        </div>
+    </div>
+</body>
+</html>

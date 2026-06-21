@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>React & Next.js Crash Course · دليل رياكت العملي — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4755909548836402" crossorigin="anonymous"></script>
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header { text-align: center; margin-bottom: 40px; }
+        .article-header .cat-tag { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #7c3aed, #3b82f6); margin-bottom: 16px; }
+        .article-header h1 { font-size: 2rem; margin-bottom: 12px; line-height: 1.4; background: linear-gradient(135deg, #f1f5f9, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-header .meta { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        .article-body { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); line-height: 2; }
+        .article-body h2 { font-size: 1.4rem; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.08); color: #a78bfa; }
+        .article-body h3 { font-size: 1.15rem; margin: 28px 0 12px; color: #f1f5f9; }
+        .article-body p { margin-bottom: 18px; color: rgba(255,255,255,0.75); }
+        .article-body strong { color: #f1f5f9; }
+        .article-body code { background: rgba(124,58,237,0.15); color: #c4b5fd; padding: 2px 10px; border-radius: 6px; font-size: 0.88rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1a1a2e; color: #e2e8f0; padding: 20px 24px; border-radius: 14px; direction: ltr; text-align: left; overflow-x: auto; margin: 20px 0; border: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+        .article-body ul { margin-bottom: 18px; padding-right: 20px; }
+        .article-body li { margin-bottom: 8px; color: rgba(255,255,255,0.7); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.92rem; transition: color 0.2s; }
+        .back-link:hover { color: #a78bfa; }
+        .ad-unit { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 13px; padding: 30px; text-align: center; margin: 30px 0; color: rgba(255,255,255,0.15); font-size: 0.8rem; }
+        .article-footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .article-footer a { color: #a78bfa; text-decoration: none; font-weight: 600; }
+        .article-footer a:hover { text-decoration: underline; }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.5rem; } .article-body { padding: 24px 18px; } .article-body h2 { font-size: 1.2rem; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header">
+            <span class="cat-tag">💻 Programming · برمجة</span>
+            <h1>React & Next.js Crash Course · دليل رياكت العملي</h1>
+            <div class="meta">25 min read · 25 دقيقة</div>
+        </div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> React has been the dominant frontend library for nearly a decade. With the release of React 19 and Next.js 15 (App Router), the ecosystem has never been more powerful. This crash course takes you from zero to building production-ready applications. Whether you're a complete beginner or an experienced developer looking to modernize your skills, this guide covers everything you need.</p>
+            <p><strong>English:</strong> The React ecosystem has matured significantly. Server Components, the React Compiler, and Server Actions represent a paradigm shift in how we build web applications. Gone are the days of managing complex client-side state for every interaction — we now have the ability to seamlessly blend server and client code in a single component tree.</p>
+            <p><strong>English:</strong> In this guide, we'll build a real project step by step, exploring each concept with practical examples. You'll learn not just the syntax, but the reasoning behind each pattern. By the end, you'll have a solid foundation to build your own React and Next.js applications with confidence.</p>
+            <p><strong>العربية:</strong> رياكت هي المكتبة الأكثر هيمنة في عالم الواجهات الأمامية منذ ما يقرب من عقد. مع إصدار React 19 و Next.js 15، أصبح النظام البيئي أقوى من أي وقت مضى. هذا الدليل العملي يأخذك من الصفر إلى بناء تطبيقات جاهزة للإنتاج.</p>
+            <p><strong>العربية:</strong> تطور نظام رياكت البيئي بشكل كبير. مكونات الخادم و React Compiler وإجراءات الخادم تمثل تحولًا جذريًا في كيفية بناء تطبيقات الويب. لقد ولت أيام إدارة الحالة المعقدة على جانب العميل لكل تفاعل — الآن لدينا القدرة على مزج كود الخادم والعميل بسلاسة في شجرة مكونات واحدة.</p>
+            <p><strong>العربية:</strong> في هذا الدليل، سنبني مشروعًا حقيقيًا خطوة بخطوة، مستكشفين كل مفهوم بأمثلة عملية. ستتعلم ليس فقط الصياغة، بل المنطق وراء كل نمط. في النهاية، سيكون لديك أساس متين لبناء تطبيقات React و Next.js الخاصة بك بثقة.</p>
+
+            <h2>Why React in 2026? · لماذا رياكت في 2026؟</h2>
+            <p><strong>English:</strong> React remains the most hired-for frontend skill globally. Its component-based architecture, massive ecosystem, and strong community make it the safest investment for your career. The new React Compiler (previously "React Forget") automatically memoizes components, eliminating the need for useMemo, useCallback, and React.memo in most cases.</p>
+            <p><strong>English:</strong> Server Components in Next.js allow rendering on the server, reducing client-side JavaScript by up to 80%. The result is faster pages, better SEO, and improved developer experience. Companies like Vercel, Netflix, Discord, and Airbnb have all migrated their frontends to React or Next.js, citing performance improvements and developer productivity gains.</p>
+            <p><strong>English:</strong> Beyond the technical merits, React's job market is unparalleled. A quick search on any job platform shows thousands of React positions. The skills you learn here transfer to React Native for mobile development, React Three Fiber for 3D, and countless other specialized fields. Learning React in 2026 is not just learning a library — it's investing in your career.</p>
+            <p><strong>العربية:</strong> رياكت لا تزال المهارة الأكثر طلبًا في سوق العمل للواجهات الأمامية. معماريتها القائمة على المكونات ونظامها البيئي الضخم يجعلانها أفضل استثمار لمستقبلك المهني. React Compiler الجديد يقوم تلقائيًا بحفظ المكونات، مما يلغي الحاجة لـ useMemo و useCallback في معظم الحالات.</p>
+            <p><strong>العربية:</strong> مكونات الخادم في Next.js تتيح التصيير على الخادم، مما يقلل من جافاسكريبت الجانب العميل بنسبة تصل إلى 80%. والنتيجة هي صفحات أسرع وتحسين محركات البحث وتجربة مطورين أفضل. شركات مثل Vercel و Netflix و Discord و Airbnb هاجرت جميعًا واجهاتها إلى React أو Next.js، مشيرة إلى تحسينات الأداء وإنتاجية المطورين.</p>
+            <p><strong>العربية:</strong> بعيدًا عن الجوانب التقنية، سوق عمل رياكت لا يُضاهى. بحث سريع في أي منصة وظائف يظهر آلاف الوظائف لرياكت. المهارات التي تتعلمها هنا تنتقل إلى React Native لتطوير الجوال و React Three Fiber للرسوم ثلاثية الأبعاد ومجالات متخصصة أخرى لا تُحصى. تعلم رياكت في 2026 ليس مجرد تعلم مكتبة — إنه استثمار في مستقبلك المهني.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>Setting Up · الإعداد</h2>
+            <p><strong>English:</strong> Start by creating a new Next.js project with the App Router. The command is simple:</p>
+            <pre><code>npx create-next-app@latest my-app --typescript --tailwind --app</code></pre>
+            <p><strong>English:</strong> This sets up TypeScript, Tailwind CSS, and the App Router automatically. The project structure includes <code>app/</code> for routes, <code>components/</code> for reusable UI, and <code>public/</code> for static assets. Each folder inside <code>app/</code> becomes a route — <code>app/about/page.tsx</code> becomes <code>/about</code>.</p>
+            <p><strong>English:</strong> Once initialized, run <code>npm run dev</code> and you'll see your app at <code>http://localhost:3000</code>. The default page is <code>app/page.tsx</code>. Try editing it — changes reflect instantly thanks to Fast Refresh. Next.js also generates a <code>layout.tsx</code> which wraps every page. This is where you put shared UI like navigation bars and footers.</p>
+            <p><strong>English:</strong> For an optimal developer experience, install additional tools: ESLint for code linting, Prettier for formatting, and the VS Code Tailwind CSS IntelliSense extension. Configure <code>tsconfig.json</code> with path aliases for cleaner imports:</p>
+            <pre><code>// tsconfig.json
+{
+  "compilerOptions": {
+    "paths": { "@/*": ["./src/*"] }
+  }
+}
+// Now you can import: import { Button } from "@/components/Button"</code></pre>
+            <p><strong>العربية:</strong> ابدأ بإنشاء مشروع Next.js جديد مع App Router. الأمر بسيط: <code>npx create-next-app@latest my-app --typescript --tailwind --app</code>. هذا يهيئ TypeScript و Tailwind CSS و App Router تلقائيًا. هيكل المشروع يشمل <code>app/</code> للمسارات، <code>components/</code> للمكونات القابلة لإعادة الاستخدام، و <code>public/</code> للملفات الثابتة.</p>
+            <p><strong>العربية:</strong> بعد التهيئة، شغّل <code>npm run dev</code> وسترى تطبيقك على <code>http://localhost:3000</code>. الصفحة الافتراضية هي <code>app/page.tsx</code>. جرب تعديلها — التغييرات تظهر فورًا بفضل Fast Refresh. Next.js ينشئ أيضًا <code>layout.tsx</code> الذي يغلف كل صفحة. هنا تضع واجهات المستخدم المشتركة مثل أشرطة التنقل والتذييلات.</p>
+            <p><strong>العربية:</strong> لتجربة مطورين مثلى، ثبّت أدوات إضافية: ESLint لفحص الكود و Prettier للتنسيق وإضافة VS Code Tailwind CSS IntelliSense. هيّئ <code>tsconfig.json</code> بمسميات مسارات للاستيراد الأنظف كما في المثال أعلاه.</p>
+
+            <h2>Components & Props · المكونات والخصائص</h2>
+            <p><strong>English:</strong> React components are functions that return JSX. Props are the way to pass data between components. In React 19, you can use server components by default, and client components by adding <code>"use client"</code> at the top. Here's a simple component:</p>
+            <pre><code>// app/components/Card.tsx
+export default function Card({ title, children }: {
+  title: string;
+  children: React.ReactNode;
+}) {
+  return (
+    &lt;div className="rounded-xl bg-white/5 p-6 border border-white/10"&gt;
+      &lt;h3 className="text-lg font-bold mb-2"&gt;{title}&lt;/h3&gt;
+      {children}
+    &lt;/div&gt;
+  );
+}</code></pre>
+            <p><strong>English:</strong> This component receives a <code>title</code> prop and <code>children</code> for nested content. The pattern of composing small, focused components is the foundation of React architecture. Each component should do one thing well.</p>
+            <p><strong>English:</strong> Props are read-only — a component should never modify its props. For dynamic behavior, use state. TypeScript helps catch prop-related bugs at compile time. Always type your props with interfaces or type aliases. Consider using React 19's <code>use()</code> hook for reading promises and context within components:</p>
+            <pre><code>// Using the use() hook in React 19
+import { use } from 'react';
+
+function Comments({ commentsPromise }: { commentsPromise: Promise&lt;Comment[]&gt; }) {
+  const comments = use(commentsPromise);
+  return comments.map(c => &lt;p key={c.id}&gt;{c.text}&lt;/p&gt;);
+}</code></pre>
+            <p><strong>العربية:</strong> هذا المكون يستقبل خاصية <code>title</code> و <code>children</code> للمحتوى المتداخل. نمط بناء مكونات صغيرة ومركزة هو أساس معمارية رياكت. كل مكون يجب أن يقوم بشيء واحد فقط بإتقان.</p>
+            <p><strong>العربية:</strong> الخصائص للقراءة فقط — لا يجب على المكون أبدًا تعديل خصائصه. للسلوك الديناميكي، استخدم الحالة. TypeScript يساعد في اكتشاف أخطاء الخصائص في وقت التجميع. اكتب دائمًا أنواع خصائصك باستخدام interfaces أو type aliases. استخدم hook <code>use()</code> في React 19 لقراءة الوعود والـ context داخل المكونات كما في المثال أعلاه.</p>
+
+            <h2>Server Components & Data Fetching · مكونات الخادم وجلب البيانات</h2>
+            <p><strong>English:</strong> Next.js 15 introduced stable Server Components. Components are server-rendered by default — they can directly access databases, file systems, and APIs without exposing secrets to the client. Data fetching becomes straightforward:</p>
+            <pre><code>// app/posts/page.tsx (Server Component - default)
+export default async function PostsPage() {
+  const res = await fetch('https://api.example.com/posts');
+  const posts = await res.json();
+
+  return (
+    &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-6"&gt;
+      {posts.map(post => (
+        &lt;PostCard key={post.id} post={post} /&gt;
+      ))}
+    &lt;/div&gt;
+  );
+}</code></pre>
+            <p><strong>English:</strong> This entire component runs on the server. The fetch call, data processing, and initial render all happen server-side. The client only receives the final HTML, making the page load instantly. You can also fetch data incrementally using <code>loading.tsx</code> for streaming and <code>error.tsx</code> for error boundaries.</p>
+            <p><strong>English:</strong> Next.js extends the native <code>fetch</code> API with caching and revalidation options. Use <code>cache: 'no-store'</code> for dynamic data, <code>next: { revalidate: 3600 }</code> for ISR (Incremental Static Regeneration), and default caching for static data. This granular control lets you optimize each data source independently.</p>
+            <pre><code>// Different caching strategies
+// Static - cached indefinitely
+const staticData = await fetch('https://api.example.com/settings');
+// Revalidated every hour
+const posts = await fetch('https://api.example.com/posts', { next: { revalidate: 3600 } });
+// Dynamic - never cached
+const userData = await fetch('https://api.example.com/me', { cache: 'no-store' });</code></pre>
+            <p><strong>العربية:</strong> هذا المكون بأكمله يعمل على الخادم. عملية جلب البيانات ومعالجتها والتصيير الأولي كلها تتم على الخادم. العميل يستلم فقط HTML النهائي، مما يجعل الصفحة تُحمل فورًا. يمكنك أيضًا جلب البيانات بشكل تدريجي باستخدام <code>loading.tsx</code> للتدفق و <code>error.tsx</code> لإدارة الأخطاء.</p>
+            <p><strong>العربية:</strong> Next.js يوسّع واجهة <code>fetch</code> الأصلية بخيارات التخزين المؤقت وإعادة التحقق. استخدم <code>cache: 'no-store'</code> للبيانات الديناميكية و <code>next: { revalidate: 3600 }</code> للتوليد الثابت المتزايد (ISR) والتخزين المؤقت الافتراضي للبيانات الثابتة. هذا التحكم الدقيق يتيح لك تحسين كل مصدر بيانات بشكل مستقل كما في المثال أعلاه.</p>
+
+            <h2>Server Actions · إجراءات الخادم</h2>
+            <p><strong>English:</strong> Server Actions allow you to run server-side code directly from client components. They're ideal for form handling, database mutations, and any operation that needs server-side execution. Here's an example:</p>
+            <pre><code>// app/actions.ts
+"use server";
+
+export async function createPost(formData: FormData) {
+  const title = formData.get('title');
+  const content = formData.get('content');
+
+  const post = await db.post.create({
+    data: { title, content }
+  });
+
+  return { success: true, id: post.id };
+}</code></pre>
+            <p><strong>English:</strong> Call this from any client component with <code>useActionState</code> or directly in a form's <code>action</code> prop. React 19's <code>useActionState</code> hook provides pending states and error handling out of the box.</p>
+            <p><strong>English:</strong> Server Actions also support progressive enhancement — forms work even without JavaScript. The action runs on the server, and the page updates automatically. You can also call Server Actions from <code>useEffect</code> or event handlers for more complex interactions. Always validate input on the server side using libraries like Zod or Valibot:</p>
+            <pre><code>// Server Action with validation
+"use server";
+import { z } from 'zod';
+
+const schema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8)
+});
+
+export async function signup(prev: any, formData: FormData) {
+  const parsed = schema.safeParse({
+    email: formData.get('email'),
+    password: formData.get('password')
+  });
+  if (!parsed.success) return { error: parsed.error.flatten() };
+  // Proceed with signup...
+}</code></pre>
+            <p><strong>العربية:</strong> استدعِ هذا من أي مكون عميل باستخدام <code>useActionState</code> أو مباشرة في خاصية <code>action</code> للنموذج. hook <code>useActionState</code> في React 19 يوفر حالات التحميل ومعالجة الأخطاء مباشرة.</p>
+            <p><strong>العربية:</strong> إجراءات الخادم تدعم أيضًا التحسين التدريجي — النماذج تعمل حتى بدون JavaScript. الإجراء يعمل على الخادم، والصفحة تُحدّث تلقائيًا. يمكنك أيضًا استدعاء إجراءات الخادم من <code>useEffect</code> أو معالجات الأحداث للتفاعلات الأكثر تعقيدًا. تحقق دائمًا من الإدخالات على جانب الخادم باستخدام مكتبات مثل Zod أو Valibot كما في المثال أعلاه.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>React 19 New Features · ميزات React 19 الجديدة</h2>
+            <p><strong>English:</strong> React 19 introduces several groundbreaking features. The <code>use()</code> hook lets you read promises and context directly in render, simplifying data flow. The new React Compiler automatically memoizes your components, eliminating the need for manual optimizations like <code>useMemo</code> and <code>useCallback</code> in most cases.</p>
+            <p><strong>English:</strong> Server Components, stable since React 19, allow components to run exclusively on the server. This reduces bundle size dramatically. Combined with Server Actions, you can handle form submissions, database writes, and authentication all from within your component tree, without exposing logic to the client.</p>
+            <p><strong>English:</strong> The <code>useActionState</code> hook replaces the experimental <code>useFormState</code> and provides a standard way to handle form state including pending states and errors. <code>useOptimistic</code> lets you update the UI immediately while a server action is processing, creating a snappy user experience. Here's a practical example:</p>
+            <pre><code>// useOptimistic in action
+"use client";
+import { useOptimistic } from 'react';
+
+function MessageList({ messages, sendMessage }: {
+  messages: Message[];
+  sendMessage: (text: string) => Promise&lt;void&gt;;
+}) {
+  const [optimisticMessages, addOptimistic] = useOptimistic(
+    messages,
+    (state, newMessage: string) => [...state, { text: newMessage, sending: true }]
+  );
+
+  async function handleSubmit(formData: FormData) {
+    addOptimistic(formData.get('message'));
+    await sendMessage(formData.get('message'));
+  }
+  // ...render optimistically
+}</code></pre>
+            <p><strong>العربية:</strong> React 19 يقدم عدة ميزات ثورية. hook <code>use()</code> يتيح لك قراءة الوعود والـ context مباشرة في التصيير، مما يبسط تدفق البيانات. React Compiler الجديد يقوم تلقائيًا بحفظ المكونات، مما يلغي الحاجة للتحسينات اليدوية مثل <code>useMemo</code> و <code>useCallback</code> في معظم الحالات.</p>
+            <p><strong>العربية:</strong> مكونات الخادم، المستقرة منذ React 19، تسمح للمكونات بالعمل حصريًا على الخادم. هذا يقلل حجم الحزمة بشكل كبير. مع إجراءات الخادم، يمكنك التعامل مع إرسال النماذج وكتابة البيانات في قاعدة البيانات والمصادقة كلها من داخل شجرة المكونات دون كشف المنطق للعميل.</p>
+            <p><strong>العربية:</strong> hook <code>useActionState</code> يحل محل <code>useFormState</code> التجريبي ويوفر طريقة قياسية للتعامل مع حالة النموذج بما في ذلك حالات التحميل والأخطاء. <code>useOptimistic</code> يسمح لك بتحديث واجهة المستخدم فورًا بينما يتم معالجة إجراء الخادم، مما يخلق تجربة مستخدم سريعة كما في المثال أعلاه.</p>
+
+            <h2>State Management · إدارة الحالة</h2>
+            <p><strong>English:</strong> For global state, React 19 includes <code>use()</code> hook for reading context and promises directly. Combine with Zustand or Jotai for complex state needs. Server Components eliminate much of the need for client-side state management — data is fetched on the server and passed down.</p>
+            <p><strong>English:</strong> When you do need client state, keep it minimal. Start with React's built-in <code>useState</code> and <code>useReducer</code>. For global state that doesn't change often, use React Context. For frequently updated global state, choose Zustand — it's minimal and TypeScript-friendly:</p>
+            <pre><code>// Zustand store example
+import { create } from 'zustand';
+
+interface CartStore {
+  items: Item[];
+  addItem: (item: Item) => void;
+  total: () => number;
+}
+
+export const useCartStore = create&lt;CartStore&gt;((set, get) => ({
+  items: [],
+  addItem: (item) => set((state) => ({ items: [...state.items, item] })),
+  total: () => get().items.reduce((sum, i) => sum + i.price, 0),
+}));</code></pre>
+            <p><strong>English:</strong> Understand the difference between server state and client state. Server state (user data, posts, comments) should be fetched and cached with tools like React Query or SWR. Client state (theme, modals, form inputs) stays in React state. Mixing the two leads to bugs and poor performance.</p>
+            <p><strong>العربية:</strong> للحالات المعقدة، استخدم Zustand — بسيط ومتوافق مع TypeScript ويعمل جيدًا مع مكونات الخادم والعميل. تجنب الإفراط في هندسة إدارة الحالة؛ معظم التطبيقات تحتاج فقط إلى حالة محلية وبيانات من الخادم.</p>
+            <p><strong>العربية:</strong> افهم الفرق بين حالة الخادم وحالة العميل. حالة الخادم (بيانات المستخدم، المقالات، التعليقات) يجب جلبها وتخزينها مؤقتًا باستخدام أدوات مثل React Query أو SWR. حالة العميل (السمة، النوافذ المنبثقة، إدخالات النماذج) تبقى في حالة رياكت. خلط الاثنين يؤدي إلى أخطاء وأداء ضعيف.</p>
+            <p><strong>العربية:</strong> مثال متجر Zustand أعلاه يوضح كيفية إنشاء متجر بسيط لإدارة سلة التسوق مع دعم TypeScript الكامل. هذا النمط مثالي للحالات التي تحتاجها عبر عدة مكونات مثل عربة التسوق أو تفضيلات المستخدم.</p>
+
+            <h2>Routing & Layouts · التوجيه والتخطيطات</h2>
+            <p><strong>English:</strong> Next.js App Router uses a file-system based routing. Create parallel routes, intercepting routes, and dynamic routes with simple folder structures. Layouts persist across navigations and can be nested:</p>
+            <pre><code>app/
+  layout.tsx          // Root layout (applies everywhere)
+  page.tsx            // Home page (/)
+  about/
+    page.tsx          // About page (/about)
+  blog/
+    layout.tsx        // Blog layout (applies to all blog pages)
+    page.tsx          // Blog index (/blog)
+    [slug]/
+      page.tsx        // Dynamic route (/blog/my-post)</code></pre>
+            <p><strong>English:</strong> This structure provides automatic code splitting, prefetching, and caching. Use <code>generateStaticParams</code> for static generation of dynamic routes. For complex navigation patterns, use parallel routes (two pages in one view) and intercepting routes (modals that work with URL sharing).</p>
+            <p><strong>English:</strong> Layouts are unique in Next.js — they don't unmount when navigating between pages. This means you can put sidebars, navigation, and audio players in a layout and they'll persist seamlessly. Nested layouts inherit from parent layouts, allowing for section-specific navigation:</p>
+            <pre><code>// app/dashboard/layout.tsx - Dashboard layout
+export default function DashboardLayout({ children, analytics }: {
+  children: React.ReactNode;
+  analytics: React.ReactNode;
+}) {
+  return (
+    &lt;div className="flex"&gt;
+      &lt;DashboardSidebar /&gt;
+      &lt;main&gt;{children}&lt;/main&gt;
+      {analytics}
+    &lt;/div&gt;
+  );
+}</code></pre>
+            <p><strong>العربية:</strong> هذا الهيكل يوفر تقسيم الكود تلقائيًا والجلب المسبق والتخزين المؤقت. استخدم <code>generateStaticParams</code> للتوليد الثابت للمسارات الديناميكية. للأنماط المعقدة، استخدم المسارات المتوازية (صفحتان في عرض واحد) والمسارات المعترضة (نوافذ منبثقة تعمل مع مشاركة URL).</p>
+            <p><strong>العربية:</strong> التخطيطات فريدة في Next.js — لا تُفصل عند التنقل بين الصفحات. هذا يعني أنه يمكنك وضع الأشرطة الجانبية والتنقل ومشغلات الصوت في تخطيط وستبقى بشكل سلس. التخطيطات المتداخلة ترث من التخطيطات الأم، مما يتيح تنقلًا خاصًا بكل قسم.</p>
+
+            <h2>Performance Optimization · تحسين الأداء</h2>
+            <p><strong>English:</strong> Performance is critical for user retention and SEO. Next.js provides built-in performance features: image optimization with <code>next/image</code>, font loading with <code>next/font</code>, and script loading with <code>next/script</code>. Use Partial Prerendering (PPR) for hybrid static + dynamic pages.</p>
+            <p><strong>English:</strong> For client components, apply these patterns: use <code>React.memo</code> sparingly (the React Compiler handles this automatically in React 19), implement code splitting with <code>next/dynamic</code>, and virtualize long lists with libraries like <code>@tanstack/virtual</code>. Always monitor Core Web Vitals using tools like Lighthouse and Web Vitals:</p>
+            <pre><code>// Dynamic import for code splitting
+import dynamic from 'next/dynamic';
+
+const HeavyComponent = dynamic(() => import('@/components/HeavyChart'), {
+  loading: () => &lt;p&gt;Loading chart...&lt;/p&gt;,
+  ssr: false, // Disable SSR if component uses browser APIs
+});</code></pre>
+            <p><strong>English:</strong> Image optimization alone can cut page weight by 50% or more. Always provide width, height, and priority for above-the-fold images. Use WebP format and responsive srcSet. Next.js automatically serves modern formats and resizes images on demand.</p>
+            <p><strong>العربية:</strong> الأداء ضروري للاحتفاظ بالمستخدمين وتحسين محركات البحث. Next.js يوفر ميزات أداء مدمجة: تحسين الصور بـ <code>next/image</code> وتحميل الخطوط بـ <code>next/font</code> وتحميل النصوص البرمجية بـ <code>next/script</code>. استخدم التصيير المسبق الجزئي (PPR) للصفحات الهجينة.</p>
+            <p><strong>العربية:</strong> لمكونات العميل، طبق هذه الأنماط: استخدم <code>React.memo</code> بشكل محدود (React Compiler يتولى هذا تلقائيًا في React 19)، طبق تقسيم الكود بـ <code>next/dynamic</code>، وقم بتفعيل القوائم الطويلة بمكتبات مثل <code>@tanstack/virtual</code>. راقب دائمًا Core Web Vitals باستخدام أدوات مثل Lighthouse كما في المثال أعلاه.</p>
+
+            <h2>Testing React Applications · اختبار تطبيقات رياكت</h2>
+            <p><strong>English:</strong> Testing ensures your application works correctly and prevents regressions. The standard stack is Vitest (or Jest) + React Testing Library. Vitest is faster and integrates seamlessly with Vite-based Next.js projects. React Testing Library encourages testing behavior, not implementation details.</p>
+            <p><strong>English:</strong> Write unit tests for individual components, focusing on user interactions and rendered output. Use <code>screen</code> queries to find elements by role, text, or test ID — not by CSS class or tag name. Test accessibility roles as part of your tests:</p>
+            <pre><code>// Component test with React Testing Library
+import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import Counter from './Counter';
+
+test('increments count when button clicked', async () => {
+  render(&lt;Counter /&gt;);
+  
+  const button = screen.getByRole('button', { name: /increment/i });
+  await userEvent.click(button);
+  
+  expect(screen.getByText('Count: 1')).toBeInTheDocument();
+});</code></pre>
+            <p><strong>English:</strong> For server components, test data fetching and rendering separately. Use <code>vi.mock</code> to mock fetch calls. Write integration tests for critical user flows like signup, checkout, or search. Aim for the testing trophy — a few E2E tests, several integration tests, and many unit tests.</p>
+            <p><strong>العربية:</strong> الاختبار يضمن أن تطبيقك يعمل بشكل صحيح ويمنع الانتكاسات. الحزمة القياسية هي Vitest (أو Jest) مع React Testing Library. Vitest أسرع ويتكامل بسلاسة مع مشاريع Next.js القائمة على Vite. React Testing Library تشجع على اختبار السلوك وليس تفاصيل التنفيذ.</p>
+            <p><strong>العربية:</strong> اكتب اختبارات وحدة للمكونات الفردية، مركزًا على تفاعلات المستخدم والمخرجات المصيّرة. استخدم استعلامات <code>screen</code> للعثور على العناصر بواسطة الدور أو النص أو معرّف الاختبار — ليس بواسطة class CSS أو اسم الوسم. اختبر أدوار الوصول كجزء من اختباراتك كما في المثال أعلاه.</p>
+
+            <h2>Deployment Strategies · استراتيجيات النشر</h2>
+            <p><strong>English:</strong> Next.js offers multiple deployment options. Vercel is the most seamless — one click from GitHub and you get preview deployments, automatic SSL, and edge functions. For self-hosted deployments, use Docker with a Node.js server, or export to static HTML with <code>next export</code> for CDN hosting.</p>
+            <p><strong>English:</strong> Configure environment variables properly: use <code>.env.local</code> for local development, <code>.env.production</code> for production, and never commit secrets. Set up CI/CD pipelines with GitHub Actions, GitLab CI, or Jenkins that run linting, tests, and type-checking before deployment:</p>
+            <pre><code># .github/workflows/deploy.yml
+name: Deploy to Production
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run build
+      - uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}</code></pre>
+            <p><strong>English:</strong> Monitor your deployed application with tools like Sentry for error tracking, Vercel Analytics for performance, and Logtail for server logs. Set up alerts for critical errors and performance degradation. A well-deployed application includes monitoring, logging, and a rollback strategy.</p>
+            <p><strong>العربية:</strong> Next.js يقدم خيارات نشر متعددة. Vercel هو الأكثر سلاسة — نقرة واحدة من GitHub وستحصل على نشر تجريبي و SSL تلقائي و edge functions. للنشر الذاتي، استخدم Docker مع خادم Node.js، أو صدر إلى HTML ثابت بـ <code>next export</code> للاستضافة على CDN.</p>
+            <p><strong>العربية:</strong> هيّئ متغيرات البيئة بشكل صحيح: استخدم <code>.env.local</code> للتطوير المحلي و <code>.env.production</code> للإنتاج ولا ترسل الأسرار أبدًا. أعد خطوط CI/CD مع GitHub Actions أو GitLab CI أو Jenkins التي تشغل فحص الكود والاختبارات وفحص الأنواع قبل النشر كما في المثال أعلاه.</p>
+
+            <h2>Real-World Project Structure · هيكل مشروع حقيقي</h2>
+            <p><strong>English:</strong> A production Next.js project needs more than just pages. Organize your codebase with a clear structure that scales. Here's a recommended structure for a medium-sized application:</p>
+            <pre><code>src/
+  app/                    # Routes
+    (auth)/               # Route group (no layout inheritance)
+      login/page.tsx
+    dashboard/
+      layout.tsx
+      page.tsx
+  components/
+    ui/                   # Reusable UI primitives
+    forms/                # Form components
+    layout/               # Navigation, sidebar, footer
+  lib/
+    db.ts                 # Database client
+    auth.ts               # Auth utilities
+    api-client.ts         # External API client
+  hooks/
+    use-auth.ts
+    use-debounce.ts
+  types/
+    index.ts
+  utils/
+    cn.ts                 # Classname utility (clsx + twMerge)
+    format.ts             # Date, currency formatting</code></pre>
+            <p><strong>English:</strong> Use route groups (folders in parentheses) to organize routes without affecting the URL path. Keep components close to where they're used — put shared components in <code>components/ui/</code> and page-specific components next to the page. This structure scales from a small blog to a large SaaS application.</p>
+            <p><strong>العربية:</strong> مشروع Next.js إنتاجي يحتاج أكثر من مجرد صفحات. نظّم قاعدة الكود بهيكل واضح يتوسع. استخدم مجموعات المسارات (مجلدات بين قوسين) لتنظيم المسارات دون التأثير على مسار URL. ابقِ المكونات قريبة من مكان استخدامها — ضع المكونات المشتركة في <code>components/ui/</code> والمكونات الخاصة بالصفحة بجوار الصفحة. هذا الهيكل يتوسع من مدونة صغيرة إلى تطبيق SaaS كبير.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> React 19 and Next.js 15 represent the best of modern web development — server components for performance, client components for interactivity, and a unified developer experience. Start small, build something real, and iterate. The framework handles the complexity so you can focus on what matters: building great products.</p>
+            <p><strong>English:</strong> Remember these key takeaways: prefer server components by default, use client components only when you need interactivity, leverage Server Actions for form handling, optimize images and fonts automatically, and test your components. The React ecosystem continues to evolve — stay curious, keep learning, and build things that matter.</p>
+            <p><strong>العربية:</strong> React 19 و Next.js 15 يمثلان أفضل ما في تطوير الويب الحديث — مكونات خادم للأداء، مكونات عميل للتفاعلية، وتجربة مطورين موحدة. ابدأ صغيرًا، ابنِ شيئًا حقيقيًا، وطوره تدريجيًا. الإطار يتولى التعقيد حتى تركز أنت على ما يهم: بناء منتجات رائعة.</p>
+            <p><strong>العربية:</strong> تذكر هذه النقاط الرئيسية: فضّل مكونات الخادم افتراضيًا، استخدم مكونات العميل فقط عندما تحتاج التفاعلية، استفد من إجراءات الخادم للنماذج، حسّن الصور والخطوط تلقائيًا، واختبر مكوناتك. نظام رياكت البيئي يستمر في التطور — ابقَ فضوليًا، استمر في التعلم، وابنِ أشياءً تهم.</p>
+        </div>
+        <div class="article-footer">
+            <a href="../blog.html">← العودة للمدونة — Back to Blog</a>
+        </div>
+    </div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>

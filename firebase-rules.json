@@ -1,0 +1,41 @@
+{
+  "rules": {
+    "users": {
+      "$uid": {
+        ".read": "auth != null",
+        ".write": "auth != null && auth.uid == $uid",
+        ".indexOn": ["createdAt"],
+        "displayName": {
+          ".read": true
+        }
+      }
+    },
+    "questions": {
+      "$recipientId": {
+        ".read": "auth != null && auth.uid == $recipientId",
+        ".write": true,
+        ".indexOn": ["timestamp"],
+        "$questionId": {
+          ".validate": "
+            newData.hasChildren(['text', 'timestamp']) &&
+            !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) &&
+            newData.child('text').isString() &&
+            newData.child('text').val().length > 0 &&
+            newData.child('text').val().length <= 500 &&
+            newData.child('timestamp').isNumber() &&
+            newData.child('timestamp').val() <= now &&
+            newData.child('timestamp').val() > (now - 300000)
+          "
+        }
+      }
+    },
+    "shortUrls": {
+      ".read": true,
+      "$shortName": {
+        ".write": "auth != null",
+        ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid",
+        ".indexOn": ["uid"]
+      }
+    }
+  }
+}

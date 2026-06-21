@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Security Guide · دليل أمن المواقع — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4755909548836402" crossorigin="anonymous"></script>
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header { text-align: center; margin-bottom: 40px; }
+        .article-header .cat-tag { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #7c3aed, #3b82f6); margin-bottom: 16px; }
+        .article-header h1 { font-size: 2rem; margin-bottom: 12px; line-height: 1.4; background: linear-gradient(135deg, #f1f5f9, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-header .meta { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        .article-body { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); line-height: 2; }
+        .article-body h2 { font-size: 1.4rem; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.08); color: #a78bfa; }
+        .article-body h3 { font-size: 1.15rem; margin: 28px 0 12px; color: #f1f5f9; }
+        .article-body p { margin-bottom: 18px; color: rgba(255,255,255,0.75); }
+        .article-body strong { color: #f1f5f9; }
+        .article-body code { background: rgba(124,58,237,0.15); color: #c4b5fd; padding: 2px 10px; border-radius: 6px; font-size: 0.88rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1a1a2e; color: #e2e8f0; padding: 20px 24px; border-radius: 14px; direction: ltr; text-align: left; overflow-x: auto; margin: 20px 0; border: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+        .article-body ul { margin-bottom: 18px; padding-right: 20px; }
+        .article-body li { margin-bottom: 8px; color: rgba(255,255,255,0.7); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.92rem; transition: color 0.2s; }
+        .back-link:hover { color: #a78bfa; }
+        .ad-unit { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 13px; padding: 30px; text-align: center; margin: 30px 0; color: rgba(255,255,255,0.15); font-size: 0.8rem; }
+        .article-footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .article-footer a { color: #a78bfa; text-decoration: none; font-weight: 600; }
+        .article-footer a:hover { text-decoration: underline; }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.5rem; } .article-body { padding: 24px 18px; } .article-body h2 { font-size: 1.2rem; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header">
+            <span class="cat-tag">💻 Programming · برمجة</span>
+            <h1>Web Security Best Practices · دليل أمن المواقع</h1>
+            <div class="meta">30 min read · 30 دقيقة</div>
+        </div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> Web security is not optional — it's a fundamental requirement for any application that touches user data. Every day, thousands of websites are compromised through preventable vulnerabilities. The OWASP Top 10 represents the most critical security risks to web applications. This guide walks through each major threat with practical code examples and defense strategies.</p>
+            <p><strong>English:</strong> The cost of a security breach is staggering: lost customer trust, legal penalties, remediation costs, and brand damage. In 2025 alone, data breaches cost companies an average of $4.88 million per incident. Yet most breaches exploit well-known, preventable vulnerabilities. Understanding these vulnerabilities is the first step toward building secure applications.</p>
+            <p><strong>English:</strong> This guide takes a practical, developer-focused approach to web security. You'll learn not just what the vulnerabilities are, but how to prevent them with concrete code examples, configuration snippets, and architectural patterns. Security is a mindset — think like an attacker to build like a defender.</p>
+            <p><strong>العربية:</strong> أمن الويب ليس اختياريًا — إنه مطلب أساسي لأي تطبيق يتعامل مع بيانات المستخدم. كل يوم، آلاف المواقع تُخترق من خلال ثغرات يمكن منعها. OWASP Top 10 تمثل أخطر المخاطر الأمنية لتطبيقات الويب. هذا الدليل يشرح كل تهديد رئيسي مع أمثلة عملية واستراتيجيات دفاعية.</p>
+            <p><strong>العربية:</strong> تكلفة الاختراق الأمني هائلة: فقدان ثقة العملاء، غرامات قانونية، تكاليف المعالجة، وضرر بالعلامة التجارية. في 2025 وحده، كلّت خروقات البيانات الشركات متوسط 4.88 مليون دولار لكل حادث. مع ذلك، معظم الاختراقات تستغل ثغرات معروفة ويمكن منعها. فهم هذه الثغرات هو أول خطوة نحو بناء تطبيقات آمنة.</p>
+            <p><strong>العربية:</strong> هذا الدليل يأخذ نهجًا عمليًا يركز على المطورين لأمن الويب. ستتعلم ليس فقط ما هي الثغرات، بل كيف تمنعها بأمثلة كود ملموسة ومقتطفات إعدادات وأنماط معمارية. الأمان هو عقلية — فكر كمهاجم لتبني كمدافع.</p>
+
+            <h2>OWASP Top 10 Deep Dive · غوص في أهم 10 ثغرات</h2>
+            <p><strong>English:</strong> The OWASP Top 10 is the industry standard for web application security awareness. Let's examine each category: Broken Access Control (users accessing unauthorized resources), Cryptographic Failures (weak encryption), Injection (SQL, NoSQL, command injection), Insecure Design (flawed architecture), Security Misconfiguration (default passwords, unnecessary services), Vulnerable Components (outdated libraries), Authentication Failures (weak login mechanisms), Data Integrity Failures (untrusted deserialization), Logging & Monitoring Failures (undetected breaches), and SSRF (server-side request forgery).</p>
+            <p><strong>English:</strong> Broken Access Control is now the #1 risk. It means users can access resources they shouldn't — another user's data, admin panels, or paid features. Fix this with server-side authorization checks on every request, never rely on client-side hiding. Use Role-Based Access Control (RBAC) or Attribute-Based Access Control (ABAC) and test every endpoint:</p>
+            <pre><code>// Server-side authorization middleware
+function requireRole(role: string) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (!req.user || req.user.role !== role) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+    next();
+  };
+}
+
+// Apply to routes
+router.delete("/admin/users/:id", requireRole("admin"), deleteUser);
+// Never: router.delete("/admin/users/:id", deleteUser); // Missing auth check!</code></pre>
+            <p><strong>English:</strong> Cryptographic Failures come second. Use HTTPS everywhere, hash passwords with bcrypt or Argon2, encrypt sensitive data at rest with AES-256, and never roll your own cryptography. Use well-vetted libraries like libsodium or the Web Crypto API.</p>
+            <p><strong>العربية:</strong> OWASP Top 10 هو المعيار الصناعي للوعي بأمن تطبيقات الويب. دعنا نفحص كل فئة: التحكم المكسور في الوصول، فشل التشفير، الحقن، التصميم غير الآمن، سوء التهيئة الأمنية، المكونات الضعيفة، فشل المصادقة، فشل تكامل البيانات، فشل التسجيل والمراقبة، وتزوير الطلبات من الخادم.</p>
+            <p><strong>العربية:</strong> التحكم المكسور في الوصول هو الآن الخطر رقم 1. يعني أن المستخدمين يمكنهم الوصول إلى موارد لا يجب عليهم — بيانات مستخدم آخر، لوحات تحكم المشرف، أو ميزات مدفوعة. أصلح هذا بفحوصات ترخيص على جانب الخادم لكل طلب، لا تعتمد أبدًا على الإخفاء في جانب العميل. استخدم التحكم في الوصول القائم على الأدوار (RBAC) واختبر كل نقطة نهاية كما في المثال أعلاه.</p>
+
+            <h2>XSS — Cross-Site Scripting · الثغرة النصية</h2>
+            <p><strong>English:</strong> XSS occurs when an attacker injects malicious scripts into web pages viewed by others. It's the most common web vulnerability. There are three types: Stored (persistent, saved on the server), Reflected (in URL parameters), and DOM-based (client-side only). Prevention is straightforward: never trust user input.</p>
+            <p><strong>English:</strong> Sanitize all output, use Content Security Policy (CSP) headers, and encode data before rendering. CSP is one of the most powerful defensive measures — it tells the browser what sources of content are trusted. A strict CSP can block entire classes of XSS attacks:</p>
+            <pre><code>// Safe rendering — never use innerHTML with user data
+function safeRender(userInput) {
+    const el = document.createElement('div');
+    el.textContent = userInput; // textContent escapes HTML automatically
+    document.body.appendChild(el);
+}
+
+// CSP header (set on server)
+// Content-Security-Policy: default-src 'self'; script-src 'self'
+// More restrictive CSP:
+// Content-Security-Policy: default-src 'none'; script-src 'self'; img-src 'self' https:; style-src 'self' 'unsafe-inline'</code></pre>
+            <p><strong>English:</strong> For modern React or Next.js apps, XSS is largely handled by the framework's automatic escaping. However, be careful with <code>dangerouslySetInnerHTML</code> in React, <code>v-html</code> in Vue, or any use of <code>innerHTML</code>. If you must render HTML, sanitize it first with DOMPurify library. Train your team to recognize XSS vectors — every input field is a potential attack surface.</p>
+            <p><strong>العربية:</strong> XSS تحدث عندما يحقن المهاجم نصوصًا برمجية خبيثة في صفحات الويب التي يشاهدها الآخرون. إنها أكثر ثغرات الويب شيوعًا. هناك ثلاثة أنواع: مخزنة (دائمة)، عاكسة (في بارامترات URL)، وقائمة على DOM. الوقاية مباشرة: لا تثق أبدًا في إدخال المستخدم.</p>
+            <p><strong>العربية:</strong> نظّف كل المخرجات، استخدم سياسة أمان المحتوى (CSP)، وشفر البيانات قبل العرض. CSP هو أحد أقوى الإجراءات الدفاعية — يخبر المتصفح بمصادر المحتوى الموثوقة. CSP صارم يمكنه حظر فئات كاملة من هجمات XSS كما في المثال أعلاه.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>SQL Injection · حقن SQL</h2>
+            <p><strong>English:</strong> SQL injection lets attackers execute arbitrary database queries through input fields. It can lead to data theft, deletion, or complete server compromise. The fix is simple: always use parameterized queries or an ORM. Never concatenate user input directly into SQL strings:</p>
+            <pre><code>// ❌ Vulnerable — never do this
+const query = `SELECT * FROM users WHERE email = '${userInput}'`;
+
+// ✅ Safe — parameterized query
+const safeQuery = 'SELECT * FROM users WHERE email = ?';
+db.query(safeQuery, [userInput]);
+
+// ✅ Even safer — use an ORM
+const user = await User.findOne({ where: { email: userInput } });</code></pre>
+            <p><strong>English:</strong> Modern ORMs like Prisma, Sequelize, or TypeORM handle this automatically — they parameterize all queries by default. But beware of raw queries in ORMs. Prisma's <code>$queryRaw</code> and TypeORM's <code>createQueryRunner</code> can still be vulnerable if you concatenate input. Always validate input type — if you expect an integer, parse it as one before using it in a query.</p>
+            <p><strong>English:</strong> Apply the principle of least privilege to your database user. Your application's database user shouldn't have <code>DROP</code>, <code>TRUNCATE</code>, or <code>CREATE</code> permissions. Use separate read-only and read-write connections. Enable query logging in development to detect potential injections, and use database firewalls to block suspicious queries in production.</p>
+            <p><strong>العربية:</strong> حقن SQL يسمح للمهاجمين بتنفيذ استعلامات قاعدة بيانات عشوائية من خلال حقول الإدخال. يمكن أن يؤدي إلى سرقة البيانات أو حذفها أو اختراق الخادم بالكامل. الإصلاح بسيط: استخدم دائمًا الاستعلامات ذات المعلمات أو ORM. لا تربط أبدًا إدخال المستخدم مباشرة في سلاسل SQL.</p>
+            <p><strong>العربية:</strong> ORMs الحديثة مثل Prisma و Sequelize و TypeORM تتعامل مع هذا تلقائيًا — تجعل كل الاستعلامات ذات معلمات افتراضيًا. لكن احذر من الاستعلامات الخام في ORMs. <code>$queryRaw</code> في Prisma يمكن أن يكون ضعيفًا إذا ربطت الإدخال. تحقق دائمًا من نوع الإدخال — إذا كنت تتوقع رقمًا صحيحًا، قم بتحليله كرقم قبل استخدامه في استعلام كما في المثال أعلاه.</p>
+
+            <h2>CSRF — Cross-Site Request Forgery · تزوير الطلبات</h2>
+            <p><strong>English:</strong> CSRF tricks authenticated users into executing unwanted actions on a web application where they're logged in. Imagine clicking a link that changes your email password without your knowledge. Modern frameworks include built-in CSRF protection — use it.</p>
+            <p><strong>English:</strong> For APIs, use SameSite cookies, CSRF tokens, and custom request headers. Never rely solely on CORS for security — CORS blocks browser-based requests from other origins, but doesn't protect against direct requests or server-to-server attacks. Implement double-submit cookie pattern or use <code>csrf-csrf</code> library for Express:</p>
+            <pre><code>// CSRF protection with Express
+import csrf from 'csrf-csrf';
+
+const { generateToken, doubleCsrfProtection } = csrf({
+  getSecret: () => process.env.CSRF_SECRET,
+  cookieName: 'csrf-token',
+  cookieOptions: { httpOnly: true, sameSite: 'strict', secure: true },
+});
+
+// Apply to all state-changing routes
+app.use('/api', doubleCsrfProtection);
+
+// Include token in forms
+app.get('/form', (req, res) => {
+  res.render('form', { csrfToken: generateToken(req, res) });
+});</code></pre>
+            <p><strong>English:</strong> For SPAs and mobile apps, use token-based auth (JWT) instead of cookies to eliminate CSRF entirely. But if you must use cookies, combine SameSite=Strict with CSRF tokens for defense in depth. SameSite=Strict prevents the browser from sending cookies with cross-site requests, which is the core mechanism of CSRF.</p>
+            <p><strong>العربية:</strong> CSRF يخدع المستخدمين المسجلين لتنفيذ إجراءات غير مرغوب فيها في تطبيق ويب حيث هم مسجلون. تخيل رابط يغير كلمة مرور بريدك الإلكتروني بدون علمك. الأطر الحديثة تتضمن حماية مدمجة من CSRF — استخدمها.</p>
+            <p><strong>العربية:</strong> للـ APIs، استخدم SameSite cookies و CSRF tokens و headers مخصصة. لا تعتمد فقط على CORS للأمان — CORS يمنع طلبات المتصفح من أصول أخرى، لكنه لا يحمي من الطلبات المباشرة أو هجمات الخادم إلى الخادم. طبق نمط double-submit cookie أو استخدم مكتبة <code>csrf-csrf</code> لـ Express كما في المثال أعلاه.</p>
+
+            <h2>Authentication Best Practices · أفضل ممارسات المصادقة</h2>
+            <p><strong>English:</strong> Weak authentication is a gateway for attackers. Enforce strong password policies (12+ characters, mixed case, numbers, symbols). Implement Multi-Factor Authentication (MFA). Use bcrypt or Argon2 for password hashing — never MD5 or SHA-1. Store sessions securely with HTTP-only, Secure, SameSite cookies.</p>
+            <p><strong>English:</strong> JWT (JSON Web Tokens) are popular for stateless authentication but have pitfalls. Always sign JWTs with a strong secret (256+ bits), set short expiration times (15 minutes for access tokens, 7 days for refresh tokens), and implement token rotation. Store refresh tokens in HTTP-only cookies, not localStorage. Never include sensitive data in the JWT payload — it's only base64-encoded, not encrypted:</p>
+            <pre><code>// Secure JWT implementation
+import jwt from 'jsonwebtoken';
+
+function generateTokens(userId: string) {
+  const accessToken = jwt.sign(
+    { userId, type: 'access' },
+    process.env.JWT_SECRET!,
+    { expiresIn: '15m' }
+  );
+  
+  const refreshToken = jwt.sign(
+    { userId, type: 'refresh' },
+    process.env.REFRESH_SECRET!,
+    { expiresIn: '7d' }
+  );
+
+  return { accessToken, refreshToken };
+}
+
+// Store refresh token in HTTP-only cookie
+res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: true,
+  sameSite: 'strict',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});</code></pre>
+            <p><strong>English:</strong> OAuth 2.0 and OIDC are standards for third-party authentication. Use well-known providers (Google, GitHub, Auth0) instead of building your own auth system. For social login, always use the authorization code flow with PKCE, never the implicit flow. Implement account recovery flows carefully — they're a common attack vector.</p>
+            <p><strong>العربية:</strong> المصادقة الضعيفة هي بوابة للمهاجمين. فرض سياسات كلمات مرور قوية (12+ حرفًا، أحرف كبيرة وصغيرة، أرقام، رموز). طبق المصادقة متعددة العوامل (MFA). استخدم bcrypt أو Argon2 لتشفير كلمات المرور — أبدًا MD5 أو SHA-1.</p>
+            <p><strong>العربية:</strong> JWTs شائعة للمصادقة عديمة الحالة لكن لها مخاطر. دائمًا وقّع JWTs بسري قوي (256+ بت)، حدد وقت انتهاء قصير (15 دقيقة لرموز الوصول، 7 أيام لرموز التحديث)، وطبق تدوير الرموز. خزّن رموز التحديث في HTTP-only cookies، ليس في localStorage. لا تضف أبدًا بيانات حساسة في حمولة JWT — إنها فقط مشفرة بـ base64 وليست مشفرة كما في المثال أعلاه.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>HTTPS & Secure Headers · HTTPS والروؤس الآمنة</h2>
+            <p><strong>English:</strong> HTTPS is non-negotiable in 2026. It encrypts all traffic between the client and server, preventing man-in-the-middle attacks. Use Let's Encrypt for free certificates. Beyond HTTPS, implement security headers that harden your application against common attacks.</p>
+            <p><strong>English:</strong> Here's a complete set of security headers for a production Express/Next.js application. These headers protect against clickjacking, MIME sniffing, XSS, and protocol downgrade attacks. Test your headers with securityheaders.com or observatory.mozilla.org:</p>
+            <pre><code>// Security headers for Express.js
+import helmet from 'helmet';
+
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://pagead2.googlesyndication.com"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+      imgSrc: ["'self'", "https:", "data:"],
+      fontSrc: ["'self'", "https://fonts.gstatic.com"],
+      connectSrc: ["'self'"],
+    },
+  },
+  strictTransportSecurity: {
+    maxAge: 31536000, // 1 year
+    includeSubDomains: true,
+    preload: true,
+  },
+}));
+
+// Or set headers manually:
+// Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+// X-Frame-Options: DENY
+// X-Content-Type-Options: nosniff
+// Referrer-Policy: strict-origin-when-cross-origin
+// Permissions-Policy: camera=(), microphone=(), geolocation=()</code></pre>
+            <p><strong>English:</strong> HTTPS should be enforced at the infrastructure level (load balancer, reverse proxy) and the application level. Redirect all HTTP traffic to HTTPS. Enable HSTS preloading to ensure browsers never connect via HTTP. Use Perfect Forward Secrecy (PFS) cipher suites so that even if your private key is compromised, past sessions remain secure.</p>
+            <p><strong>العربية:</strong> HTTPS ليس للتفاوض في 2026. إنه يشفر كل حركة البيانات بين العميل والخادم، مما يمنع هجمات الرجل في المنتصف. استخدم Let's Encrypt للحصول على شهادات مجانية. بعد HTTPS، طبق روؤس أمان تعزز تطبيقك ضد الهجمات الشائعة.</p>
+            <p><strong>العربية:</strong> إليك مجموعة كاملة من روؤس الأمان لتطبيق Express/Next.js إنتاجي كما في المثال أعلاه. هذه الروؤس تحمي ضد clickjacking و MIME sniffing و XSS وهجمات خفض البروتوكول. اختبر روؤسك باستخدام securityheaders.com أو observatory.mozilla.org.</p>
+
+            <h2>API Security · أمن واجهات API</h2>
+            <p><strong>English:</strong> APIs are the backbone of modern applications and a prime target for attackers. Secure your APIs with rate limiting, input validation, proper authentication, and CORS configuration. Rate limiting prevents brute-force attacks, DDoS, and resource exhaustion.</p>
+            <p><strong>English:</strong> Implement granular rate limits — different limits for authenticated vs unauthenticated users, stricter limits for sensitive endpoints (login, password reset). Use a sliding window algorithm for accuracy. Validate every input with a schema validator and return clear, non-revealing error messages:</p>
+            <pre><code>// API security: rate limiting + validation
+import rateLimit from 'express-rate-limit';
+import { z } from 'zod';
+
+// Rate limiters
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: 'Too many requests' }
+});
+
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5, // 5 login attempts per 15 minutes
+  message: { error: 'Too many login attempts' }
+});
+
+// Input validation
+const SignupSchema = z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Password too short')
+    .regex(/[A-Z]/, 'Must contain uppercase')
+    .regex(/[0-9]/, 'Must contain number'),
+});
+
+app.use('/api/', globalLimiter);
+app.use('/api/auth/login', authLimiter);</code></pre>
+            <p><strong>English:</strong> CORS should be as restrictive as possible. Only allow specific origins, not wildcards. Limit HTTP methods to what's actually needed. Use <code>OPTIONS</code> preflight requests properly. Never expose internal API endpoints to the public internet without authentication. Implement API keys for third-party consumers with automatic rotation and revocation.</p>
+            <p><strong>العربية:</strong> APIs هي العمود الفقري للتطبيقات الحديثة وهدف رئيسي للمهاجمين. أمّن APIs الخاصة بك بتحديد السرعة والتحقق من المدخلات والمصادقة الصحيحة وإعدادات CORS. تحديد السرعة يمنع هجمات القوة الغاشمة و DDoS واستنزاف الموارد.</p>
+            <p><strong>العربية:</strong> طبق حدود سرعة دقيقة — حدود مختلفة للمستخدمين الموثقين مقابل غير الموثقين، حدود أكثر صرامة لنقاط النهاية الحساسة (تسجيل الدخول، إعادة تعيين كلمة المرور). استخدم خوارزمية النافذة المنزلقة للدقة. تحقق من كل إدخال باستخدام مدقق مخطط وأعد رسائل خطأ واضحة غير كاشفة كما في المثال أعلاه.</p>
+
+            <h2>Dependency Security · أمن التبعيات</h2>
+            <p><strong>English:</strong> Your application is only as secure as its weakest dependency. The average project has hundreds of dependencies, each a potential attack vector. Regularly audit dependencies with <code>npm audit</code>, <code>pip audit</code>, or GitHub Dependabot. Remove unused packages. Lock dependency versions with lockfiles.</p>
+            <p><strong>English:</strong> The SolarWinds and Log4j incidents proved that supply chain attacks are real and devastating. Beyond auditing, use Software Bill of Materials (SBOM) to track every component in your application. Use tools like Snyk, Socket.dev, or GitHub's dependency graph for continuous monitoring. Pin exact versions in your package.json to prevent surprise updates from introducing vulnerabilities:</p>
+            <pre><code>// Lockfile security practices
+// 1. Always commit lockfiles (package-lock.json, yarn.lock)
+// 2. Use npm audit in CI:
+//    npm audit --audit-level=high
+// 
+// 3. Create a dependency update policy:
+//    - Security patches: auto-merge
+//    - Minor versions: review and merge within a week
+//    - Major versions: manual review with breaking change testing
+//
+// 4. Check for abandoned packages:
+//    npm deprecate check
+//    or use: https://npms.io/</code></pre>
+            <p><strong>English:</strong> Consider using a private registry (Verdaccio, AWS CodeArtifact) to cache and vet packages before they reach your developers. Implement a dependency review process — approve new dependencies before they're added to the project. Every dependency adds risk; question whether you really need it. A smaller dependency footprint means a smaller attack surface.</p>
+            <p><strong>العربية:</strong> تطبيقك آمن بقدر أضعف تبعية فيه. المشروع المتوسط لديه مئات التبعيات، كل منها ناقل هجوم محتمل. دقق التبعيات بانتظام باستخدام <code>npm audit</code> أو <code>pip audit</code> أو GitHub Dependabot. أزل الحزم غير المستخدمة. ثبّت إصدارات التبعيات بملفات القفل.</p>
+            <p><strong>العربية:</strong> حوادث SolarWinds و Log4j أثبتت أن هجمات سلسلة التوريد حقيقية ومدمرة. بعد التدقيق، استخدم قائمة مواد البرمجيات (SBOM) لتتبع كل مكون في تطبيقك. استخدم أدوات مثل Snyk أو Socket.dev للمراقبة المستمرة. ثبت الإصدارات الدقيقة في package.json لمنع التحديثات المفاجئة من إدخال ثغرات كما في المثال أعلاه.</p>
+
+            <h2>Security Testing Tools · أدوات اختبار الأمان</h2>
+            <p><strong>English:</strong> Automated security testing should be part of your CI/CD pipeline. OWASP ZAP (Zed Attack Proxy) is a free, open-source scanner that can automatically find vulnerabilities in your web applications. Burp Suite is the industry standard for professional penetration testing with advanced features like intruder, repeater, and decoder.</p>
+            <p><strong>English:</strong> Integrate security scanning into your development workflow: use SAST (Static Application Security Testing) tools like SonarQube, Semgrep, or CodeQL for finding vulnerabilities in source code. Use DAST (Dynamic Application Security Testing) with OWASP ZAP against running applications. Use SCA (Software Composition Analysis) for dependency scanning:</p>
+            <pre><code># CI/CD security scanning pipeline example
+# .github/workflows/security-scan.yml
+name: Security Scan
+on: [push, pull_request]
+jobs:
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      # SAST - static analysis
+      - name: Run Semgrep
+        uses: semgrep/semgrep-action@v1
+        with:
+          config: p/default
+      
+      # Dependency scan
+      - name: npm audit
+        run: |
+          npm audit --audit-level=high
+      
+      # DAST - dynamic scan
+      - name: OWASP ZAP Scan
+        uses: zaproxy/action-full-scan@v0.10.0
+        with:
+          target: 'https://staging.example.com'</code></pre>
+            <p><strong>English:</strong> Beyond automated tools, conduct manual penetration tests at least once a year. Hire ethical hackers through bug bounty programs (HackerOne, Bugcrowd). Run tabletop exercises with your team to practice incident response. Security is not a one-time fix — it's an ongoing process of improvement.</p>
+            <p><strong>العربية:</strong> اختبار الأمان الآلي يجب أن يكون جزءًا من خط أنابيب CI/CD الخاص بك. OWASP ZAP هو ماسح مفتوح المصدر مجاني يمكنه العثور تلقائيًا على الثغرات في تطبيقات الويب. Burp Suite هو المعيار الصناعي لاختبار الاختراق الاحترافي بميزات متقدمة مثل intruder و repeater و decoder.</p>
+            <p><strong>العربية:</strong> ادمج فحص الأمان في سير عمل التطوير الخاص بك: استخدم أدوات SAST مثل SonarQube أو Semgrep أو CodeQL للعثور على الثغرات في الكود المصدري. استخدم DAST مع OWASP ZAP ضد التطبيقات الجارية. استخدم SCA لفحص التبعيات كما في مثال CI/CD أعلاه.</p>
+
+            <h2>Incident Response & Logging · الاستجابة للحوادث والتسجيل</h2>
+            <p><strong>English:</strong> Even with the best defenses, breaches can happen. A proper incident response plan minimizes damage. The NIST framework outlines five phases: Prepare, Detect, Contain/Eradicate, Recover, and Post-Incident Review. Log everything relevant — authentication attempts, access control failures, data changes, and admin actions.</p>
+            <p><strong>English:</strong> Centralize logs with tools like ELK Stack (Elasticsearch, Logstash, Kibana), Grafana Loki, or Datadog. Never log sensitive data like passwords, credit card numbers, or personal information. Set up real-time alerts for suspicious patterns: multiple failed logins, unusual data access, or requests from unexpected locations:</p>
+            <pre><code>// Structured logging for security events
+import pino from 'pino';
+
+const logger = pino({
+  level: 'info',
+  redact: ['password', 'token', 'ssn', 'creditCard'],
+});
+
+// Security event logging
+function logSecurityEvent(event: string, details: object) {
+  logger.warn({
+    event,
+    timestamp: new Date().toISOString(),
+    ...details,
+  });
+}
+
+// Usage
+app.use('/api/login', (req, res, next) => {
+  logSecurityEvent('LOGIN_ATTEMPT', {
+    ip: req.ip,
+    userAgent: req.headers['user-agent'],
+    success: false,
+  });
+});</code></pre>
+            <p><strong>English:</strong> Have a communication plan for when things go wrong. Who needs to be notified? How do you communicate with affected users? What's the public relations strategy? Document these procedures and practice them. A well-handled incident can actually increase trust — a poorly handled one can destroy your reputation.</p>
+            <p><strong>العربية:</strong> حتى مع أفضل الدفاعات، الاختراقات يمكن أن تحدث. خطة استجابة مناسبة للحوادث تقلل الضرر. إطار NIST يحدد خمس مراحل: التحضير، الكشف، الاحتواء/الاستئصال، الاسترداد، والمراجعة بعد الحادث. سجل كل شيء مهم — محاولات المصادقة، فشل التحكم في الوصول، تغييرات البيانات، وإجراءات المشرف.</p>
+            <p><strong>العربية:</strong> وحّد السجلات بأدوات مثل ELK Stack أو Grafana Loki أو Datadog. لا تسجل أبدًا بيانات حساسة مثل كلمات المرور أو أرقام بطاقات الائتمان. أعد تنبيهات فورية للأنماط المشبوهة: محاولات تسجيل دخول فاشلة متعددة، وصول غير عادي للبيانات، أو طلبات من مواقع غير متوقعة كما في المثال أعلاه.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> Security is a process, not a feature. Adopt a security-first mindset: threat model your application, implement defense in depth, stay updated on emerging threats, and test your defenses regularly. Use automated security scanning tools, conduct penetration tests, and have an incident response plan.</p>
+            <p><strong>English:</strong> The principles covered here — OWASP Top 10, authentication best practices, API security, secure deployment, and testing — form the foundation of web security. But this is just the beginning. Follow security researchers (Troy Hunt, Bruce Schneier), subscribe to CVE notifications, and make security part of every code review. The cost of prevention is always lower than the cost of a breach.</p>
+            <p><strong>العربية:</strong> الأمان هو عملية، ليس ميزة. تبنَّ عقلية الأمان أولاً: صمم نموذج تهديد لتطبيقك، طبق الدفاع في العمق، ابقَ على اطلاع على التهديدات الناشئة، واختبر دفاعاتك بانتظام. استخدم أدوات الفحص الأمني التلقائي، أجرِ اختبارات الاختراق، وامتلك خطة استجابة للحوادث.</p>
+            <p><strong>العربية:</strong> المبادئ التي تم تغطيتها هنا — OWASP Top 10، أفضل ممارسات المصادقة، أمن API، النشر الآمن، والاختبار — تشكل أساس أمن الويب. لكن هذه مجرد البداية. تابع باحثي الأمن (Troy Hunt, Bruce Schneier)، اشترك في إشعارات CVE، واجعل الأمان جزءًا من كل مراجعة كود. تكلفة الوقاية دائمًا أقل من تكلفة الاختراق.</p>
+        </div>
+        <div class="article-footer">
+            <a href="../blog.html">← العودة للمدونة — Back to Blog</a>
+        </div>
+    </div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>

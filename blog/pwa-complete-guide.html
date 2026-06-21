@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA Complete Guide · دليل تطبيقات الويب التدريجية — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1e293b; color: #e2e8f0; padding: 18px 22px; border-radius: 12px; direction: ltr; text-align: left; overflow-x: auto; margin: 15px 0; font-size: 0.85rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>PWA Complete Guide · دليل تطبيقات الويب التدريجية</h1></div>
+        <div class="article-body">
+            <h2>What is a PWA? · ما هي تطبيقات الويب التدريجية؟</h2>
+            <p><strong>English:</strong> A Progressive Web App is a website that behaves like a native app — installable, offline-capable, with push notifications and fast loading. PWAs combine the reach of the web with the power of native apps. Unlike traditional mobile apps, PWAs don't require app store approval, update automatically, and work across all platforms from a single codebase.</p>
+            <p><strong>العربية:</strong> تطبيق الويب التدريجي هو موقع يتصرف كتطبيق أصلي — قابل للتثبيت، يعمل بدون نت، مع إشعارات وتحميل سريع. يجمع بين انتشار الويب وقوة التطبيقات. على عكس تطبيقات الجوال التقليدية، لا تتطلب PWAs موافقة متجر التطبيقات، تُحدث نفسها تلقائيًا، وتعمل عبر جميع المنصات من قاعدة كود واحدة.</p>
+
+            <h2>Service Worker Deep Dive · شرح متعمق لـ Service Worker</h2>
+            <p><strong>English:</strong> The Service Worker is a JavaScript file that runs in the background, completely separate from the web page. It intercepts network requests, serves cached content, handles push notifications, and enables background sync. It's the engine that makes PWAs work offline. Register it in your main JavaScript file:</p>
+            <p><strong>العربية:</strong> Service Worker هو ملف JavaScript يعمل في الخلفية، منفصل تمامًا عن صفحة الويب. يعترض طلبات الشبكة، يقدم محتوى من الكاش، يتعامل مع الإشعارات الفورية، ويمكّن المزامنة الخلفية. إنه المحرك الذي يجعل PWAs تعمل بدون إنترنت. سجله في ملف JavaScript الرئيسي:</p>
+            <pre><code>// Register service worker
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("/sw.js");
+      console.log("SW registered:", reg.scope);
+    } catch (err) {
+      console.error("SW registration failed:", err);
+    }
+  });
+}
+
+// Complete service worker (sw.js)
+const CACHE_NAME = "my-pwa-v1";
+const ASSETS = [
+  "/",
+  "/index.html",
+  "/style.css",
+  "/app.js",
+  "/offline.html",
+  "/images/logo.png",
+];
+
+// Install event - cache initial assets
+self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("Caching assets");
+      return cache.addAll(ASSETS);
+    })
+  );
+});
+
+// Activate event - clean old caches
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => key !== CACHE_NAME)
+          .map((key) => caches.delete(key))
+      );
+    })
+  );
+});</code></pre>
+            <p><strong>English:</strong> The install event pre-caches critical assets so your app loads instantly even on the first visit. The activate event cleans up old caches when you update your service worker. This lifecycle ensures users always have the latest version without manual updates.</p>
+            <p><strong>العربية:</strong> حدث install يخزّن مؤقتًا الأصول الحرجة حتى يتم تحميل تطبيقك فورًا حتى في أول زيارة. حدث activate ينظف الكاش القديم عند تحديث Service Worker. دورة الحياة هذه تضمن أن المستخدمين لديهم دائمًا أحدث إصدار بدون تحديثات يدوية.</p>
+
+            <h2>Cache Strategies with Examples · استراتيجيات التخزين المؤقت مع أمثلة</h2>
+            <p><strong>English:</strong> Choosing the right caching strategy is crucial for your PWA's performance and freshness. Here are the four main strategies with implementation examples you can use in your service worker.</p>
+            <p><strong>العربية:</strong> اختيار استراتيجية التخزين المؤقت المناسبة أمر حاسم لأداء تطبيقك وتحديثه. إليك الاستراتيجيات الأربع الرئيسية مع أمثلة تنفيذ يمكنك استخدامها في Service Worker الخاص بك.</p>
+            <pre><code>// 1. Cache First - Offline-first (best for static assets)
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      return cached || fetch(event.request).then((response) => {
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+    })
+  );
+});
+
+// 2. Network First - Fresh content (best for API calls)
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    fetch(event.request)
+      .then((response) => {
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      })
+      .catch(() => caches.match(event.request))
+  );
+});
+
+// 3. Stale-While-Revalidate - Best balance (for most content)
+self.addEventListener("fetch", (event) => {
+  event.respondWith(
+    caches.match(event.request).then((cached) => {
+      const fetchPromise = fetch(event.request).then((response) => {
+        return caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, response.clone());
+          return response;
+        });
+      });
+      return cached || fetchPromise;
+    })
+  );
+});
+
+// 4. Cache Only - For immutable assets
+self.addEventListener("fetch", (event) => {
+  event.respondWith(caches.match(event.request));
+});</code></pre>
+            <p><strong>English:</strong> Use Cache First for images, fonts, and CSS — they rarely change and speed is critical. Use Network First for API responses that need fresh data. Use Stale-While-Revalidate for HTML pages — it's the best compromise between speed and freshness. Each strategy serves a different purpose; combine them based on the URL pattern.</p>
+            <p><strong>العربية:</strong> استخدم Cache First للصور والخطوط و CSS — نادرًا ما تتغير والسرعة ضرورية. استخدم Network First لاستجابات API التي تحتاج بيانات حديثة. استخدم Stale-While-Revalidate لصفحات HTML — إنها أفضل حل وسط بين السرعة والتحديث. كل استراتيجية تخدم غرضًا مختلفًا؛ ادمجها حسب نمط URL.</p>
+
+            <h2>Manifest Setup · إعداد ملف البيان</h2>
+            <p><strong>English:</strong> The web app manifest (manifest.json) is a JSON file that tells the browser how your PWA should behave when installed. It controls the app name, icons, theme color, display mode, and splash screen. Here's a complete, production-ready manifest:</p>
+            <p><strong>العربية:</strong> ملف بيان تطبيق الويب (manifest.json) هو ملف JSON يخبر المتصفح كيف يجب أن يتصرف PWA الخاص بك عند تثبيته. يتحكم في اسم التطبيق والأيقونات ولون السمة ووضع العرض وشاشة البداية. إليك بيان كامل جاهز للإنتاج:</p>
+            <pre><code>{
+  "name": "My Awesome App",
+  "short_name": "MyApp",
+  "description": "A progressive web app that works offline",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "prefer_related_applications": false,
+  "scope": "/"
+}</code></pre>
+            <p><strong>English:</strong> Link the manifest in your HTML head with <code>&lt;link rel="manifest" href="/manifest.json"&gt;</code>. Generate icons in multiple sizes (192x192, 512x512 minimum) using tools like PWABuilder or favicon generators. Use maskable icons for the best adaptive icon support on Android.</p>
+            <p><strong>العربية:</strong> اربط ملف البيان في head في HTML بـ <code>&lt;link rel="manifest" href="/manifest.json"&gt;</code>. أنشئ أيقونات بأحجام متعددة (192x192، 512x512 كحد أدنى) باستخدام أدوات مثل PWABuilder أو مولدات الأيقونات. استخدم أيقونات maskable للحصول على أفضل دعم للأيقونات المتكيفة على Android.</p>
+
+            <h2>Push Notifications · الإشعارات الفورية</h2>
+            <p><strong>English:</strong> Push notifications re-engage users even when the browser is closed. They require two steps: subscribing the user (generating a push subscription object) and sending the push from your server via Web Push API. The service worker listens for push events and shows a notification:</p>
+            <p><strong>العربية:</strong> الإشعارات الفورية تعيد جذب المستخدمين حتى عندما يكون المتصفح مغلقًا. تتطلب خطوتين: اشتراك المستخدم (توليد كائن اشتراك الدفع) وإرسال الإشعار من الخادم عبر Web Push API. Service Worker يستمع لأحداث الدفع ويعرض إشعارًا:</p>
+            <pre><code>// In sw.js - Listen for push events
+self.addEventListener("push", (event) => {
+  const data = event.data?.json() ?? {
+    title: "Default Title",
+    body: "You have a new notification",
+    icon: "/icons/icon-192x192.png",
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, {
+      body: data.body,
+      icon: data.icon,
+      badge: "/icons/badge-72x72.png",
+      vibrate: [200, 100, 200],
+      data: { url: data.url || "/" },
+    })
+  );
+});
+
+// Handle notification click
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  event.waitUntil(clients.openWindow(event.notification.data.url));
+});</code></pre>
+            <p><strong>English:</strong> Request notification permission with <code>Notification.requestPermission()</code>. Always explain why you need notifications before asking. Use VAPID keys for secure push messaging. Services like Firebase Cloud Messaging simplify the server-side push delivery.</p>
+            <p><strong>العربية:</strong> اطلب إذن الإشعارات بـ <code>Notification.requestPermission()</code>. اشرح دائمًا لماذا تحتاج الإشعارات قبل الطلب. استخدم مفاتيح VAPID للإرسال الآمن. خدمات مثل Firebase Cloud Messaging تبسط تسليم الإشعارات من جانب الخادم.</p>
+
+            <h2>Testing Your PWA · اختبار تطبيقك</h2>
+            <p><strong>English:</strong> Use Chrome DevTools &gt; Application tab to inspect your service worker, cache storage, and manifest. Lighthouse in Chrome gives you a PWA audit with scores and improvement suggestions. Run <code>npx lighthouse https://your-site.com --view</code> from the command line. The key PWA requirements: HTTPS, registered service worker, valid manifest, responsive design, and offline experience.</p>
+            <p><strong>العربية:</strong> استخدم Chrome DevTools &gt; Application لفحص Service Worker وتخزين الكاش وملف البيان. Lighthouse في Chrome يعطيك تدقيق PWA مع درجات واقتراحات للتحسين. شغّل <code>npx lighthouse https://your-site.com --view</code> من سطر الأوامر. متطلبات PWA الرئيسية: HTTPS، Service Worker مسجل، manifest صالح، تصميم متجاوب، وتجربة بدون إنترنت.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> PWAs are the future of web development. They deliver app-like experiences without the friction of app stores. Start with a service worker and manifest, add caching strategies that match your content, and progressively enhance with push notifications. Tools like Workbox (by Google) can abstract away much of the service worker complexity. Build your PWA today — your users will thank you for the fast, reliable, engaging experience.</p>
+            <p><strong>العربية:</strong> PWAs هي مستقبل تطوير الويب. تقدم تجارب شبيهة بالتطبيقات بدون عناء متاجر التطبيقات. ابدأ بـ Service Worker و manifest، أضف استراتيجيات تخزين مؤقت تناسب محتواك، وعزز تدريجيًا بالإشعارات الفورية. أدوات مثل Workbox (من جوجل) يمكنها تجريد الكثير من تعقيد Service Worker. ابنِ PWA الخاص بك اليوم — سيشكرك مستخدموك على التجربة السريعة والموثوقة والجذابة.</p>
+        </div>
+    </div>
+</body>
+</html>

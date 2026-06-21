@@ -1,0 +1,8 @@
+{
+  "servers": {
+    "ask-me-secretly-ctrl-z.github.io Docs": {
+      "type": "sse",
+      "url": "https://gitmcp.io/CTRL-z2026/ask-me-secretly-ctrl-z.github.io"
+    }
+  }
+}

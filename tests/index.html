@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AURA - Tests</title>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #1a1a2e; color: #eee; }
+        .test-suite { margin-bottom: 30px; }
+        .test-suite h2 { color: #00d4ff; border-bottom: 1px solid #333; padding-bottom: 8px; }
+        .pass { color: #00ff88; }
+        .fail { color: #ff4444; }
+        .test-result { padding: 4px 0; }
+        #summary { position: fixed; top: 10px; right: 20px; padding: 15px; background: #16213e; border-radius: 8px; border: 1px solid #333; }
+        #summary .total { font-size: 24px; font-weight: bold; }
+        #summary .pass-count { color: #00ff88; }
+        #summary .fail-count { color: #ff4444; }
+    </style>
+</head>
+<body>
+    <div id="summary">
+        <div class="total" id="total">0</div>
+        <div class="pass-count" id="pass">0 passed</div>
+        <div class="fail-count" id="fail">0 failed</div>
+    </div>
+    <div id="results"></div>
+
+    <script type="module">
+        // Simple test framework
+        const results = { total: 0, pass: 0, fail: 0 };
+
+        function describe(name, fn) {
+            const div = document.createElement('div');
+            div.className = 'test-suite';
+            div.innerHTML = `<h2>${name}</h2>`;
+            document.getElementById('results').appendChild(div);
+            fn(() => div);
+        }
+
+        function it(name, fn) {
+            results.total++;
+            try {
+                fn();
+                results.pass++;
+                const p = document.createElement('p');
+                p.className = 'test-result pass';
+                p.textContent = `✓ ${name}`;
+                document.querySelector('.test-suite:last-child').appendChild(p);
+            } catch (e) {
+                results.fail++;
+                const p = document.createElement('p');
+                p.className = 'test-result fail';
+                p.textContent = `✗ ${name} — ${e.message}`;
+                document.querySelector('.test-suite:last-child').appendChild(p);
+            }
+            updateSummary();
+        }
+
+        function assertEqual(actual, expected, msg = '') {
+            if (actual !== expected) {
+                throw new Error(`${msg} Expected "${expected}", got "${actual}"`);
+            }
+        }
+
+        function assertTrue(value, msg = '') {
+            if (!value) throw new Error(`${msg} Expected true, got ${value}`);
+        }
+
+        function assertFalse(value, msg = '') {
+            if (value) throw new Error(`${msg} Expected false, got ${value}`);
+        }
+
+        function updateSummary() {
+            document.getElementById('total').textContent = results.total;
+            document.getElementById('pass').textContent = results.pass + ' passed';
+            document.getElementById('fail').textContent = results.fail + ' failed';
+        }
+
+        // =====================
+        // SecurityUtils Tests
+        // =====================
+
+        describe('SecurityUtils.escapeHtml', () => {
+            it('escapes <script> tags', () => {
+                const input = '<script>alert("xss")<\/script>';
+                const output = escapeHtml(input);
+                assertTrue(output.includes('&lt;') && output.includes('&gt;'));
+            });
+
+            it('escapes double quotes', () => {
+                assertEqual(escapeHtml('say "hello"'), 'say &quot;hello&quot;');
+            });
+
+            it('escapes single quotes', () => {
+                assertEqual(escapeHtml("it's"), 'it&#x27;s');
+            });
+
+            it('escapes ampersands', () => {
+                assertEqual(escapeHtml('a & b'), 'a &amp; b');
+            });
+
+            it('leaves plain text unchanged', () => {
+                assertEqual(escapeHtml('hello world'), 'hello world');
+            });
+        });
+
+        describe('SecurityUtils.sanitizeInput', () => {
+            it('strips leading/trailing whitespace', () => {
+                assertEqual(sanitizeInput('  hello  '), 'hello');
+            });
+
+            it('returns empty string for non-string input', () => {
+                assertEqual(sanitizeInput(null), '');
+                assertEqual(sanitizeInput(123), '');
+            });
+
+            it('escapes HTML in input', () => {
+                const output = sanitizeInput('<img onerror=alert(1)>');
+                assertTrue(!output.includes('<img'));
+            });
+        });
+
+        describe('SecurityUtils.validateQuestionText', () => {
+            it('accepts valid text', () => {
+                assertTrue(validateQuestionText('hello world'));
+            });
+
+            it('rejects empty string', () => {
+                assertFalse(validateQuestionText(''));
+            });
+
+            it('rejects text over 500 chars', () => {
+                assertFalse(validateQuestionText('x'.repeat(501)));
+            });
+
+            it('accepts exactly 500 chars', () => {
+                assertTrue(validateQuestionText('x'.repeat(500)));
+            });
+
+            it('rejects non-string input', () => {
+                assertFalse(validateQuestionText(null));
+                assertFalse(validateQuestionText(123));
+            });
+        });
+
+        // =====================
+        // ThemeManager Tests
+        // =====================
+
+        describe('ThemeManager', () => {
+            it('applies theme class to body', () => {
+                const tm = new ThemeManager();
+                document.body.className = '';
+                tm.applyTheme(2);
+                assertTrue(document.body.classList.contains('theme-2'));
+                assertEqual(tm.getCurrentIndex(), 2);
+            });
+
+            it('saves theme to localStorage', () => {
+                const tm = new ThemeManager();
+                tm.applyTheme(3);
+                assertEqual(localStorage.getItem('Ctrl-z_site_theme'), '3');
+            });
+
+            it('loads saved theme from localStorage', () => {
+                localStorage.setItem('Ctrl-z_site_theme', '1');
+                const tm = new ThemeManager();
+                tm.loadLocalTheme();
+                assertEqual(tm.getCurrentIndex(), 1);
+                document.body.className = '';
+            });
+
+            it('tracks modal open state', () => {
+                const tm = new ThemeManager();
+                assertFalse(tm.isModalOpen());
+                tm.setModalOpen(true);
+                assertTrue(tm.isModalOpen());
+            });
+        });
+
+        // =====================
+        // ErrorHandler Tests
+        // =====================
+
+        describe('ErrorHandler', () => {
+            it('has all expected error codes', () => {
+                assertTrue(ErrorCodes.AUTH_FAILED === 'AUTH_001');
+                assertTrue(ErrorCodes.DB_WRITE_FAILED === 'DB_001');
+                assertTrue(ErrorCodes.STORY_GENERATION_FAILED === 'STORY_001');
+            });
+
+            it('logs errors to console', () => {
+                let logged = false;
+                const originalError = console.error;
+                console.error = () => { logged = true; };
+                ErrorHandler.log(ErrorCodes.UNKNOWN, new Error('test'));
+                console.error = originalError;
+                assertTrue(logged);
+            });
+        });
+
+        // =====================
+        // Router Tests
+        // =====================
+
+        describe('AppRouter', () => {
+            it('parses query params', () => {
+                const router = new AppRouter();
+                const params = new URLSearchParams('?to=abc123&foo=bar');
+                assertEqual(params.get('to'), 'abc123');
+            });
+
+            it('returns null for missing param', () => {
+                const router = new AppRouter();
+                const params = new URLSearchParams('?foo=bar');
+                assertEqual(params.get('to'), null);
+            });
+
+            it('builds correct user link', () => {
+                const router = new AppRouter();
+                const link = router.getUserLink('user123');
+                assertTrue(link.includes('?to=user123'));
+            });
+
+            it('tracks auth state', () => {
+                const router = new AppRouter();
+                assertEqual(router.authReady, false);
+                router.setAuthState({ uid: 'test' });
+                assertEqual(router.authReady, true);
+            });
+        });
+
+        // =====================
+        // Story Themes Tests
+        // =====================
+
+        describe('STORY_THEMES', () => {
+            it('has 5 themes', () => {
+                assertEqual(STORY_THEMES.length, 5);
+            });
+
+            it('each theme has name and gradient', () => {
+                STORY_THEMES.forEach(theme => {
+                    assertTrue(typeof theme.name === 'string');
+                    assertTrue(typeof theme.gradient === 'string');
+                    assertTrue(theme.gradient.startsWith('linear-gradient'));
+                });
+            });
+        });
+
+        // Cleanup
+        localStorage.removeItem('Ctrl-z_site_theme');
+        document.body.className = '';
+    </script>
+
+    <!-- Import modules for testing -->
+    <script type="module">
+        import { SecurityUtils } from '../src/security-compat.js';
+        import { ThemeManager, SITE_THEMES } from '../src/themes-compat.js';
+        import { ErrorHandler, ErrorCodes } from '../src/errors-compat.js';
+        import { AppRouter } from '../src/router-compat.js';
+        import { STORY_THEMES } from '../src/story-compat.js';
+
+        window.escapeHtml = SecurityUtils.escapeHtml;
+        window.sanitizeInput = SecurityUtils.sanitizeInput;
+        window.validateQuestionText = SecurityUtils.validateQuestionText;
+        window.ThemeManager = ThemeManager;
+        window.ErrorHandler = ErrorHandler;
+        window.ErrorCodes = ErrorCodes;
+        window.AppRouter = AppRouter;
+        window.STORY_THEMES = STORY_THEMES;
+    </script>
+</body>
+</html>

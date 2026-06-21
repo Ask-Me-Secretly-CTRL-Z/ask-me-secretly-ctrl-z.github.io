@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Web Scraping · سكرابينج بايثون — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4755909548836402" crossorigin="anonymous"></script>
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header { text-align: center; margin-bottom: 40px; }
+        .article-header .cat-tag { display: inline-block; padding: 6px 20px; border-radius: 20px; font-size: 0.78rem; font-weight: 700; color: #fff; background: linear-gradient(135deg, #7c3aed, #3b82f6); margin-bottom: 16px; }
+        .article-header h1 { font-size: 2rem; margin-bottom: 12px; line-height: 1.4; background: linear-gradient(135deg, #f1f5f9, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .article-header .meta { color: rgba(255,255,255,0.4); font-size: 0.85rem; }
+        .article-body { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 20px; padding: 40px; box-shadow: 0 20px 60px rgba(0,0,0,0.2); line-height: 2; }
+        .article-body h2 { font-size: 1.4rem; margin: 40px 0 16px; padding-bottom: 10px; border-bottom: 2px solid rgba(255,255,255,0.08); color: #a78bfa; }
+        .article-body h3 { font-size: 1.15rem; margin: 28px 0 12px; color: #f1f5f9; }
+        .article-body p { margin-bottom: 18px; color: rgba(255,255,255,0.75); }
+        .article-body strong { color: #f1f5f9; }
+        .article-body code { background: rgba(124,58,237,0.15); color: #c4b5fd; padding: 2px 10px; border-radius: 6px; font-size: 0.88rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1a1a2e; color: #e2e8f0; padding: 20px 24px; border-radius: 14px; direction: ltr; text-align: left; overflow-x: auto; margin: 20px 0; border: 1px solid rgba(255,255,255,0.06); font-size: 0.85rem; }
+        .article-body ul { margin-bottom: 18px; padding-right: 20px; }
+        .article-body li { margin-bottom: 8px; color: rgba(255,255,255,0.7); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 30px; color: rgba(255,255,255,0.5); text-decoration: none; font-size: 0.92rem; transition: color 0.2s; }
+        .back-link:hover { color: #a78bfa; }
+        .ad-unit { background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.08); border-radius: 13px; padding: 30px; text-align: center; margin: 30px 0; color: rgba(255,255,255,0.15); font-size: 0.8rem; }
+        .article-footer { margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; }
+        .article-footer a { color: #a78bfa; text-decoration: none; font-weight: 600; }
+        .article-footer a:hover { text-decoration: underline; }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.5rem; } .article-body { padding: 24px 18px; } .article-body h2 { font-size: 1.2rem; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header">
+            <span class="cat-tag">💻 Programming · برمجة</span>
+            <h1>Python Web Scraping Mastery · سكرابينج بايثون</h1>
+            <div class="meta">28 min read · 28 دقيقة</div>
+        </div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> Web scraping is the art of extracting data from websites. Python, with its rich ecosystem of libraries, is the language of choice for scraping projects of any scale. Whether you're gathering market research, monitoring prices, building datasets for machine learning, or automating repetitive data entry tasks, Python has a tool for every job.</p>
+            <p><strong>English:</strong> The web contains the largest repository of human knowledge ever created, but most of it is locked in HTML structures designed for human consumption. Web scraping is the key to unlocking this data for analysis, automation, and innovation. This comprehensive guide covers the entire scraping stack — from simple HTML parsing with BeautifulSoup to headless browser automation with Playwright and industrial-scale crawling with Scrapy.</p>
+            <p><strong>English:</strong> By the end of this guide, you'll understand not just how to scrape, but when to scrape, how to do it ethically and legally, and how to build robust scraping pipelines that handle errors, rate limits, and anti-bot measures. Let's begin our journey into the world of data extraction.</p>
+            <p><strong>العربية:</strong> استخراج بيانات الويب هو فن انتزاع البيانات من المواقع. بايثون، بنظامها البيئي الغني من المكتبات، هي اللغة المثلى لمشاريع الاستخراج مهما كان حجمها. سواء كنت تجمع أبحاث سوق، تراقب الأسعار، تبني مجموعات بيانات للتعلم الآلي، أو تؤتمت مهام إدخال البيانات المتكررة، بايثون لديها أداة لكل مهمة.</p>
+            <p><strong>العربية:</strong> الويب يحتوي على أكبر مستودع للمعرفة البشرية تم إنشاؤه على الإطلاق، لكن معظمه محبوس في هياكل HTML مصممة للاستهلاك البشري. استخراج بيانات الويب هو المفتاح لفتح هذه البيانات للتحليل والأتمتة والابتكار. هذا الدليل الشامل يغطي كامل أدوات الاستخراج — من تحليل HTML البسيط بـ BeautifulSoup إلى أتمتة المتصفحات بـ Playwright والزحف الصناعي بـ Scrapy.</p>
+            <p><strong>العربية:</strong> بنهاية هذا الدليل، ستفهم ليس فقط كيف تستخرج، بل متى تستخرج، وكيف تفعل ذلك بشكل أخلاقي وقانوني، وكيف تبني خطوط أنابيب استخراج قوية تتعامل مع الأخطاء وحدود السرعة وإجراءات مكافحة البوتات. دعنا نبدأ رحلتنا في عالم استخراج البيانات.</p>
+
+            <h2>Legal & Ethical Foundations · الأسس القانونية والأخلاقية</h2>
+            <p><strong>English:</strong> Before writing a single line of code, understand the legal landscape. Always check <code>robots.txt</code> (e.g., <code>example.com/robots.txt</code>) to see which paths are disallowed. Respect rate limits — making too many requests too fast can overload servers and get your IP blocked.</p>
+            <p><strong>English:</strong> Different jurisdictions have different laws. In the US, <code>hiQ Labs v. LinkedIn</code> ruled that scraping publicly accessible data is legal. In the EU, GDPR restricts scraping personal data. In many countries, bypassing technical protections (like login walls) may violate computer fraud laws. Always consult a lawyer if you're unsure.</p>
+            <p><strong>English:</strong> Ethical scraping principles: use public APIs when available, identify your scraper with a descriptive User-Agent, throttle requests to avoid overwhelming servers, never scrape login-protected content without authorization, and don't republish copyrighted data verbatim. Being a good citizen of the web ensures the ecosystem remains open for everyone.</p>
+            <p><strong>العربية:</strong> قبل كتابة أي سطر كود، افهم المشهد القانوني. تحقق دائمًا من <code>robots.txt</code> لترى المسارات الممنوعة. احترم حدود السرعة — الطلبات الكثيرة جدًا يمكن أن تثقل الخوادم وتحظر عنوان IP الخاص بك.</p>
+            <p><strong>العربية:</strong> الولايات القضائية المختلفة لها قوانين مختلفة. في الولايات المتحدة، قضية <code>hiQ Labs v. LinkedIn</code> حكمت أن استخراج البيانات المتاحة للعموم قانوني. في الاتحاد الأوروبي، GDPR يقيد استخراج البيانات الشخصية. في العديد من الدول، تجاوز الحمايات التقنية قد ينتهك قوانين الاحتيال الحاسوبي. استشر دائمًا محاميًا إذا كنت غير متأكد.</p>
+            <p><strong>العربية:</strong> مبادئ الاستخراج الأخلاقي: استخدم APIs العامة عندما تكون متاحة، عرّف أداتك الاستخراجية بـ User-Agent وصفي، خفف الطلبات لتجنب إرهاق الخوادم، لا تستخرج محتوى محميًا بتسجيل الدخول بدون إذن، ولا تعيد نشر بيانات محفوظة الحقوق حرفيًا. كونك مواطنًا صالحًا على الإنترنت يضمن بقاء النظام البيئي مفتوحًا للجميع.</p>
+
+            <h2>BeautifulSoup — The Foundation · الأساسيات</h2>
+            <p><strong>English:</strong> BeautifulSoup is the most popular Python library for parsing HTML and XML. Combined with <code>requests</code> for fetching pages, it handles 80% of scraping tasks. Here's how to extract data from a page:</p>
+            <pre><code>import requests
+from bs4 import BeautifulSoup
+
+url = "https://example.com/articles"
+response = requests.get(url, headers={
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+})
+soup = BeautifulSoup(response.text, "html.parser")
+
+articles = soup.find_all("article")
+for article in articles:
+    title = article.find("h2").get_text(strip=True)
+    link = article.find("a")["href"]
+    summary = article.find(class_="summary").get_text(strip=True)
+    print(f"{title}: {link}")</code></pre>
+            <p><strong>English:</strong> This code fetches a page, parses it, then extracts each article's title, link, and summary. The <code>User-Agent</code> header makes the request appear to come from a real browser. BeautifulSoup's <code>find</code> and <code>find_all</code> methods accept tags, attributes, CSS classes, and even custom functions for complex filtering.</p>
+            <p><strong>English:</strong> Advanced BeautifulSoup techniques include navigating the parse tree with <code>.parent</code>, <code>.children</code>, <code>.next_sibling</code>, and using CSS selectors via <code>soup.select()</code>. For broken HTML, BeautifulSoup's parsers (<code>html.parser</code>, <code>lxml</code>, <code>html5lib</code>) handle malformed markup gracefully. Always use <code>lxml</code> for speed — it's 5-10x faster than the default parser.</p>
+            <pre><code># Advanced BeautifulSoup techniques
+# CSS selectors
+soup.select("div.content &gt; p.summary")
+soup.select("#main article[data-type='blog']")
+
+# Navigating the tree
+for sibling in soup.find("h2").find_next_siblings("p"):
+    print(sibling.text)
+
+# Handling pagination
+for page in range(1, 6):
+    url = f"https://example.com/page/{page}"
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, "lxml")
+    # Extract data from each page...</code></pre>
+            <p><strong>العربية:</strong> هذا الكود يجلب الصفحة ويحللها ثم يستخرج عنوان كل مقال ورابطه وملخصه. header <code>User-Agent</code> يجعل الطلب يبدو وكأنه من متصفح حقيقي. دوال <code>find</code> و <code>find_all</code> في BeautifulSoup تقبل الوسوم والخصائص وكلاسات CSS وحتى دوال مخصصة للفلترة المعقدة.</p>
+            <p><strong>العربية:</strong> تقنيات BeautifulSoup المتقدمة تشمل التنقل في شجرة التحليل بـ <code>.parent</code> و <code>.children</code> و <code>.next_sibling</code> واستخدام محددات CSS عبر <code>soup.select()</code>. لـ HTML التالف، محللات BeautifulSoup تتعامل مع الوسوم غير الصحيحة برشاقة. استخدم دائمًا <code>lxml</code> للسرعة — إنه أسرع 5-10 مرات من المحلل الافتراضي كما في الأمثلة أعلاه.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>Scrapy — Industrial-Grade Scraping · الاستخراج الصناعي</h2>
+            <p><strong>English:</strong> When you need to scrape thousands of pages efficiently, Scrapy is the answer. It's an asynchronous framework that handles concurrency, request scheduling, data pipelines, and export formats out of the box. Create a new Scrapy project with <code>scrapy startproject myproject</code>, define your data model (Item), write a Spider that follows links and extracts data, then run it with <code>scrapy crawl myspider -o output.json</code>.</p>
+            <p><strong>English:</strong> Scrapy's architecture is built for scale. The engine manages a pool of concurrent requests, the scheduler prioritizes URLs, and the downloader handles middlewares for retries, proxies, and user-agent rotation. Items pass through pipelines where you can clean, validate, and store data. Here's a complete spider example:</p>
+            <pre><code>import scrapy
+
+class BlogSpider(scrapy.Spider):
+    name = "blogs"
+    start_urls = ["https://example.com/blog"]
+
+    def parse(self, response):
+        # Extract articles from listing page
+        for article in response.css("article.post"):
+            yield {
+                "title": article.css("h2::text").get(),
+                "url": article.css("a::attr(href)").get(),
+                "date": article.css(".date::text").get(),
+            }
+
+        # Follow pagination
+        next_page = response.css("a.next::attr(href)").get()
+        if next_page:
+            yield response.follow(next_page, self.parse)</code></pre>
+            <p><strong>English:</strong> Run this with <code>scrapy crawl blogs -o blogs.json</code>. Scrapy automatically handles concurrency, retries failed requests, and respects <code>robots.txt</code>. For large projects, use <code>Item Loaders</code> for data cleaning and <code>Feed Exports</code> for multiple output formats (JSON, CSV, XML, Parquet).</p>
+            <p><strong>العربية:</strong> عندما تحتاج لاستخراج آلاف الصفحات بكفاءة، Scrapy هو الحل. إنه إطار عمل غير متزامن يتولى التزامن وجدولة الطلبات وخطوط أنابيب البيانات وتنسيقات التصدير مباشرة. أنشئ مشروع Scrapy جديد بـ <code>scrapy startproject myproject</code>، حدد نموذج البيانات (Item)، اكتب Spider يتبع الروابط ويستخرج البيانات، ثم شغله بـ <code>scrapy crawl myspider -o output.json</code>.</p>
+            <p><strong>العربية:</strong> معمارية Scrapy مبنية للتوسع. المحرك يدير مجموعة من الطلبات المتزامنة، المجدول يرتب عناوين URL، والتنزيل يتعامل مع البرمجيات الوسيطة لإعادة المحاولة والبروكسيات وتناوب User-Agent. العناصر تمر عبر خطوط أنابيب حيث يمكنك تنظيف البيانات والتحقق منها وتخزينها. المثال أعلاه يوضح Spider كامل يتبع الصفحات ويستخرج المقالات.</p>
+
+            <h2>Selenium & Playwright — JavaScript Sites · المواقع المعقدة</h2>
+            <p><strong>English:</strong> Modern websites heavily rely on JavaScript to render content. BeautifulSoup can't execute JavaScript — it only sees the initial HTML. Selenium and Playwright solve this by controlling a real browser. Playwright is newer, faster, and more reliable:</p>
+            <pre><code>from playwright.sync_api import sync_playwright
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page()
+    page.goto("https://example.com")
+    page.wait_for_selector(".article-list")
+    
+    articles = page.query_selector_all(".article")
+    for article in articles:
+        title = article.query_selector("h2").inner_text()
+        print(title)
+    
+    browser.close()</code></pre>
+            <p><strong>English:</strong> Playwright waits for JavaScript to execute, making it perfect for SPAs, infinite scroll pages, and sites with dynamic content. It also supports network interception, screenshot capture, PDF generation, and mobile viewport emulation. You can intercept API calls made by the page:</p>
+            <p><strong>English:</strong> For infinite scroll pages, Playwright can auto-scroll and wait for new content. Use <code>page.evaluate()</code> to run custom JavaScript in the browser context, perfect for extracting data from JavaScript variables or complex UI states. Playwright is also async-native with <code>playwright.async_api</code> for high-performance concurrent scraping.</p>
+            <pre><code># Intercepting network requests with Playwright
+def handle_response(response):
+    if "/api/data" in response.url:
+        data = response.json()
+        print(f"Intercepted API data: {len(data)} items")
+
+page.on("response", handle_response)
+page.goto("https://example.com")
+page.wait_for_timeout(3000)  # Wait for all API calls</code></pre>
+            <p><strong>العربية:</strong> Playwright ينتظر حتى تنفذ JavaScript، مما يجعله مثاليًا لتطبيقات الصفحة الواحدة وصفحات التمرير اللانهائي والمواقع ذات المحتوى الديناميكي. كما أنه يدعم اعتراض الشبكة والتقاط الشاشات وإنشاء PDF ومحاكاة منفذ العرض للجوال. يمكنك اعتراض استدعاءات API التي تقوم بها الصفحة.</p>
+            <p><strong>العربية:</strong> لصفحات التمرير اللانهائي، Playwright يمكنه التمرير تلقائيًا وانتظار المحتوى الجديد. استخدم <code>page.evaluate()</code> لتشغيل JavaScript مخصص في سياق المتصفح، مثالي لاستخراج البيانات من متغيرات JavaScript أو حالات UI المعقدة. Playwright يدعم أيضًا البرمجة غير المتزامنة بـ <code>playwright.async_api</code> للاستخراج المتزامن عالي الأداء كما في المثال أعلاه.</p>
+
+            <h2>Data Cleaning & Storage · تنظيف البيانات وتخزينها</h2>
+            <p><strong>English:</strong> Raw scraped data is almost always messy. Use Pandas for cleaning — remove duplicates, handle missing values, normalize text, and convert data types. Store clean data in CSV, JSON, or directly into databases like SQLite, PostgreSQL, or MongoDB.</p>
+            <p><strong>English:</strong> Here's a complete data cleaning pipeline using Pandas. This handles the most common issues: missing data, inconsistent formatting, duplicates, and type conversion. Always validate your data after cleaning — check for unexpected values, outliers, and data integrity:</p>
+            <pre><code>import pandas as pd
+
+df = pd.read_json("scraped_data.json")
+
+# Remove duplicates
+df = df.drop_duplicates(subset=["url"])
+
+# Handle missing values
+df["description"] = df["description"].fillna("No description")
+df["price"] = pd.to_numeric(df["price"], errors="coerce")
+
+# Normalize text
+df["title"] = df["title"].str.strip().str.title()
+
+# Convert dates
+df["date"] = pd.to_datetime(df["date"], errors="coerce")
+
+# Save to database
+from sqlalchemy import create_engine
+engine = create_engine("postgresql://user:pass@localhost/mydb")
+df.to_sql("articles", engine, if_exists="append", index=False)</code></pre>
+            <p><strong>English:</strong> For large datasets, consider Parquet format (compressed, columnar) instead of CSV. For databases, use batch inserts with <code>executemany</code> or ORM bulk operations. Always add indexes on columns you'll query frequently. Set up data validation checks before storage to catch scraping errors early.</p>
+            <p><strong>العربية:</strong> البيانات المستخرجة الخام دائمًا ما تكون غير نظيفة. استخدم Pandas للتنظيف — إزالة التكرارات، معالجة القيم المفقودة، توحيد النص، وتحويل أنواع البيانات. خزّن البيانات النظيفة في CSV أو JSON أو مباشرة في قواعد بيانات مثل SQLite أو PostgreSQL أو MongoDB.</p>
+            <p><strong>العربية:</strong> إليك خط أنابيب تنظيف بيانات كامل باستخدام Pandas كما في المثال أعلاه. هذا يتعامل مع المشكلات الأكثر شيوعًا: البيانات المفقودة، التنسيق غير المتناسق، التكرارات، وتحويل الأنواع. تحقق دائمًا من بياناتك بعد التنظيف — افحص القيم غير المتوقعة والقيم المتطرفة وتكامل البيانات.</p>
+
+            <div class="ad-unit">
+                <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-4755909548836402" data-ad-slot="xxxxxxxxxx" data-ad-format="auto" data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <h2>Avoiding Anti-Scraping Measures · تجنب إجراءات منع الاستخراج</h2>
+            <p><strong>English:</strong> Websites employ various anti-scraping measures. Counter them ethically: rotate User-Agent headers, use proxy rotation (residential proxies are best), add random delays between requests (2-5 seconds), respect <code>robots.txt</code>, and limit request frequency. If a site offers an API, use it instead of scraping.</p>
+            <p><strong>English:</strong> Advanced techniques include using a proxy pool with automatic failover, rotating IP addresses per request, and mimicking human behavior patterns (random mouse movements, natural scrolling). For Cloudflare-protected sites, consider using Playwright with stealth plugins that mask automation signals:</p>
+            <pre><code>import random
+import time
+from itertools import cycle
+
+proxies = [
+    "http://proxy1:8080",
+    "http://proxy2:8080",
+    "http://proxy3:8080",
+]
+proxy_pool = cycle(proxies)
+
+user_agents = [
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Firefox/120.0",
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) Safari/17.0",
+    "Mozilla/5.0 (X11; Linux x86_64) Chrome/120.0.0.0",
+]
+
+for url in urls:
+    proxy = next(proxy_pool)
+    headers = {"User-Agent": random.choice(user_agents)}
+    
+    try:
+        response = requests.get(url, proxies={"http": proxy}, headers=headers, timeout=10)
+        # Process response...
+    except requests.RequestException:
+        print(f"Failed: {url}, trying next proxy...")
+    
+    delay = random.uniform(2, 5)
+    time.sleep(delay)</code></pre>
+            <p><strong>English:</strong> Most blocks happen because scrapers are too aggressive. Common mistakes: no delays between requests, same User-Agent for every request, ignoring <code>robots.txt</code>, scraping during peak hours, and not handling HTTP errors gracefully. Build retry logic with exponential backoff — if a request fails, wait 1 second, then 2, then 4, then 8, up to a maximum.</p>
+            <p><strong>العربية:</strong> المواقع تستخدم إجراءات متنوعة لمنع الاستخراج. تصدَّ لها بشكل أخلاقي: غيّر User-Agent headers، استخدم بروكسيات متناوبة، أضف تأخيرات عشوائية (2-5 ثواني)، احترم <code>robots.txt</code>، وحدد تكرار الطلبات. إذا كان الموقع يوفر API، استخدمه بدل الاستخراج.</p>
+            <p><strong>العربية:</strong> التقنيات المتقدمة تشمل استخدام مجموعة بروكسيات مع تجاوز تلقائي للفشل، تدوير عناوين IP لكل طلب، ومحاكاة أنماط السلوك البشري. للمواقع المحمية بـ Cloudflare، استخدم Playwright مع إضافات التخفي التي تخفي إشارات الأتمتة. معظم الحظر يحدث لأن أدوات الاستخراج تكون عدوانية جدًا — ابطئ وكن مهذبًا كما في المثال أعلاه.</p>
+
+            <h2>Building a Scraping Pipeline · بناء خط أنابيب استخراج</h2>
+            <p><strong>English:</strong> Production scrapers need scheduling, monitoring, and alerting. Use Apache Airflow or Celery for scheduling periodic scrapes. Store job metadata (start time, items scraped, errors) in a database. Set up alerts for failures via email, Slack, or SMS.</p>
+            <p><strong>English:</strong> A robust scraping pipeline has several stages: URL discovery and queue management, fetching with retry logic, parsing and extraction, data cleaning and validation, storage, and monitoring. Each stage should be independently testable and fault-tolerant. Use message queues like Redis or RabbitMQ to decouple stages:</p>
+            <pre><code># Simple scraping pipeline with error handling
+import logging
+from typing import List, Dict
+from datetime import datetime
+
+class ScrapingPipeline:
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.stats = {"started": None, "completed": 0, "failed": 0}
+    
+    def run(self, urls: List[str]) -> List[Dict]:
+        self.stats["started"] = datetime.now()
+        results = []
+        
+        for url in urls:
+            try:
+                data = self.scrape_url(url)
+                cleaned = self.clean_data(data)
+                self.store_data(cleaned)
+                results.append(cleaned)
+                self.stats["completed"] += 1
+            except Exception as e:
+                self.logger.error(f"Failed to scrape {url}: {e}")
+                self.stats["failed"] += 1
+        
+        self.send_alert_if_needed()
+        return results
+    
+    def scrape_url(self, url): ...
+    def clean_data(self, data): ...
+    def store_data(self, data): ...
+    def send_alert_if_needed(self):
+        if self.stats["failed"] &gt; self.stats["completed"] * 0.1:
+            self.logger.warning("High failure rate detected!")</code></pre>
+            <p><strong>English:</strong> Monitor your pipeline with metrics: requests per minute, success rate, average response time, and data quality scores. Set up dashboards with Grafana or simply log to a file and use <code>tail</code> for small projects. Always have a kill switch — if a website changes its structure, your pipeline should fail gracefully and alert you.</p>
+            <p><strong>العربية:</strong> أدوات الاستخراج الإنتاجية تحتاج إلى جدولة ومراقبة وتنبيه. استخدم Apache Airflow أو Celery لجدولة عمليات الاستخراج الدورية. خزّن بيانات التعريف (وقت البدء، العناصر المستخرجة، الأخطاء) في قاعدة بيانات. أعد تنبيهات للفشل عبر البريد الإلكتروني أو Slack أو SMS.</p>
+            <p><strong>العربية:</strong> خط أنابيب استخراج قوي له عدة مراحل: اكتشاف URL وإدارة قائمة الانتظار، الجلب مع منطق إعادة المحاولة، التحليل والاستخراج، تنظيف البيانات والتحقق منها، التخزين، والمراقبة. كل مرحلة يجب أن تكون قابلة للاختبار بشكل مستقل ومتسامحة مع الأخطاء. استخدم قوائم انتظار الرسائل مثل Redis أو RabbitMQ لفصل المراحل كما في المثال أعلاه.</p>
+
+            <h2>Real-World Scraping Project · مشروع استخراج عملي</h2>
+            <p><strong>English:</strong> Let's combine everything into a real project: scraping an e-commerce site for price monitoring. The pipeline should discover product pages, extract prices and descriptions, handle pagination, avoid blocks, clean the data, and store it in a database for trend analysis.</p>
+            <p><strong>English:</strong> Key considerations for e-commerce scraping: products change frequently, websites have complex structures, session handling may be needed, and competitors may actively block scrapers. Build in features like product change detection, price history tracking, and automatic re-scraping of stale products:</p>
+            <pre><code># E-commerce price monitor skeleton
+class EcommerceMonitor:
+    def __init__(self, db_url: str):
+        self.engine = create_engine(db_url)
+    
+    def scrape_product(self, url: str) -> Dict:
+        response = requests.get(url, headers=random_headers())
+        soup = BeautifulSoup(response.text, "lxml")
+        
+        return {
+            "url": url,
+            "name": soup.select_one("h1.product-name").text.strip(),
+            "price": self.extract_price(soup),
+            "currency": "USD",
+            "in_stock": bool(soup.select_one(".add-to-cart")),
+            "timestamp": datetime.now(),
+        }
+    
+    def detect_price_change(self, product: Dict) -> bool:
+        last = pd.read_sql(
+            "SELECT price FROM products WHERE url = %s ORDER BY timestamp DESC LIMIT 1",
+            self.engine, params=[product["url"]]
+        )
+        return last.empty or last.iloc[0]["price"] != product["price"]</code></pre>
+            <p><strong>English:</strong> Run this daily with a cron job or Airflow DAG. Log all price changes and send alerts when products drop below target prices. With historical data, you can predict price trends and find the best times to buy.</p>
+            <p><strong>العربية:</strong> دعنا نجمع كل شيء في مشروع حقيقي: استخراج موقع تجارة إلكترونية لمراقبة الأسعار. خط الأنابيب يجب أن يكتشف صفحات المنتجات ويستخرج الأسعار والوصف ويتعامل مع التقسيم ويتجنب الحظر وينظف البيانات ويخزّنها في قاعدة بيانات لتحليل الاتجاهات.</p>
+            <p><strong>العربية:</strong> اعتبارات رئيسية لاستخراج التجارة الإلكترونية: المنتجات تتغير باستمرار، المواقع لها هياكل معقدة، قد تحتاج للتعامل مع الجلسات، والمنافسون قد يمنعون أدوات الاستخراج بنشاط. ابنِ ميزات مثل كشف تغيير المنتج وتتبع تاريخ الأسعار وإعادة الاستخراج التلقائي للمنتجات القديمة كما في المثال أعلاه.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> Python web scraping is a superpower. Start with BeautifulSoup for simple projects, graduate to Scrapy for scale, and use Playwright for JavaScript-heavy sites. Always scrape ethically, respect website rules, and use data responsibly.</p>
+            <p><strong>English:</strong> Remember the key principles: check robots.txt, use polite delays, rotate proxies and headers, clean your data, monitor your pipelines, and stay legal. The web is the largest dataset ever created — Python is your key to unlocking it. Build something useful, respect the websites you scrape from, and contribute back to the open-source tools that make this possible.</p>
+            <p><strong>العربية:</strong> استخراج بيانات الويب بايثون هو قدرة خارقة. ابدأ بـ BeautifulSoup للمشاريع البسيطة، ثم انتقل لـ Scrapy للتوسع، واستخدم Playwright للمواقع المعقدة. استخرج دائمًا بشكل أخلاقي، احترم قواعد المواقع، واستخدم البيانات بمسؤولية.</p>
+            <p><strong>العربية:</strong> تذكر المبادئ الأساسية: افحص robots.txt، استخدم تأخيرات مهذبة، غيّر البروكسيات والـ headers، نظّف بياناتك، راقب خطوط الأنابيب الخاصة بك، والتزم بالقانون. الويب هو أكبر مجموعة بيانات تم إنشاؤها على الإطلاق — وبايثون هو مفتاحك لفتحها. ابنِ شيئًا مفيدًا، احترم المواقع التي تستخرج منها، وساهم في الأدوات مفتوحة المصدر التي تجعل هذا ممكنًا.</p>
+        </div>
+        <div class="article-footer">
+            <a href="../blog.html">← العودة للمدونة — Back to Blog</a>
+        </div>
+    </div>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Figma Tips · أسرار فيجما — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>Figma Tips · أسرار فيجما</h1></div>
+        <div class="article-body">
+            <h2>Introduction · مقدمة</h2>
+            <p><strong>English:</strong> Figma is the industry standard for UI/UX design. But are you using it to its full potential? These tips will boost your productivity and design quality. From keyboard shortcuts to advanced component systems, mastering these techniques will cut your design time in half and elevate the consistency of your work.</p>
+            <p><strong>العربية:</strong> فيجما هو المعيار الصناعي لتصميم واجهات المستخدم. لكن هل تستخدمه بأقصى إمكانياته؟ هذه النصائح سترفع إنتاجيتك وجودة تصميمك. من اختصارات لوحة المفاتيح إلى أنظمة المكونات المتقدمة.</p>
+
+            <h2>Auto Layout · التخطيط التلقائي</h2>
+            <p><strong>English:</strong> Auto Layout is Figma's most powerful feature. It creates responsive containers that adjust automatically to content changes. Master the key properties: padding (individual sides or symmetric), spacing between items (horizontal and vertical gap), direction (horizontal row or vertical column), alignment (start, center, end, space-between), and sizing (fixed, hug contents, fill container). Use "hug" for buttons and tags, "fill" for full-width elements, "fixed" for explicit dimensions.</p>
+            <p><strong>English:</strong> Nest Auto Layout frames for complex layouts: a card frame (vertical auto layout) containing an image (fill width, fixed height), a text block (vertical auto layout with padding), and a button row (horizontal auto layout with space-between). Each inner frame has its own Auto Layout settings. This creates a fully responsive component tree where changing one element reflows everything automatically. Use absolute positioning within Auto Layout for badges, icons, and overlays that shouldn't affect the flow.</p>
+            <p><strong>العربية:</strong> التخطيط التلقائي هو أقوى ميزة في فيجما. ينشئ حاويات متجاوبة تتكيف تلقائيًا مع المحتوى. أتقن الحشو والتباعد والاتجاه والمحاذاة والتحجيم. استخدم "hug" للأزرار، "fill" للعناصر كاملة العرض. كدس إطارات Auto Layout للتخطيطات المعقدة — إطار بطاقة يحتوي على صورة ونص وزر، كل بإعدادات تخطيط تلقائي خاصة به.</p>
+
+            <h2>Components & Variants · المكونات والمتغيرات</h2>
+            <p><strong>English:</strong> Create master components with variants for different states (default, hover, active, disabled, loading, error, focused). Use component properties to expose customizable options: text (swap text instances), boolean (show/hide elements), instance swap (swap between icon sets), and variant (switch between style variants like primary/secondary/outline/ghost buttons in sizes sm/md/lg). A well-structured component library reduces design time by 60-80%.</p>
+            <p><strong>English:</strong> Organize components using clear naming conventions with forward slashes for nesting: "Button / Primary / Medium", "Button / Secondary / Small", "Input / Text / Default". This creates a hierarchical dropdown in the assets panel. Use team libraries (publish as a team library) to share components across multiple files. When you update a master component, all instances across every file update automatically — this is the single source of truth for your design system.</p>
+            <p><strong>العربية:</strong> أنشئ مكونات رئيسية بمتغيرات للحالات المختلفة (مبدئي، hover، نشط، معطل، خطأ). استخدم خصائص المكونات لتبديل النصوص والأيقونات والرؤية. نظم المكونات بتسميات واضحة: "زر / أساسي / متوسط". استخدم مكتبات الفريق لمشاركة المكونات عبر ملفات متعددة.</p>
+
+            <h2>Keyboard Shortcuts · اختصارات لوحة المفاتيح</h2>
+            <p><strong>English:</strong> Essential shortcuts every Figma user must know: <code>Ctrl+D</code> — duplicate (or <code>Alt+Drag</code>), <code>Ctrl+G</code> — group selection, <code>Ctrl+Shift+G</code> — ungroup, <code>Ctrl+[</code> and <code>Ctrl+]</code> — move layer backward/forward, <code>Ctrl+Shift+[</code> and <code>Ctrl+Shift+]</code> — send to back/front. Tool shortcuts: <code>R</code> — rectangle, <code>O</code> — oval, <code>T</code> — text, <code>L</code> — line, <code>P</code> — pen, <code>Shift+1</code> — fit to screen, <code>Shift+2</code> — zoom to selection.</p>
+            <p><strong>English:</strong> Advanced shortcuts: <code>Ctrl+Alt+C</code> — copy properties, <code>Ctrl+Alt+V</code> — paste properties (like format painter). <code>Ctrl+Shift+E</code> — flatten selection to image. <code>Alt</code> — show measurement distances between layers. Hold <code>Ctrl</code> while dragging to override Auto Layout constraints. Double-click any layer to enter isolation mode. <code>/</code> — search anything in the file. <code>Ctrl+P</code> — quick search commands. Learning these shortcuts will save hours every week.</p>
+            <p><strong>العربية:</strong> الاختصارات الأساسية: <code>Ctrl+D</code> — نسخ. <code>Ctrl+G</code> — مجموعة. <code>R</code> — مستطيل. <code>O</code> — بيضاوي. <code>T</code> — نص. <code>Shift+1</code> — ملء الشاشة. اختصارات متقدمة: <code>Ctrl+Alt+C/V</code> — نسخ/لصق الخصائص. <code>Alt</code> — إظهار مسافات القياس. <code>/</code> — بحث أي شيء. إتقان هذه الاختصارات سيوفر ساعات كل أسبوع.</p>
+
+            <h2>Design Systems & Variables · أنظمة التصميم والمتغيرات</h2>
+            <p><strong>English:</strong> Use Figma Variables (introduced 2024) for theme management. Create primitive variables for raw values (--blue-500: #3B82F6), then alias them as semantic tokens (--color-primary: --blue-500). Create modes for light and dark themes. Link component properties to variables so theme switching happens automatically across all components. This is the professional way to maintain multiple brand themes in a single file.</p>
+            <p><strong>English:</strong> Structure your design system with dedicated pages: a "Design System" page containing all color styles, text styles, effect styles, variables, and component libraries. Use "Cover" pages for presentation. Create a "Sandbox" page for experimentation. Keep an "Archive" page for deprecated elements. This structure keeps your file organized and makes it easy for team members to find what they need without creating chaos.</p>
+            <p><strong>العربية:</strong> استخدم متغيرات فيجما (2024) لإدارة السمات. أنشئ متغيرات أولية للقيم الخام ثم سمها كرموز دلالية. أنشئ أنماطًا للسمات الفاتحة والداكنة. نظم ملفك بصفحات مخصصة: صفحة "نظام تصميم" تحتوي على جميع الأنماط والمكونات. هذا يبقي ملفك منظمًا.</p>
+
+            <h2>Plugins · الإضافات</h2>
+            <p><strong>English:</strong> Top Figma plugins for productivity: Content Reel (dummy text, images, avatars, flags), Iconify (100,000+ open-source icons accessible instantly), Stark (accessibility — contrast checking, colorblind simulation), Remove BG (AI-powered background removal), FigJam AI (diagram and flow generation), Autoflow (connect user flows with arrows), Figmotion (create animations inside Figma), and Unsplash (free stock photos directly in canvas).</p>
+            <p><strong>English:</strong> For specialized workflows: Anima (convert Figma to React/Vue code), Zeplin or Avocode (developer handoff), LottieFiles (import and export Lottie animations), Chart (data visualization charts), Noise & Texture (add realistic texture), and Broken Link Checker (find disconnected prototypes). Only install plugins you actually use — too many plugins slow down Figma's performance. Review your plugins quarterly and remove unused ones.</p>
+            <p><strong>العربية:</strong> أفضل إضافات فيجما: Content Reel (نصوص وصور وهمية)، Iconify (مجموعات أيقونات)، Stark (إمكانية الوصول)، Remove BG (خلفيات الصور)، Anima (تحويل التصميم لكود)، LottieFiles (رسوم متحركة). راجع إضافاتك كل 3 أشهر وأزل غير المستخدمة منها.</p>
+
+            <h2>File Organization · تنظيم الملفات</h2>
+            <p><strong>English:</strong> A clean file is a fast file. Use consistent naming conventions: "Page Name | Variant — Description". Name all layers meaningfully — never leave default names like "Frame 1" or "Rectangle 2". Use sections (Shift+A) to group related frames. Use pages to separate distinct workstreams. Hide or delete unused layers. Each layer should have a purpose — if it doesn't, remove it.</p>
+            <p><strong>English:</strong> Cover pages create a professional impression. Name your pages clearly: "Cover", "Design System", "Screens — Home", "Screens — Onboarding", "Screens — Settings", "Components", "Prototype Flows", "Archived". Use the "✕" component (not the layer visibility toggle) to reduce clutter in the layers panel. A well-organized Figma file is respected by teammates and makes collaboration seamless.</p>
+            <p><strong>العربية:</strong> نظم ملفاتك بتسميات متسقة: "اسم الصفحة | النوع — الوصف". سم جميع الطبقات بشكل ذي معنى. استخدم الأقسام لتجميع الإطارات المرتبطة. استخدم الصفحات لفصل مسارات العمل المختلفة. أخفِ أو احذف الطبقات غير المستخدمة. صفحة غلاف احترافية تترك انطباعًا جيدًا لدى العملاء والزملاء.</p>
+        </div>
+    </div>
+</body>
+</html>

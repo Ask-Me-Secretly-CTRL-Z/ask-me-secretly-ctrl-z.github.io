@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase Hosting · انشر موقعك مجانًا — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1e293b; color: #e2e8f0; padding: 18px 22px; border-radius: 12px; direction: ltr; text-align: left; overflow-x: auto; margin: 15px 0; font-size: 0.85rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>Firebase Hosting · انشر موقعك مجانًا</h1></div>
+        <div class="article-body">
+            <h2>Why Firebase Hosting? · لماذا فايربيز هوستينج؟</h2>
+            <p><strong>English:</strong> Firebase Hosting offers fast, secure, and free static hosting with global CDN, automatic SSL, custom domains, and one-command deployments via the Firebase CLI. It's optimized for modern web apps — single-page apps (React, Vue, Angular), static sites, and progressive web apps. With Google's global edge network, your site loads fast anywhere in the world.</p>
+            <p><strong>العربية:</strong> Firebase Hosting يقدم استضافة سريعة وآمنة ومجانية مع CDN عالمي و SSL تلقائي ونطاقات مخصصة ونشر بأمر واحد عبر Firebase CLI. إنه محسّن لتطبيقات الويب الحديثة — تطبيقات الصفحة الواحدة (React، Vue، Angular) والمواقع الثابتة وتطبيقات الويب التدريجية. مع شبكة Google العالمية، موقعك يُحمل بسرعة في أي مكان في العالم.</p>
+
+            <h2>Step 1: Prerequisites · المتطلبات الأساسية</h2>
+            <p><strong>English:</strong> Before you start, make sure you have: Node.js v18+ installed (<code>node --version</code> to check), a Google account (Gmail), a Firebase project created in the Firebase Console (console.firebase.google.com), and your website files ready (a build folder with index.html at minimum). If you're using React, Next.js, or Vue, build your project first with <code>npm run build</code>.</p>
+            <p><strong>العربية:</strong> قبل أن تبدأ، تأكد من أن لديك: Node.js v18+ مثبتًا (تحقق بـ <code>node --version</code>)، حساب Google (Gmail)، مشروع Firebase منشأ في Firebase Console، وملفات موقعك جاهزة (مجلد build مع index.html على الأقل). إذا كنت تستخدم React أو Next.js أو Vue، ابنِ مشروعك أولاً بـ <code>npm run build</code>.</p>
+
+            <h2>Step 2: Install & Login · التثبيت وتسجيل الدخول</h2>
+            <p><strong>English:</strong> Install the Firebase CLI globally with npm. Then authenticate with your Google account. The login opens a browser window — complete the authentication there. Once logged in, verify with <code>firebase list</code> to see your projects.</p>
+            <p><strong>العربية:</strong> ثبّت Firebase CLI عالميًا باستخدام npm. ثم سجل الدخول بحساب Google. تسجيل الدخول يفتح نافذة متصفح — أكمل المصادقة هناك. بعد تسجل الدخول، تحقق بـ <code>firebase list</code> لرؤية مشاريعك.</p>
+            <pre><code># Install Firebase CLI
+npm install -g firebase-tools
+
+# Verify installation
+firebase --version
+
+# Login to Google
+firebase login
+
+# List your Firebase projects
+firebase list</code></pre>
+
+            <h2>Step 3: Initialize · تهيئة المشروع</h2>
+            <p><strong>English:</strong> Run <code>firebase init hosting</code> in your project directory. The CLI will ask you to select an existing Firebase project or create a new one. Specify your public directory (usually <code>build</code>, <code>dist</code>, or <code>public</code>). Answer "Yes" when asked if this is a single-page app (this configures URL rewrites for client-side routing). The init command creates two files: <code>firebase.json</code> (configuration) and <code>.firebaserc</code> (project alias).</p>
+            <p><strong>العربية:</strong> شغّل <code>firebase init hosting</code> في مجلد مشروعك. CLI سيطلب منك تحديد مشروع Firebase موجود أو إنشاء مشروع جديد. حدد مجلد العام الخاص بك (عادة <code>build</code> أو <code>dist</code> أو <code>public</code>). أجب بـ "نعم" عندما يُسأل إذا كان هذا تطبيق صفحة واحدة (هذا يهيئ إعادة كتابة URL للتوجيه من جانب العميل). أمر init ينشئ ملفين: <code>firebase.json</code> (الإعدادات) و <code>.firebaserc</code> (اسم المشروع).</p>
+            <pre><code># Initialize hosting
+firebase init hosting
+
+# You'll be prompted for:
+# ? Select a Firebase project: (select from list)
+# ? What do you want to use as your public directory? (build)
+# ? Configure as a single-page app? (Yes)
+# ? Set up automatic builds with GitHub? (No for now)
+# ? File build/index.html already exists. Overwrite? (No)</code></pre>
+
+            <h2>Step 4: Deploy · النشر</h2>
+            <p><strong>English:</strong> Run <code>firebase deploy</code> to push your site live in seconds. Your site is served at <code>your-project.web.app</code> and <code>your-project.firebaseapp.com</code>. For subsequent deployments, the same command updates your site with zero downtime. Use <code>firebase deploy --only hosting</code> to deploy only the hosting part if you have other Firebase services.</p>
+            <p><strong>العربية:</strong> شغّل <code>firebase deploy</code> لنشر موقعك في ثوانٍ. موقعك يكون متاحًا على <code>your-project.web.app</code> و <code>your-project.firebaseapp.com</code>. للنشرات اللاحقة، نفس الأمر يُحدّث موقعك بدون توقف. استخدم <code>firebase deploy --only hosting</code> لنشر جزء الاستضافة فقط إذا كان لديك خدمات Firebase أخرى.</p>
+            <pre><code># Deploy to production
+firebase deploy
+
+# Deploy only hosting (faster)
+firebase deploy --only hosting
+
+# Preview deployment (local server)
+firebase serve
+
+# Deploy to a specific project
+firebase deploy --project my-project-name</code></pre>
+            <p><strong>English:</strong> For team workflows, set up automatic deployments with GitHub Actions. Create a workflow file that runs tests, builds your app, and deploys to Firebase on every push to the main branch. Use Firebase CI token (<code>firebase login:ci</code>) for non-interactive authentication in CI pipelines.</p>
+            <p><strong>العربية:</strong> لسير عمل الفريق، أعد نشرًا تلقائيًا مع GitHub Actions. أنشئ ملف workflow يشغل الاختبارات ويبني تطبيقك وينشر إلى Firebase مع كل push إلى الفرع الرئيسي. استخدم رمز Firebase CI (<code>firebase login:ci</code>) للمصادقة غير التفاعلية في خطوط CI.</p>
+
+            <h2>Step 5: Custom Domain · نطاق مخصص</h2>
+            <p><strong>English:</strong> In Firebase Console, go to Hosting, click "Add custom domain". Enter your domain (e.g., example.com). Firebase will provide DNS records to add at your domain registrar. For the apex domain (example.com), add A records pointing to Firebase's IPs. For www subdomain (www.example.com), add a CNAME record pointing to <code>your-project.web.app</code>. SSL is provisioned automatically by Google — typically within minutes.</p>
+            <p><strong>العربية:</strong> في Firebase Console، اذهب إلى Hosting، انقر "Add custom domain". أدخل نطاقك (مثل example.com). Firebase سيوفر سجلات DNS لتضيفها عند مسجل النطاق. للنطاق الجذر (example.com)، أضف سجلات A تشير إلى عناوين IP الخاصة بـ Firebase. للنطاق الفرعي www (www.example.com)، أضف سجل CNAME يشير إلى <code>your-project.web.app</code>. SSL يتم توفيره تلقائيًا بواسطة Google — عادة في دقائق.</p>
+            <pre><code># Typical DNS records for Firebase Hosting
+# For apex domain (example.com):
+#   Type: A     Name: @      Value: 151.101.1.91
+#   Type: A     Name: @      Value: 151.101.65.91
+#   Type: A     Name: @      Value: 151.101.129.91
+#   Type: A     Name: @      Value: 151.101.193.91
+#
+# For www subdomain:
+#   Type: CNAME Name: www    Value: your-project.web.app.</code></pre>
+
+            <h2>Firebase.json Configuration · إعدادات Firebase.json</h2>
+            <p><strong>English:</strong> The firebase.json file controls hosting behavior. Configure rewrites for SPA routing, redirects for SEO, headers for security, and clean URLs. Here's a production-ready configuration:</p>
+            <p><strong>العربية:</strong> ملف firebase.json يتحكم في سلوك الاستضافة. هيّئ إعادة الكتابة لتوجيه SPA وإعادة التوجيه لتحسين محركات البحث والروؤس للأمان وعناوين URL النظيفة. إليك إعداد جاهز للإنتاج:</p>
+            <pre><code>{
+  "hosting": {
+    "public": "build",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "**", "destination": "/index.html" }
+    ],
+    "redirects": [
+      { "source": "/old-page", "destination": "/new-page", "type": 301 },
+      { "source": "/blog/:slug", "destination": "/articles/:slug", "type": 301 }
+    ],
+    "headers": [
+      {
+        "source": "**/*.@(js|css|jpg|png|svg|webp)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+        ]
+      },
+      {
+        "source": "**",
+        "headers": [
+          { "key": "X-Frame-Options", "value": "DENY" },
+          { "key": "X-Content-Type-Options", "value": "nosniff" },
+          { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+        ]
+      }
+    ],
+    "appAssociation": "AUTO"
+  }
+}</code></pre>
+            <p><strong>English:</strong> The rewrites section sends all requests to index.html — essential for SPAs with client-side routing. The redirects section handles 301 permanent redirects for SEO. The headers section sets aggressive caching for static assets and security headers for all pages. Add a 404.html page for custom 404 handling.</p>
+            <p><strong>العربية:</strong> قسم rewrites يرسل كل الطلبات إلى index.html — ضروري لتطبيقات الصفحة الواحدة. قسم redirects يتعامل مع إعادة التوجيه الدائم 301 لتحسين محركات البحث. قسم headers يضبط تخزينًا مؤقتًا قويًا للأصول الثابتة وروؤس أمان لجميع الصفحات. أضف صفحة 404.html للتعامل المخصص مع خطأ 404.</p>
+
+            <h2>CI/CD with GitHub Actions · النشر التلقائي</h2>
+            <p><strong>English:</strong> Automate deployments so every push to main deploys your site automatically. Generate a Firebase CI token with <code>firebase login:ci</code>, add it as a repository secret named <code>FIREBASE_TOKEN</code>, then create this workflow:</p>
+            <p><strong>العربية:</strong> أتمتة النشر بحيث كل push إلى main ينشر موقعك تلقائيًا. أنشئ رمز Firebase CI بـ <code>firebase login:ci</code>، أضفه كسر للمستودع باسم <code>FIREBASE_TOKEN</code>، ثم أنشئ هذا workflow:</p>
+            <pre><code># .github/workflows/deploy.yml
+name: Deploy to Firebase
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci
+      - run: npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          channelId: live
+          projectId: your-project-id</code></pre>
+
+            <h2>Preview Channels · قنوات المعاينة</h2>
+            <p><strong>English:</strong> Firebase Hosting also supports preview channels — each Pull Request gets its own unique URL. This is a game-changer for team workflows. When you open a PR, Firebase automatically deploys a preview version of your site with a unique URL (e.g., <code>pr-42-my-project.web.app</code>). You (and your reviewers) can see the changes live before merging. To configure this, add the <code>--channel-id</code> flag to your deploy command or use the <code>channelId: "preview"</code> option in GitHub Actions. Preview channels expire after 7 days by default, keeping your deployment dashboard clean.</p>
+            <p><strong>العربية:</strong> Firebase Hosting يدعم أيضًا قنوات المعاينة — كل طلب سحب يحصل على URL فريد خاص به. هذا تغيير جذري لسير عمل الفريق. عندما تفتح PR، Firebase ينشر تلقائيًا نسخة معاينة من موقعك مع URL فريد (مثل <code>pr-42-my-project.web.app</code>). يمكنك أنت والمراجعون رؤية التغييرات مباشرة قبل الدمج. لتكوين هذا، أضف علامة <code>--channel-id</code> لأمر النشر أو استخدم خيار <code>channelId: "preview"</code> في GitHub Actions. قنوات المعاينة تنتهي بعد 7 أيام افتراضيًا، مما يحافظ على نظافة لوحة النشر الخاصة بك.</p>
+
+            <h2>Troubleshooting · استكشاف الأخطاء</h2>
+            <p><strong>English:</strong> Common issues: "Hosting has no files" — make sure your public directory is correct and you've built your app. "SSL not provisioned" — custom domain SSL can take up to 24 hours. "Deploy fails" — check that you're logged in (<code>firebase login</code>) and have the correct project selected. "404 on page refresh for SPAs" — ensure your firebase.json has the rewrite rule <code>{ "source": "**", "destination": "/index.html" }</code>. "CORS errors on API calls" — configure CORS on Cloud Functions or use a proxy rewrite in firebase.json.</p>
+            <p><strong>العربية:</strong> مشاكل شائعة: "Hosting has no files" — تأكد أن مجلد العام صحيح وأنك بنيت تطبيقك. "SSL not provisioned" — SSL للنطاق المخصص قد يستغرق حتى 24 ساعة. "Deploy fails" — تحقق أنك مسجل الدخول (<code>firebase login</code>) والمشروع الصحيح محدد. "404 عند تحديث الصفحة لتطبيقات SPA" — تأكد أن firebase.json لديه قاعدة إعادة الكتابة <code>{ "source": "**", "destination": "/index.html" }</code>. "أخطاء CORS في استدعاءات API" — هيّئ CORS على Cloud Functions أو استخدم إعادة كتابة وكيل في firebase.json.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> Firebase Hosting is one of the easiest and most reliable ways to deploy web applications. Free SSL, global CDN, one-command deployment, and custom domain support make it ideal for both beginners and professionals. Combine it with GitHub Actions for automatic deployments, and you have a world-class hosting setup at zero cost. Start deploying today — your first site can be live in under 5 minutes.</p>
+            <p><strong>العربية:</strong> Firebase Hosting هي واحدة من أسهل وأكثر الطرق موثوقية لنشر تطبيقات الويب. SSL مجاني و CDN عالمي ونشر بأمر واحد ودعم النطاقات المخصصة تجعله مثاليًا للمبتدئين والمحترفين. ادمجه مع GitHub Actions للنشر التلقائي وستحصل على إعداد استضافة عالمي المستوى بدون تكلفة. ابدأ النشر اليوم — أول موقع لك يمكن أن يكون متاحًا في أقل من 5 دقائق.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firebase vs Supabase 2026 · مقارنة شاملة — CTRL-Z Blog</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .article-container { max-width: 800px; margin: 0 auto; padding: 40px 20px 80px; }
+        .article-header h1 { font-size: 1.8rem; margin-bottom: 10px; line-height: 1.4; }
+        .article-body { background: var(--card-bg); border-radius: 18px; padding: 35px; box-shadow: var(--shadow); border: 1px solid var(--border-color); line-height: 1.9; }
+        .article-body h2 { font-size: 1.35rem; margin: 30px 0 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border-color); }
+        .article-body p { margin-bottom: 16px; }
+        .article-body code { background: #f1f5f9; padding: 2px 8px; border-radius: 4px; font-size: 0.9rem; direction: ltr; display: inline-block; }
+        .article-body pre { background: #1e293b; color: #e2e8f0; padding: 18px 22px; border-radius: 12px; direction: ltr; text-align: left; overflow-x: auto; margin: 15px 0; font-size: 0.85rem; }
+        .article-body strong { color: var(--accent); }
+        .back-link { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 25px; color: var(--text-secondary); text-decoration: none; font-size: 0.95rem; }
+        .back-link:hover { color: var(--accent); }
+        @media (max-width: 600px) { .article-header h1 { font-size: 1.4rem; } .article-body { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="article-container">
+        <a href="../blog.html" class="back-link">← العودة للمدونة</a>
+        <div class="article-header"><h1>Firebase vs Supabase 2026 · مقارنة شاملة</h1></div>
+        <div class="article-body">
+            <h2>The Great Debate · المعركة الكبيرة</h2>
+            <p><strong>English:</strong> Firebase (Google) vs Supabase (Open Source) — the ultimate backend showdown in 2026. Each has strengths and weaknesses. Your choice depends on your specific needs. Firebase is a fully managed platform by Google with deep integration across the Google Cloud ecosystem. Supabase is an open-source alternative that gives you full control with transparent pricing.</p>
+            <p><strong>العربية:</strong> Firebase (جوجل) ضد Supabase (مفتوح المصدر) — المواجهة النهائية في 2026. لكل منهما نقاط قوة وضعف. اختيارك يعتمد على احتياجاتك. Firebase منصة مُدارة بالكامل من جوجل مع تكامل عميق في نظام Google Cloud. Supabase بديل مفتوح المصدر يمنحك تحكمًا كاملاً وتسعيرًا شفافًا.</p>
+
+            <h2>Database Comparison · مقارنة قواعد البيانات</h2>
+            <p><strong>English:</strong> Firebase uses Firestore, a NoSQL document database optimized for real-time data sync, offline support, and mobile apps. Supabase uses PostgreSQL, a powerful relational SQL database with advanced features like full-text search, JSON/JSONB support, and custom functions. Firestore excels at real-time listeners and offline persistence. PostgreSQL excels at complex queries, joins, aggregations, and data integrity.</p>
+            <p><strong>العربية:</strong> Firebase يستخدم Firestore، قاعدة بيانات NoSSL وثائقية محسّنة للمزامنة الفورية والدعم بدون اتصال وتطبيقات الجوال. Supabase يستخدم PostgreSQL، قاعدة بيانات SQL علائقية قوية مع ميزات متقدمة مثل البحث النصي الكامل ودعم JSON/JSONB والدوال المخصصة. Firestore يتفوق بالمستمعين الفوريين والتخزين المؤقت بدون اتصال. PostgreSQL يتفوق بالاستعلامات المعقدة والجداول والتجميعات وتكامل البيانات.</p>
+
+            <h2>Detailed Comparison Table · جدول مقارنة مفصل</h2>
+            <p><strong>English:</strong> Here's a side-by-side comparison across all major dimensions to help you decide which platform fits your project.</p>
+            <p><strong>العربية:</strong> إليك مقارنة جنبًا إلى جنب عبر جميع الأبعاد الرئيسية لمساعدتك في اختيار المنصة المناسبة لمشروعك.</p>
+            <pre><code>Feature                | Firebase                        | Supabase
+----------------------|---------------------------------|------------------------------
+Database Type         | NoSQL (Firestore)               | SQL (PostgreSQL 16)
+Real-time             | Built-in listeners              | Built-in via Realtime
+Auth                  | 30+ providers, built-in         | 20+ providers, built-in
+Storage               | Google Cloud Storage            | S3-compatible (local/S3)
+File Storage (free)   | 5 GB free                       | 1 GB free
+Database (free)       | 1 GB                            | 500 MB
+Functions             | Cloud Functions (Node/Python)   | Edge Functions (Deno)
+Vector Search         | Via Google Vertex AI            | Built-in pgvector
+AI/ML                 | ML Kit, Vertex AI               | Via extensions
+Custom Domain         | Free with hosting               | Free with hosting
+Open Source           | No                              | Yes (MIT license)
+Self-host             | Not possible                    | Yes (Docker)
+Pricing Model         | Usage-based, can spike           | Flat-rate, predictable
+Maximum Doc/Row Size  | 1 MiB                           | 1.6 TB (PG limits)
+Backups               | Automatic                       | Automatic (point-in-time)
+Multi-Region          | Yes                             | Available (Enterprise)
+Offline Support       | Excellent                       | Via custom solutions
+SDK Quality           | Mature, well-documented         | Growing, well-designed</code></pre>
+
+            <h2>Code Examples · أمثلة برمجية</h2>
+            <p><strong>English:</strong> Firebase reads a document with a real-time listener. The snapshot contains the document data as soon as it's available and on every subsequent update.</p>
+            <p><strong>العربية:</strong> Firebase يقرأ مستندًا مع مستمع فوري. اللقطة تحتوي على بيانات المستند بمجرد توفرها وفي كل تحديث لاحق.</p>
+            <pre><code>// Firebase - Real-time listener
+import { doc, onSnapshot } from "firebase/firestore";
+
+const unsub = onSnapshot(doc(db, "posts", "post123"), (snap) => {
+  if (snap.exists()) {
+    console.log("Post data:", snap.data());
+  }
+});
+
+// Supabase - Real-time subscription
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const channel = supabase
+  .channel("posts")
+  .on("postgres_changes",
+    { event: "INSERT", schema: "public", table: "posts" },
+    (payload) => console.log("New post:", payload.new)
+  )
+  .subscribe();</code></pre>
+            <p><strong>English:</strong> Firebase fetches a collection with filters and sorting using the `getDocs` function. Supabase uses the `.select()` method with chaining for equivalent SQL-like queries. Notice how Supabase syntax closely mirrors SQL, while Firebase uses its own query API.</p>
+            <p><strong>العربية:</strong> Firebase يجلب مجموعة مع مرشحات وترتيب باستخدام دالة `getDocs`. Supabase يستخدم طريقة `.select()` مع التسلسل لاستعلامات مشابهة لـ SQL. لاحظ كيف أن صياغة Supabase تشبه SQL بينما Firebase يستخدم واجهة استعلام خاصة به.</p>
+            <pre><code>// Firebase - Query with filters
+import { collection, query, where, orderBy, getDocs } from "firebase/firestore";
+
+const q = query(
+  collection(db, "products"),
+  where("price", "&gt;=", 50),
+  orderBy("price", "desc")
+);
+const snapshot = await getDocs(q);
+snapshot.forEach(doc => console.log(doc.id, "=&gt;", doc.data()));
+
+// Supabase - Equivalent query
+const { data, error } = await supabase
+  .from("products")
+  .select("*")
+  .gte("price", 50)
+  .order("price", { ascending: false });</code></pre>
+
+            <h2>Pricing Deep Dive · تحليل التسعير</h2>
+            <p><strong>English:</strong> Firebase has a generous free tier (Spark Plan) but costs can grow unpredictably with usage — especially Firestore reads/writes, Cloud Functions executions, and bandwidth. A production app handling 100K daily active users can cost $300-2000/month on Firebase compared to $25-200/month on Supabase's predictable pricing. This difference makes Supabase increasingly attractive for startups and scale-ups.</p>
+            <p><strong>العربية:</strong> Firebase لديه طبقة مجانية سخية (Spark Plan) لكن التكاليف يمكن أن تنمو بشكل غير متوقع مع الاستخدام — خاصة قراءات/كتابات Firestore وتنفيذات Cloud Functions وعرض النطاق. تطبيق إنتاجي مع 100K مستخدم نشط يوميًا يمكن أن يكلف 300-2000 دولار/شهر على Firebase مقارنة بـ 25-200 دولار/شهر على تسعير Supabase المتوقع. هذا الفرق يجعل Supabase جذابًا بشكل متزايد للشركات الناشئة.</p>
+
+            <h2>Use Cases · حالات الاستخدام</h2>
+            <p><strong>English:</strong> Choose Firebase when: building mobile-first apps with real-time chat, need seamless Google Cloud integration, require offline-first mobile experiences, or have a team familiar with NoSQL. Choose Supabase when: building data-heavy applications with complex queries, need relational data integrity, want open-source flexibility with self-hosting options, or prefer SQL for managing data.</p>
+            <p><strong>العربية:</strong> اختر Firebase عندما: تبني تطبيقات جوال أولاً مع محادثة فورية، تحتاج تكاملًا سلسًا مع Google Cloud، تحتاج تجارب جوال بدون اتصال، أو لديك فريق ملم بـ NoSQL. اختر Supabase عندما: تبني تطبيقات كثيفة البيانات باستعلامات معقدة، تحتاج تكامل البيانات العلائقية، تريد مرونة المصدر المفتوح مع خيارات الاستضافة الذاتية، أو تفضل SQL لإدارة البيانات.</p>
+            <p><strong>English:</strong> Real-world examples: Firebase powers TikTok-like short-form video apps, real-time collaboration tools, and chat applications at scale. Supabase powers AI applications with pgvector, financial systems requiring ACID compliance, analytics dashboards with complex SQL queries, and SaaS products needing tenant isolation through PostgreSQL Row-Level Security.</p>
+            <p><strong>العربية:</strong> أمثلة واقعية: Firebase يشغل تطبيقات فيديو قصيرة مثل TikTok وأدوات تعاون فوري وتطبيقات محادثة على نطاق واسع. Supabase يشغل تطبيقات AI مع pgvector وأنظمة مالية تتطلب الامتثال لـ ACID ولوحات تحليل باستعلامات SQL معقدة ومنتجات SaaS التي تحتاج عزل المستأجرين عبر أمان مستوى الصف في PostgreSQL.</p>
+
+            <h2>Ecosystem & Extensions · النظام البيئي والإضافات</h2>
+            <p><strong>English:</strong> Firebase offers Auth (30+ providers), Hosting (global CDN), Cloud Functions, Cloud Storage, ML Kit (on-device ML), Cloud Messaging (push), Remote Config, A/B Testing, Crashlytics, Performance Monitoring, and Google Analytics integration. Supabase offers Auth (20+ providers), Storage, Realtime (broadcast, presence, Postgres changes), Edge Functions (Deno-based), pgvector for AI/vector search, and a growing ecosystem of community extensions.</p>
+            <p><strong>العربية:</strong> Firebase يقدم Auth (أكثر من 30 مزودًا)، Hosting (CDN عالمي)، Cloud Functions، Cloud Storage، ML Kit (تعلم آلي على الجهاز)، Cloud Messaging (إشعارات)، Remote Config، اختبار A/B، Crashlytics، مراقبة الأداء، وتكامل Google Analytics. Supabase يقدم Auth (أكثر من 20 مزودًا)، Storage، Realtime (بث، حضور، تغييرات Postgres)، Edge Functions (Deno)، pgvector للبحث المتجهي / AI، ونظام بيئي متنامٍ من الإضافات المجتمعية.</p>
+
+            <h2>Migration Path · مسار الترحيل</h2>
+            <p><strong>English:</strong> Migrating between platforms is possible but requires planning. From Firebase to Supabase: export Firestore data to JSON/CSV, transform documents to relational tables, rewrite queries from NoSQL to SQL, and restructure security rules to Row-Level Security policies. Tools like <code>firestore-to-supabase</code> and Supabase's import helpers can automate parts of this. The migration typically takes 1-4 weeks depending on app complexity.</p>
+            <p><strong>العربية:</strong> الترحيل بين المنصات ممكن لكن يتطلب تخطيطًا. من Firebase إلى Supabase: صدر بيانات Firestore إلى JSON/CSV، حول المستندات إلى جداول علائقية، أعد كتابة الاستعلامات من NoSQL إلى SQL، وأعد هيكلة قواعد الأمان إلى سياسات أمان مستوى الصف. أدوات مثل <code>firestore-to-supabase</code> ومساعدات استيراد Supabase يمكنها أتمتة أجزاء من هذا. الترحيل يستغرق عادة 1-4 أسابيع حسب تعقيد التطبيق.</p>
+
+            <h2>Authentication Comparison · مقارنة المصادقة</h2>
+            <p><strong>English:</strong> Firebase Auth supports 30+ providers including Google, Apple, Facebook, Twitter, GitHub, Microsoft, and phone authentication (SMS). It also offers anonymous auth, email/password, and multi-factor authentication. Supabase Auth supports 20+ providers with a simpler setup. Both support JWT-based sessions, OAuth, and Row-Level Security (Supabase) or Firestore Security Rules (Firebase). Firebase has the edge with phone auth and built-in account linking. Supabase has the edge with native PostgreSQL RLS integration and the ability to run custom SQL for auth triggers.</p>
+            <p><strong>العربية:</strong> Firebase Auth يدعم أكثر من 30 مزودًا بما في ذلك Google و Apple و Facebook و Twitter و GitHub و Microsoft والمصادقة عبر الهاتف. يقدم أيضًا مصادقة مجهولة وبريد إلكتروني/كلمة مرور ومصادقة متعددة العوامل. Supabase Auth يدعم أكثر من 20 مزودًا بإعداد أبسط. كلاهما يدعم جلسات JWT و OAuth وأمان مستوى الصف (Supabase) أو قواعد أمان Firestore (Firebase). Firebase يتفوق بمصادقة الهاتف وربط الحسابات المدمج. Supabase يتفوق بتكامل RLS الأصلي مع PostgreSQL.</p>
+
+            <h2>Realtime Capabilities · القدرات الفورية</h2>
+            <p><strong>English:</strong> Both platforms offer real-time features but with different architectures. Firebase uses WebSocket-based listeners on Firestore collections/documents — any change triggers an automatic update. It's seamless for chat apps, live dashboards, and collaborative editing. Supabase Realtime is built on PostgreSQL's replication protocol. It broadcasts database changes (INSERT, UPDATE, DELETE) to subscribed clients, supports presence (who's online), and custom broadcast channels. Supabase's approach is more flexible — you can filter changes at the database level using PostgreSQL's power.</p>
+            <p><strong>العربية:</strong> كلتا المنصتين تقدم ميزات فورية لكن بمعماريات مختلفة. Firebase يستخدم مستمعين قائمين على WebSocket على مجموعات/مستندات Firestore — أي تغيير يُحدث تحديثًا تلقائيًا. إنه سلس لتطبيقات المحادثة ولوحات المعلومات الحية والتحرير التعاوني. Supabase Realtime مبني على بروتوكول النسخ المتماثل في PostgreSQL. يبث تغييرات قاعدة البيانات (INSERT، UPDATE، DELETE) للعملاء المشتركين، يدعم الحضور (من متصل)، وقنوات البث المخصصة.</p>
+
+            <h2>Vendor Lock-In · الارتباط بالمزود</h2>
+            <p><strong>English:</strong> A critical consideration — Firebase is proprietary. Migrating away from Firebase means rewriting security rules, changing auth flows, and exporting data from Firestore's NoSQL format. Supabase is fully open-source (MIT license). You can self-host with Docker, migrate your PostgreSQL database to any Postgres-compatible service (Amazon RDS, Google Cloud SQL, DigitalOcean), and export data as standard SQL. For long-term projects, Supabase's open-source nature provides insurance against pricing changes, platform shutdowns, or feature limitations.</p>
+            <p><strong>العربية:</strong> اعتبار حاسم — Firebase مملوك ومغلق. الترحيل بعيدًا عن Firebase يعني إعادة كتابة قواعد الأمان وتغيير تدفقات المصادقة وتصدير البيانات من تنسيق Firestore NoSQL. Supabase مفتوح المصدر بالكامل (رخصة MIT). يمكنك استضافته بنفسك باستخدام Docker وترحيل قاعدة بيانات PostgreSQL إلى أي خدمة متوافقة مع Postgres (Amazon RDS، Google Cloud SQL). للمشاريع طويلة المدى، طبيعة Supabase مفتوحة المصدر توفر تأمينًا ضد تغييرات الأسعار أو إغلاق المنصة.</p>
+
+            <h2>Which One Should You Choose? · أيهما تختار؟</h2>
+            <p><strong>English:</strong> Quick decision guide: Choose Firebase if you're building a mobile-first app with real-time sync, need push notifications with minimal setup, want ML Kit for on-device AI, or need Crashlytics and Performance Monitoring. Choose Supabase if you're building a data-intensive SaaS, need complex SQL queries, want full control with self-hosting, are building AI features with vector search, or want predictable pricing. Many successful projects use both — Supabase for the database layer, Firebase for push notifications, analytics, and crash reporting.</p>
+            <p><strong>العربية:</strong> دليل قرار سريع: اختر Firebase إذا كنت تبني تطبيق جوال أولاً مع مزامنة فورية، تحتاج إشعارات فورية بإعداد بسيط، تريد ML Kit للذكاء الاصطناعي على الجهاز، أو تحتاج Crashlytics ومراقبة الأداء. اختر Supabase إذا كنت تبني SaaS كثيف البيانات، تحتاج استعلامات SQL معقدة، تريد تحكمًا كاملاً باستضافة ذاتية، تبني ميزات AI مع البحث المتجهي، أو تريد تسعيرًا متوقعًا. العديد من المشاريع الناجحة تستخدم كليهما — Supabase لطبقة قاعدة البيانات و Firebase للإشعارات والتحليلات.</p>
+
+            <h2>Pricing Comparison · مقارنة الأسعار</h2>
+            <p><strong>English:</strong> Firebase offers a generous free tier (Spark plan): 50,000 reads/day, 20,000 writes/day, 1 GB storage, 10 GB bandwidth. The paid Blaze plan charges per usage — you only pay for what you use. However, costs can spike unpredictably with Firestore reads/writes. Supabase free tier: 500 MB database, 1 GB bandwidth, 50 MB file storage, 50,000 monthly active users. The Pro plan at $25/month includes 8 GB database, 50 GB bandwidth, 100 GB file storage. Supabase pricing is more predictable because it's based on database size and bandwidth rather than per-operation costs. For a small to medium app (1,000-10,000 daily users), Firebase typically costs $0-$50/month while Supabase costs $0-$25/month.</p>
+            <p><strong>العربية:</strong> Firebase يقدم طبقة مجانية سخية (Spark): 50,000 قراءة/يوم، 20,000 كتابة/يوم، 1 جيجابايت تخزين، 10 جيجابايت نطاق ترددي. الخطة المدفوعة Blaze تفرض رسومًا حسب الاستخدام — تدفع فقط مقابل ما تستخدمه. لكن التكاليف يمكن أن ترتفع بشكل غير متوقع مع قراءات/كتابات Firestore. طبقة Supabase المجانية: 500 ميجابايت قاعدة بيانات، 1 جيجابايت نطاق ترددي، 50 ميجابايت تخزين ملفات، 50,000 مستخدم نشط شهريًا. خطة Pro بسعر $25/شهر تشمل 8 جيجابايت قاعدة بيانات، 50 جيجابايت نطاق ترددي، 100 جيجابايت تخزين ملفات. تسعير Supabase أكثر قابلية للتنبؤ لأنه يعتمد على حجم قاعدة البيانات والنطاق الترددي بدلاً من التكاليف لكل عملية. لتطبيق صغير إلى متوسط (1,000-10,000 مستخدم يوميًا)، Firebase عادةً يكلف $0-$50/شهر بينما Supabase يكلف $0-$25/شهر.</p>
+
+            <h2>Security & Compliance · الأمان والامتثال</h2>
+            <p><strong>English:</strong> Firebase Security Rules are written in a custom DSL — they control read/write access to Firestore and Storage at the document level. They're powerful but have a learning curve. Supabase uses PostgreSQL Row-Level Security (RLS) — policies are written in plain SQL and apply at the database level, making them more transparent and auditable. For compliance (GDPR, SOC2, HIPAA), both platforms offer encryption at rest and in transit, but Supabase's self-hosting option gives you more control over data residency and compliance requirements. Supabase also supports databaseExtensions like pgAudit for detailed audit logs.</p>
+            <p><strong>العربية:</strong> قواعد أمان Firebase مكتوبة بلغة مخصصة — تتحكم في الوصول للقراءة/الكتابة إلى Firestore و Storage على مستوى المستند. إنها قوية لكن لها منحنى تعلم. Supabase يستخدم أمان مستوى الصف في PostgreSQL — السياسات مكتوبة بلغة SQL عادية وتُطبق على مستوى قاعدة البيانات، مما يجعلها أكثر شفافية وقابلة للتدقيق. للامتثال (GDPR، SOC2، HIPAA)، كلتا المنصتين تقدم تشفيرًا أثناء التخزين والنقل، لكن خيار الاستضافة الذاتية في Supabase يمنحك تحكمًا أكبر في موقع البيانات ومتطلبات الامتثال.</p>
+
+            <h2>Performance & Scaling · الأداء والتوسع</h2>
+            <p><strong>English:</strong> Firebase scales automatically through Google's infrastructure — no server management needed. Firestore automatically shards and distributes data as it grows. However, there are limits: Firestore has a maximum write rate of 10,000 writes/second per database, and queries without an index will fail at scale. Supabase with PostgreSQL requires more upfront planning — you need to configure connection pooling with PgBouncer, set up read replicas for read-heavy workloads, and optimize queries with proper indexes. But PostgreSQL can handle terabytes of data, complex joins across millions of rows, and concurrent connections when properly configured. For most applications starting out, both scale just fine — the difference matters at enterprise level.</p>
+            <p><strong>العربية:</strong> Firebase يتوسع تلقائيًا عبر بنية Google التحتية — لا حاجة لإدارة الخادم. Firestore يوزع البيانات تلقائيًا مع النمو. لكن هناك حدود: Firestore لديه معدل كتابة أقصى 10,000 كتابة/ثانية لكل قاعدة بيانات، والاستعلامات بدون فهرس ستفشل عند التوسع. Supabase مع PostgreSQL يتطلب تخطيطًا مسبقًا أكثر — تحتاج لتكوين تجميع الاتصالات مع PgBouncer وإعداد نسخ متماثلة للقراءة. لكن PostgreSQL يمكنه التعامل مع تيرابايت من البيانات والجداول المعقدة عبر ملايين الصفوف. لمعظم التطبيقات البادئة، كلاهما يتوسع بشكل جيد — الفرق يظهر على مستوى المؤسسات.</p>
+
+            <h2>Community & Support · المجتمع والدعم</h2>
+            <p><strong>English:</strong> Firebase has extensive official documentation, a large Stack Overflow community, and Google Cloud support (paid plans). Supabase has a passionate open-source community, active Discord server, GitHub discussions, and growing documentation. Firebase documentation is more comprehensive due to its age; Supabase docs are cleaner and more developer-friendly. Both have excellent SDK documentation with code examples in multiple languages. For troubleshooting, Firebase offers more official resources; Supabase relies more on community knowledge and GitHub issues.</p>
+            <p><strong>العربية:</strong> Firebase لديه وثائق رسمية واسعة ومجتمع كبير على Stack Overflow ودعم Google Cloud (للخطط المدفوعة). Supabase لديه مجتمع مفتوح المصدر شغوف وخادم Discord نشط ونقاشات GitHub ووثائق متنامية. وثائق Firebase أكثر شمولاً بسبب عمرها؛ وثائق Supabase أنظف وأكثر وداً للمطورين. كلاهما لديه وثائق SDK ممتازة مع أمثلة كود بلغات متعددة. لاستكشاف الأخطاء، Firebase يقدم موارد رسمية أكثر؛ Supabase يعتمد أكثر على معرفة المجتمع و GitHub Issues.</p>
+
+            <p><strong>English:</strong> Both platforms have vibrant ecosystems. Firebase integrates seamlessly with Google Cloud services — Cloud Functions for serverless compute, Cloud Tasks for queue processing, BigQuery for analytics. It also supports ML Kit for on-device machine learning and Google Analytics for user behavior tracking. Supabase integrates with AWS S3 for file storage (backed by S3 protocol), Stripe for payments, and pgvector for AI embeddings. Supabase's realtime engine supports Broadcast, Presence, and Postgres Changes — making it flexible for real-time features like live cursors, chat, and collaborative editing. Firebase's ecosystem is broader but more fragmented; Supabase's ecosystem is focused but rapidly expanding.</p>
+            <p><strong>العربية:</strong> كلا المنصتين لديها أنظمة بيئية نابضة بالحياة. Firebase يتكامل بسلاسة مع خدمات Google Cloud — Cloud Functions للحوسبة بدون خادم، Cloud Tasks لمعالجة قوائم الانتظار، BigQuery للتحليلات. كما يدعم ML Kit للتعلم الآلي على الجهاز و Google Analytics لتتبع سلوك المستخدم. Supabase يتكامل مع AWS S3 لتخزين الملفات و Stripe للمدفوعات و pgvector للتضمينات في الذكاء الاصطناعي. محرك Supabase الفوري يدعم Broadcast و Presence و Postgres Changes — مما يجعله مرنًا للميزات الفورية مثل المؤشرات المباشرة والدردشة والتحرير التعاوني. النظام البيئي لـ Firebase أوسع لكن أكثر تجزؤًا؛ نظام Supabase البيئي مركز لكنه يتوسع بسرعة.</p>
+
+            <h2>Real-World Performance Benchmarks · اختبارات أداء واقعية</h2>
+            <p><strong>English:</strong> Community benchmarks show interesting patterns. For simple read operations, Firestore responds in 50-150ms globally due to Google's CDN. PostgreSQL queries through Supabase take 30-100ms for indexed queries on the same region. Write operations favor Firestore for small documents (under 100KB), but PostgreSQL wins for larger data sets and batch operations. For real-time subscriptions, both perform similarly at small scale, but Firestore's real-time sync is more mature. For complex aggregations (COUNT, SUM, JOIN across tables), PostgreSQL is 10-100x faster than equivalent NoSQL patterns in Firestore. Choose based on your specific query patterns, not generalities.</p>
+            <p><strong>العربية:</strong> اختبارات المجتمع تظهر أنماطًا مثيرة للاهتمام. لعمليات القراءة البسيطة، Firestore يستجيب في 50-150 مللي ثانية عالميًا بفضل CDN جوجل. استعلامات PostgreSQL عبر Supabase تستغرق 30-100 مللي ثانية للاستعلامات المفهرسة في نفس المنطقة. عمليات الكتابة تفضل Firestore للمستندات الصغيرة (أقل من 100 كيلوبايت)، لكن PostgreSQL تتفوق لمجموعات البيانات الأكبر والعمليات المجمعة. للاشتراكات الفورية، كلاهما يؤدي بشكل مشابه في النطاق الصغير، لكن مزامنة Firestore الفورية أكثر نضجًا. للعمليات التجميعية المعقدة، PostgreSQL أسرع 10-100x من أنماط NoSQL المماثلة في Firestore. اختر بناءً على أنماط الاستعلام الخاصة بك، وليس التعميمات.</p>
+
+            <h2>When to Choose Firebase · متى تختار Firebase</h2>
+            <p><strong>English:</strong> Choose Firebase when: you need to launch an MVP fast, your data model is simple (documents/subcollections), you need real-time sync out of the box, you want zero server management, your team is small, and you prefer Google's ecosystem. Firebase excels at mobile-first applications, real-time collaborative tools, and projects where development speed matters more than query flexibility. It's also great for static sites, hosted APIs via Cloud Functions, and apps that benefit from Google Analytics and Crashlytics integration.</p>
+            <p><strong>العربية:</strong> اختر Firebase عندما: تحتاج إطلاق MVP بسرعة، نموذج بياناتك بسيط (مستندات/مجموعات فرعية)، تحتاج مزامنة فورية بدون إعداد، تريد إدارة خادم صفرية، فريقك صغير، وتفضل نظام Google البيئي. Firebase يتفوق في التطبيقات التي تعطي الأولوية للجوال والأدوات التعاونية الفورية والمشاريع حيث سرعة التطوير أهم من مرونة الاستعلام. كما أنه رائع للمواقع الثابتة و APIs المستضافة عبر Cloud Functions والتطبيقات التي تستفيد من Google Analytics و Crashlytics.</p>
+
+            <h2>When to Choose Supabase · متى تختار Supabase</h2>
+            <p><strong>English:</strong> Choose Supabase when: your data needs complex relationships, you need SQL for reporting and analytics, you want full control over your database, you prefer open-source software, you need predictable pricing, and you want to avoid vendor lock-in. Supabase excels at data-heavy applications, internal tools, dashboards, projects requiring complex queries (aggregations, joins, window functions), and apps that need to migrate or export data easily. It's also ideal if your team already knows SQL or you need PostgreSQL-specific features like JSONB, full-text search, and geospatial queries with PostGIS.</p>
+            <p><strong>العربية:</strong> اختر Supabase عندما: بياناتك تحتاج علاقات معقدة، تحتاج SQL للتقارير والتحليلات، تريد سيطرة كاملة على قاعدة بياناتك، تفضل البرامج مفتوحة المصدر، تحتاج تسعيرًا قابلًا للتنبؤ، وتريد تجنب تقييد البائع. Supabase يتفوق في التطبيقات كثيفة البيانات والأدوات الداخلية ولوحات البيانات والمشاريع التي تتطلب استعلامات معقدة (تجميعات، جداول، دوال نافذة) والتطبيقات التي تحتاج ترحيل أو تصدير البيانات بسهولة. كما أنه مثالي إذا كان فريقك يعرف SQL بالفعل أو تحتاج ميزات PostgreSQL الخاصة مثل JSONB والبحث النصي الكامل والاستعلامات الجغرافية المكانية مع PostGIS.</p>
+
+            <h2>Conclusion · الخلاصة</h2>
+            <p><strong>English:</strong> There's no universal winner — both platforms are excellent. Firebase is mature with the richest ecosystem. Supabase is the open-source future with transparency and fair pricing. If you're starting a new project today, ask yourself: do I need complex SQL queries? Go Supabase. Do I need offline-first mobile experiences? Go Firebase. Many teams now use both — Supabase for the database and Firebase for push notifications and analytics. Whichever you choose, both platforms will serve you well in 2026 and beyond.</p>
+            <p><strong>العربية:</strong> لا يوجد فائز مطلق — كلتا المنصتين ممتازتان. Firebase ناضج مع أغنى نظام بيئي. Supabase هو المستقبل مفتوح المصدر بالشفافية والتسعير العادل. إذا كنت تبدأ مشروعًا جديدًا اليوم، اسأل نفسك: هل أحتاج استعلامات SQL معقدة؟ اختر Supabase. هل أحتاج تجارب جوال بدون اتصال؟ اختر Firebase. العديد من الفرق الآن تستخدم كليهما — Supabase لقاعدة البيانات و Firebase للإشعارات والتحليلات. أيهما تختار، كلتا المنصتين ستخدمك جيدًا في 2026 وما بعده.</p>
+        </div>
+    </div>
+</body>
+</html>
