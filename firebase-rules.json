@@ -1,28 +1,53 @@
 {
   "rules": {
     "users": {
-      ".read": "auth != null && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
+      ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
       "$uid": {
-        ".read": "auth != null && auth.uid == $uid",
-        ".write": "auth != null && auth.uid == $uid"
+        ".read": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".write": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".validate": "newData.exists() && (!newData.hasChild('name') || (newData.child('name').isString() && newData.child('name').val().length > 0))"
       }
     },
     "questions": {
-      ".read": "auth != null && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
+      ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
       "$recipientId": {
-        ".read": "auth != null && (auth.uid == $recipientId || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
-        ".write": true,
+        ".read": "auth.uid == $recipientId || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
         ".indexOn": ["timestamp"],
         "$questionId": {
-          ".validate": "newData.hasChildren(['text', 'timestamp']) && !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now && newData.child('timestamp').val() > (now - 300000)"
+          ".write": "(!data.exists() && newData.hasChildren(['text', 'timestamp']) && !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now && newData.child('timestamp').val() > (now - 300000)) || (data.exists() && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'))"
         }
       }
     },
     "shortUrls": {
       ".read": true,
+      "_backend_": {
+        ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
+      },
       "$shortName": {
-        ".write": "auth != null",
-        ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid"
+        ".write": "auth != null || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".validate": "(auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2') || (newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid)"
+      }
+    },
+    "submissions": {
+      ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+      ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
+    },
+    "leaderboard": {
+      ".read": true,
+      ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+      "$uid": {
+        ".validate": "newData.hasChildren(['score', 'name']) && newData.child('score').isNumber() && newData.child('score').val() >= 0 && newData.child('name').isString()"
+      }
+    },
+    "config": {
+      ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+      ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
+    },
+    "event_2026": {
+      ".read": true,
+      ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+      "$day": {
+        ".validate": "newData.hasChildren(['q', 'o', 'a', 'e', 'm', 'r']) && newData.child('q').isString() && newData.child('a').isNumber()"
       }
     }
   }

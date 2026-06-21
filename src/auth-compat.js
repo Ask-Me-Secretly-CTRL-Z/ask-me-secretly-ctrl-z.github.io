@@ -35,5 +35,9 @@ window.__auth.getCurrentUser = function () {
 };
 
 window.__auth.updateDisplayName = function (uid, name) {
-  return name;
+  var user = window.__fb.auth.currentUser;
+  if (!user) {
+    return Promise.reject(new Error('No authenticated user'));
+  }
+  return user.updateProfile({ displayName: name });
 };
