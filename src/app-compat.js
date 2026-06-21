@@ -209,20 +209,28 @@
         var btn = this;
         var input = document.getElementById('question-input');
         var text = input.value;
+
+        if (window.__questions._submitting) return;
+
         if (!window.__security.checkRateLimit()) {
           window.__errors.show('تمهل شوية...');
           return;
         }
+
+        window.__questions._submitting = true;
+        input.value = '';
+        document.getElementById('char-count').textContent = '0';
         btn.disabled = true;
         btn.classList.add('btn-loading');
         window.__questions.submit(targetUid, text).then(function () {
-          input.value = '';
-          document.getElementById('char-count').textContent = '0';
           window.__ui.showScreen('success-screen');
           startCountdown();
         }).catch(function (err) {
+          input.value = text;
+          document.getElementById('char-count').textContent = text.length;
           window.__errors.handle(err);
         }).finally(function () {
+          window.__questions._submitting = false;
           btn.disabled = false;
           btn.classList.remove('btn-loading');
         });

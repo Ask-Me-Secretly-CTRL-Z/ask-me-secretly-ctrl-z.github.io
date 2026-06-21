@@ -1,31 +1,20 @@
 {
   "rules": {
     "users": {
+      ".read": "auth != null && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
       "$uid": {
-        ".read": "auth != null",
-        ".write": "auth != null && auth.uid == $uid",
-        ".indexOn": ["createdAt"],
-        "displayName": {
-          ".read": true
-        }
+        ".read": "auth != null && auth.uid == $uid",
+        ".write": "auth != null && auth.uid == $uid"
       }
     },
     "questions": {
+      ".read": "auth != null && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
       "$recipientId": {
-        ".read": "auth != null && auth.uid == $recipientId",
+        ".read": "auth != null && (auth.uid == $recipientId || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
         ".write": true,
         ".indexOn": ["timestamp"],
         "$questionId": {
-          ".validate": "
-            newData.hasChildren(['text', 'timestamp']) &&
-            !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) &&
-            newData.child('text').isString() &&
-            newData.child('text').val().length > 0 &&
-            newData.child('text').val().length <= 500 &&
-            newData.child('timestamp').isNumber() &&
-            newData.child('timestamp').val() <= now &&
-            newData.child('timestamp').val() > (now - 300000)
-          "
+          ".validate": "newData.hasChildren(['text', 'timestamp']) && !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now && newData.child('timestamp').val() > (now - 300000)"
         }
       }
     },
@@ -33,8 +22,7 @@
       ".read": true,
       "$shortName": {
         ".write": "auth != null",
-        ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid",
-        ".indexOn": ["uid"]
+        ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid"
       }
     }
   }

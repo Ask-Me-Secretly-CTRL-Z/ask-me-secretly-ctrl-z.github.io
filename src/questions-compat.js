@@ -3,6 +3,7 @@ window.__questions = {};
 window.__questions._turnstileToken = '';
 window.__questions._lastResetTime = 0;
 window.__questions._MIN_RESET_INTERVAL = 2000;
+window.__questions._submitting = false;
 
 window.__questions.getTurnstileToken = function () {
   return window.__questions._turnstileToken;
