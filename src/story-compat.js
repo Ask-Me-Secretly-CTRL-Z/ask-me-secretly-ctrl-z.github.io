@@ -64,7 +64,7 @@ window.__story.showColorPicker = function (questionText, userLink) {
 
   overlay.querySelectorAll('.story-color-circle').forEach(function (circle) {
     circle.onclick = function () {
-      var index = parseInt(this.getAttribute('data-index'), 10);
+      var index = parseInt(this.getAttribute('data-index'), 10) || 0;
       window.__story.selectColor(this, index);
     };
   });

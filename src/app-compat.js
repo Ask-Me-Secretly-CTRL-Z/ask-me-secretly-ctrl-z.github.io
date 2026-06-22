@@ -557,7 +557,7 @@
 
     document.querySelectorAll('.site-option').forEach(function (el) {
       el.onclick = function () {
-        selectedTheme = parseInt(this.getAttribute('data-theme'), 10);
+        selectedTheme = parseInt(this.getAttribute('data-theme'), 10) || 0;
         window.__themes.apply(selectedTheme);
       };
     });

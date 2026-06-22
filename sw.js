@@ -47,6 +47,7 @@ self.addEventListener('activate', function (event) {
 
 self.addEventListener('fetch', function (event) {
   if (event.request.method !== 'GET') return;
+  if (!(event.request.url.startsWith('http://') || event.request.url.startsWith('https://'))) return;
 
   var url = new URL(event.request.url);
 
