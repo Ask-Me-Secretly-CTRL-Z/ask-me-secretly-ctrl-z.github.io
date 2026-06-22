@@ -13,16 +13,30 @@
         }
       }).catch(function () {});
 
-      // Process redirect result in background (required for redirect to complete)
+      // 1. Process redirect result FIRST — هذا هو المصدر الوحيد الموثوق
       window.__fb.auth.getRedirectResult().then(function (result) {
         if (result && result.user) {
           console.log('[App] Redirect login successful');
+          afterUserFound(result.user);
+          return;
         }
+        // 2. لا يوجد redirect pending — تحقق من جلسة سابقة
+        var existing = window.__fb.auth.currentUser;
+        if (existing) {
+          afterUserFound(existing);
+          return;
+        }
+        // 3. لا redirect ولا جلسة — استمع للتغيرات مرة واحدة
+        afterNoUser();
       }).catch(function (err) {
         console.error('[App] getRedirectResult error:', err.code || err.message || err);
+        var existing = window.__fb.auth.currentUser;
+        if (existing) {
+          afterUserFound(existing);
+        } else {
+          afterNoUser();
+        }
       });
-
-      monitorActiveUser();
 
       bindGlobalUI();
     } catch (e) {
@@ -38,7 +52,18 @@
     }
   }
 
-  function monitorActiveUser() {
+  function afterUserFound(user) {
+    window.__hideLoader();
+    currentUser = user;
+    var route = window.__router.init();
+    if (route === 'question') {
+      setupQuestionPage();
+    } else {
+      loadDashboard(user);
+    }
+  }
+
+  function afterNoUser() {
     var route = window.__router.init();
     if (route === 'question') {
       setupQuestionPage();
@@ -46,20 +71,15 @@
         window.__hideLoader();
       });
     } else {
-      var loginTimer = null;
-      window.__auth.onStateChanged(function (user) {
+      var unsub = window.__fb.auth.onAuthStateChanged(function (user) {
+        unsub();
         window.__hideLoader();
         if (user) {
-          if (loginTimer) { clearTimeout(loginTimer); loginTimer = null; }
-          if (currentUser) return;
           currentUser = user;
           loadDashboard(user);
-        } else if (!loginTimer) {
-          loginTimer = setTimeout(function () {
-            loginTimer = null;
-            currentUser = null;
-            window.__ui.showScreen('login-screen');
-          }, 3000);
+        } else {
+          currentUser = null;
+          window.__ui.showScreen('login-screen');
         }
       });
     }
