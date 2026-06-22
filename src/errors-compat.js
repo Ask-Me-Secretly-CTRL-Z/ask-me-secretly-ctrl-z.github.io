@@ -14,6 +14,11 @@ window.__errors.messages = {
 };
 
 window.__errors.handle = function (error) {
+  if (!error) {
+    window.__ui.showToast(window.__errors.messages['default']);
+    console.error('[Error]', 'Unknown error');
+    return;
+  }
   var msg = window.__errors.messages[error.code] || window.__errors.messages['default'];
   window.__ui.showToast(msg);
   console.error('[Error]', error.code || error.message);

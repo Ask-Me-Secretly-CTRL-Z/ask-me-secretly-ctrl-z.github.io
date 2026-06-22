@@ -6,6 +6,9 @@
 
   function handleRedirectResult() {
     window.__fb.auth.getRedirectResult().then(function (result) {
+      if (result && result.user) {
+        handleAuthState(result.user);
+      }
     }).catch(function () {
     });
   }
@@ -76,6 +79,7 @@
   }
 
   function loadDashboard(user) {
+    if (!user || !user.uid) { window.__ui.showScreen('login-screen'); return; }
     var themeBtn = document.getElementById('global-theme-btn');
     if (themeBtn) themeBtn.style.display = '';
     window.__ui.showScreen('dashboard-screen');
