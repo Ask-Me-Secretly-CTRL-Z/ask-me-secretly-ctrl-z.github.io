@@ -13,40 +13,25 @@
         }
       }).catch(function () {});
 
-      // Process pending redirect result (must be called for redirect to complete)
+      // 1. الحارس الأول: استمع لنتيجة الـ Redirect أول ما الصفحة تفتح
       window.__fb.auth.getRedirectResult().then(function (result) {
         if (result && result.user) {
-          console.log('[App] Redirect sign-in successful');
+          console.log('[App] Redirect login successful');
+          window.__hideLoader();
+          currentUser = result.user;
+          var route = window.__router.init();
+          if (route === 'question') {
+            setupQuestionPage();
+          } else {
+            loadDashboard(result.user);
+          }
+        } else {
+          monitorActiveUser();
         }
       }).catch(function (err) {
-        console.error('[App] getRedirectResult error:', err.code || err.message || err);
+        console.error('[App] Redirect error caught:', err.code || err.message || err);
+        monitorActiveUser();
       });
-
-      var route = window.__router.init();
-      if (route === 'question') {
-        var targetVal = window.__router.currentTarget;
-        var validation = window.__router.validateUid(targetVal);
-        var warnEl = document.getElementById('uid-warning');
-
-        if (validation.problems.length > 0) {
-          var html = '⚠️ اللينك ده غلط يا باشا! دور على الحرف الناقص أو الزيادة.<br>';
-          html += validation.problems.map(function (p) { return '• ' + p.message; }).join('<br>');
-          if (warnEl) { warnEl.innerHTML = html; warnEl.style.display = 'block'; }
-        } else {
-          if (warnEl) { warnEl.style.display = 'none'; }
-        }
-
-        window.__router.resolveShortUrl(validation.cleaned).then(function (actualUid) {
-          showQuestionPage(actualUid, targetVal, validation.problems.length);
-        }).catch(function () {
-          showQuestionPage(validation.cleaned, targetVal, validation.problems.length);
-        });
-        window.__auth.onStateChanged(function (user) {
-          window.__hideLoader();
-        });
-      } else {
-        window.__auth.onStateChanged(handleAuthState);
-      }
 
       bindGlobalUI();
     } catch (e) {
@@ -62,19 +47,44 @@
     }
   }
 
-  function handleAuthState(user) {
-    try {
-      window.__hideLoader();
-      if (user) {
-        currentUser = user;
-        loadDashboard(user);
-      } else {
-        currentUser = null;
-        window.__ui.showScreen('login-screen');
-      }
-    } catch (e) {
-      console.error('[App] Auth error:', e);
+  // 2. دالة مراقبة حالة المستخدم المستمرة
+  function monitorActiveUser() {
+    var route = window.__router.init();
+    if (route === 'question') {
+      setupQuestionPage();
+      window.__auth.onStateChanged(function (user) {
+        window.__hideLoader();
+      });
+    } else {
+      window.__auth.onStateChanged(function (user) {
+        window.__hideLoader();
+        if (user) {
+          currentUser = user;
+          loadDashboard(user);
+        } else {
+          currentUser = null;
+          window.__ui.showScreen('login-screen');
+        }
+      });
     }
+  }
+
+  function setupQuestionPage() {
+    var targetVal = window.__router.currentTarget;
+    var validation = window.__router.validateUid(targetVal);
+    var warnEl = document.getElementById('uid-warning');
+    if (validation.problems.length > 0) {
+      var html = '⚠️ اللينك ده غلط يا باشا! دور على الحرف الناقص أو الزيادة.<br>';
+      html += validation.problems.map(function (p) { return '• ' + p.message; }).join('<br>');
+      if (warnEl) { warnEl.innerHTML = html; warnEl.style.display = 'block'; }
+    } else {
+      if (warnEl) { warnEl.style.display = 'none'; }
+    }
+    window.__router.resolveShortUrl(validation.cleaned).then(function (actualUid) {
+      showQuestionPage(actualUid, targetVal, validation.problems.length);
+    }).catch(function () {
+      showQuestionPage(validation.cleaned, targetVal, validation.problems.length);
+    });
   }
 
   function loadDashboard(user) {
