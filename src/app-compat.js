@@ -37,8 +37,34 @@
         return;
       }
 
-      // 3.5. لو في flag من جلسة قديمة نضّفها
+      // 3.5. لو redirect حصل بس مفيش نتيجة — جرب popup كبديل
+      var authMethod;
+      try { authMethod = localStorage.getItem('__auth_method'); } catch (e) {}
       try { localStorage.removeItem('__auth_method'); } catch (e) {}
+
+      if (authMethod === 'redirect' && window.__auth.signInWithPopupFallback) {
+        try {
+          var popupResult = await window.__auth.signInWithPopupFallback();
+          if (popupResult && popupResult.user) {
+            console.log('[App] Popup fallback login successful');
+            safelyShowDashboard(popupResult.user);
+            bindGlobalUI();
+            return;
+          }
+        } catch (popupErr) {
+          console.warn('[App] Popup fallback failed:', popupErr.code || popupErr.message);
+          if (popupErr.code === 'auth/popup-blocked') {
+            showNotice(
+              'المتصفح منع الـ Popup! 😅',
+              'عشان تقدر تسجل دخول، سمح للـ popups من إعدادات الموقع، أو تأكد إن الكوكيز مش مقفولة.'
+            );
+            setupAuthObserver();
+            bindGlobalUI();
+            return;
+          }
+          // أي خطأ تاني — استمر للـ observer
+        }
+      }
 
       // 4. مفيش مستخدم — استمع للتغيرات
       setupAuthObserver();
@@ -54,6 +80,23 @@
         '<button onclick="location.reload()" style="padding:14px 40px;border:none;border-radius:16px;background:linear-gradient(135deg,#1e293b,#0f172a);color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(30,41,59,0.3);">حاول مرة أخرى 🔄</button>' +
         '</div>';
     }
+  }
+
+  function showNotice(title, message) {
+    window.__hideLoader();
+    var notice = document.createElement('div');
+    notice.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;' +
+      'display:flex;flex-direction:column;align-items:center;justify-content:center;' +
+      'padding:40px;text-align:center;direction:rtl;' +
+      'background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);';
+    notice.innerHTML =
+      '<div style="background:white;border-radius:24px;padding:40px 30px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);font-family:Cairo,sans-serif;">' +
+      '<div style="font-size:48px;margin-bottom:15px;">🔒</div>' +
+      '<h2 style="font-size:22px;color:#1e293b;margin:0 0 12px;">' + title + '</h2>' +
+      '<p style="font-size:15px;color:#64748b;line-height:1.7;margin:0 0 20px;">' + message + '</p>' +
+      '<button onclick="location.reload()" style="padding:14px 36px;border:none;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);color:white;font-size:15px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(102,126,234,0.4);">جرب تاني 🔄</button>' +
+      '</div>';
+    document.body.appendChild(notice);
   }
 
   function safelyShowDashboard(user) {
