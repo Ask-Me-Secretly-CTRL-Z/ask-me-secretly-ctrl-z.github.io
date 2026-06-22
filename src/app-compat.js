@@ -4,15 +4,6 @@
   var selectedTheme = null;
   var initError = null;
 
-  function handleRedirectResult() {
-    window.__fb.auth.getRedirectResult().then(function (result) {
-      if (result && result.user) {
-        handleAuthState(result.user);
-      }
-    }).catch(function () {
-    });
-  }
-
   function init() {
     try {
       window.__fb.database.ref('shortUrls/_backend_/url').once('value').then(function (snap) {
@@ -22,33 +13,18 @@
         }
       }).catch(function () {});
 
-      var route = window.__router.init();
-      if (route === 'question') {
-        var targetVal = window.__router.currentTarget;
-        var validation = window.__router.validateUid(targetVal);
-        var warnEl = document.getElementById('uid-warning');
-
-        // Show sync validation warnings (bad chars in URL) using inline style
-        if (validation.problems.length > 0) {
-          var html = '⚠️ اللينك ده غلط يا باشا! دور على الحرف الناقص أو الزيادة.<br>';
-          html += validation.problems.map(function (p) { return '• ' + p.message; }).join('<br>');
-          if (warnEl) { warnEl.innerHTML = html; warnEl.style.display = 'block'; }
-        } else {
-          if (warnEl) { warnEl.style.display = 'none'; }
-        }
-
-        window.__router.resolveShortUrl(validation.cleaned).then(function (actualUid) {
-          showQuestionPage(actualUid, targetVal, validation.problems.length);
-        }).catch(function () {
-          showQuestionPage(validation.cleaned, targetVal, validation.problems.length);
-        });
-        window.__auth.onStateChanged(function (user) {
+      // Check redirect result FIRST, before any auth listener
+      window.__fb.auth.getRedirectResult().then(function (result) {
+        if (result && result.user) {
           window.__hideLoader();
-        });
-      } else {
-        window.__auth.onStateChanged(handleAuthState);
-      }
-      handleRedirectResult();
+          handleAuthState(result.user);
+        } else {
+          setupAuthListener();
+        }
+      }).catch(function () {
+        setupAuthListener();
+      });
+
       bindGlobalUI();
     } catch (e) {
       initError = e;
@@ -60,6 +36,34 @@
         '<p style="color:#64748b;margin-bottom:30px;font-size:16px;">' + e.message + '</p>' +
         '<button onclick="location.reload()" style="padding:14px 40px;border:none;border-radius:16px;background:linear-gradient(135deg,#1e293b,#0f172a);color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(30,41,59,0.3);">حاول مرة أخرى 🔄</button>' +
         '</div>';
+    }
+  }
+
+  function setupAuthListener() {
+    var route = window.__router.init();
+    if (route === 'question') {
+      var targetVal = window.__router.currentTarget;
+      var validation = window.__router.validateUid(targetVal);
+      var warnEl = document.getElementById('uid-warning');
+
+      if (validation.problems.length > 0) {
+        var html = '⚠️ اللينك ده غلط يا باشا! دور على الحرف الناقص أو الزيادة.<br>';
+        html += validation.problems.map(function (p) { return '• ' + p.message; }).join('<br>');
+        if (warnEl) { warnEl.innerHTML = html; warnEl.style.display = 'block'; }
+      } else {
+        if (warnEl) { warnEl.style.display = 'none'; }
+      }
+
+      window.__router.resolveShortUrl(validation.cleaned).then(function (actualUid) {
+        showQuestionPage(actualUid, targetVal, validation.problems.length);
+      }).catch(function () {
+        showQuestionPage(validation.cleaned, targetVal, validation.problems.length);
+      });
+      window.__auth.onStateChanged(function (user) {
+        window.__hideLoader();
+      });
+    } else {
+      window.__auth.onStateChanged(handleAuthState);
     }
   }
 
