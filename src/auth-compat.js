@@ -2,19 +2,7 @@ window.__auth = {};
 
 window.__auth.signInWithGoogle = function () {
   try {
-    var popupPromise = window.__fb.auth.signInWithPopup(window.__fb.provider);
-    return popupPromise.then(function (result) {
-      return result.user;
-    }).catch(function (error) {
-      if (error && (
-        error.code === 'auth/popup-blocked' ||
-        error.code === 'auth/cancelled-popup-request' ||
-        (error.message && (error.message.indexOf('popup') !== -1 || error.message.indexOf('close') !== -1))
-      )) {
-        return window.__fb.auth.signInWithRedirect(window.__fb.provider);
-      }
-      throw error;
-    });
+    return window.__fb.auth.signInWithRedirect(window.__fb.provider);
   } catch (e) {
     return Promise.reject(e);
   }
