@@ -37,32 +37,8 @@
         return;
       }
 
-      // 3.5. Hybrid fallback: redirect كان pending بس فشل — جرب popup
-      if (window.__auth.hadPendingRedirect()) {
-        console.log('[App] Redirect was pending but returned null — trying popup fallback');
-        window.__auth.clearPendingRedirect();
-        try {
-          var popupResult = await window.__fb.auth.signInWithPopup(window.__fb.provider);
-          if (popupResult && popupResult.user) {
-            safelyShowDashboard(popupResult.user);
-            bindGlobalUI();
-            return;
-          }
-        } catch (popupErr) {
-          console.warn('[App] Popup fallback also failed:', popupErr.code || popupErr.message || popupErr);
-          // popup فشل — اعرض رسالة للمستخدم
-          window.__hideLoader();
-          document.body.innerHTML =
-            '<div style="padding:60px 30px;text-align:center;font-family:Cairo,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;">' +
-            '<div style="font-size:48px;margin-bottom:20px;">🔒</div>' +
-            '<h2 style="font-size:22px;margin-bottom:10px;color:#1e293b;">المتصفح مش متوافق مع تسجيل الدخول التلقائي</h2>' +
-            '<p style="color:#64748b;margin-bottom:8px;font-size:15px;">الموقع بيستخدم تقنية redirect من Firebase، بس المتصفح منعها بسبب إعدادات الكوكيز.</p>' +
-            '<p style="color:#64748b;margin-bottom:30px;font-size:15px;">جرب:<br>• فعّل الكوكيز من إعدادات المتصفح<br>• استخدم متصفح تاني (Chrome أو Edge أحدث)<br>• أو افتح الموقع في نافذة عادية (مش Incognito)</p>' +
-            '<button onclick="window.__auth.signInWithGoogle()" style="padding:14px 40px;margin:4px;border:none;border-radius:16px;background:linear-gradient(135deg,#1e293b,#0f172a);color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(30,41,59,0.3);">حاول تاني بالـ Google 🔄</button>' +
-            '</div>';
-          return;
-        }
-      }
+      // 3.5. لو في flag من جلسة قديمة نضّفها
+      try { localStorage.removeItem('__auth_method'); } catch (e) {}
 
       // 4. مفيش مستخدم — استمع للتغيرات
       setupAuthObserver();
