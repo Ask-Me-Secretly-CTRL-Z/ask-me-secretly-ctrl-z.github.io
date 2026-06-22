@@ -4,7 +4,7 @@
   var selectedTheme = null;
   var initError = null;
 
-  function init() {
+  async function init() {
     try {
       window.__fb.database.ref('shortUrls/_backend_/url').once('value').then(function (snap) {
         var val = snap.val();
@@ -13,31 +13,32 @@
         }
       }).catch(function () {});
 
-      // 1. Process redirect result FIRST — هذا هو المصدر الوحيد الموثوق
-      window.__fb.auth.getRedirectResult().then(function (result) {
-        if (result && result.user) {
-          console.log('[App] Redirect login successful');
-          afterUserFound(result.user);
-          return;
-        }
-        // 2. لا يوجد redirect pending — تحقق من جلسة سابقة
-        var existing = window.__fb.auth.currentUser;
-        if (existing) {
-          afterUserFound(existing);
-          return;
-        }
-        // 3. لا redirect ولا جلسة — استمع للتغيرات مرة واحدة
-        afterNoUser();
-      }).catch(function (err) {
+      // 1. BLOCK كل حاجة لحد ما getRedirectResult يخلص
+      var result;
+      try {
+        result = await window.__fb.auth.getRedirectResult();
+      } catch (err) {
         console.error('[App] getRedirectResult error:', err.code || err.message || err);
-        var existing = window.__fb.auth.currentUser;
-        if (existing) {
-          afterUserFound(existing);
-        } else {
-          afterNoUser();
-        }
-      });
+      }
 
+      // 2. لو الـ redirect رجع بمستخدم — ادخله الداشبورد وخلاص
+      if (result && result.user) {
+        console.log('[App] Redirect login successful');
+        safelyShowDashboard(result.user);
+        bindGlobalUI();
+        return;
+      }
+
+      // 3. تحقق من جلسة سابقة (متزامن)
+      var existing = window.__fb.auth.currentUser;
+      if (existing) {
+        safelyShowDashboard(existing);
+        bindGlobalUI();
+        return;
+      }
+
+      // 4. مفيش مستخدم — استمع للتغيرات
+      setupAuthObserver();
       bindGlobalUI();
     } catch (e) {
       initError = e;
@@ -52,18 +53,24 @@
     }
   }
 
-  function afterUserFound(user) {
-    window.__hideLoader();
-    currentUser = user;
-    var route = window.__router.init();
-    if (route === 'question') {
-      setupQuestionPage();
-    } else {
-      loadDashboard(user);
+  function safelyShowDashboard(user) {
+    try {
+      window.__hideLoader();
+      currentUser = user;
+      var route = window.__router.init();
+      if (route === 'question') {
+        setupQuestionPage();
+      } else {
+        loadDashboard(user);
+      }
+    } catch (e) {
+      console.error('[App] safelyShowDashboard error:', e);
+      // لو حصل أي خطأ في عرض الداشبورد، متظهرش اللوجين
+      // الداشبورد باين فعلًا (showScreen اشتغل) والخطأ في البيانات بس
     }
   }
 
-  function afterNoUser() {
+  function setupAuthObserver() {
     var route = window.__router.init();
     if (route === 'question') {
       setupQuestionPage();
@@ -119,7 +126,8 @@
       }
 
       var shortName = data && data.shortName ? data.shortName : null;
-      document.getElementById('user-link').value = window.__router.buildLink(user.uid, shortName);
+      var userLinkEl = document.getElementById('user-link');
+      if (userLinkEl) { userLinkEl.value = window.__router.buildLink(user.uid, shortName); }
 
       var checkmark = document.getElementById('short-url-checkmark');
       var shortBtn = document.getElementById('short-url-toggle-btn');
