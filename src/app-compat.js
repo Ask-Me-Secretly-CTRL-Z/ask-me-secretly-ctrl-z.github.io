@@ -283,11 +283,13 @@
         var key = window.__TURNSTILE_SITEKEY;
         return key && key.indexOf('__') !== 0;
       }
-      function updateSubmitBtn() {
+      function validateForm() {
         var len = qInput.value.trim().length;
-        qBtn.disabled = len < 3 || len > 500 || (turnstileConfigured() && !window.__questions._turnstileToken);
+        var ready = len >= 3 && len <= 500 && (!turnstileConfigured() || window.__questions._turnstileToken);
+        qBtn.disabled = !ready;
       }
-      qInput.addEventListener('input', updateSubmitBtn);
+      window.__questions.validateForm = validateForm;
+      qInput.addEventListener('input', validateForm);
       qInput.addEventListener('input', function () {
         var val = qInput.value;
         if (val.length === 0) { qInput.dir = 'rtl'; qInput.style.textAlign = 'right'; return; }
