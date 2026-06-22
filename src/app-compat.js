@@ -13,25 +13,16 @@
         }
       }).catch(function () {});
 
-      // 1. الحارس الأول: استمع لنتيجة الـ Redirect أول ما الصفحة تفتح
+      // Process redirect result in background (required for redirect to complete)
       window.__fb.auth.getRedirectResult().then(function (result) {
         if (result && result.user) {
           console.log('[App] Redirect login successful');
-          window.__hideLoader();
-          currentUser = result.user;
-          var route = window.__router.init();
-          if (route === 'question') {
-            setupQuestionPage();
-          } else {
-            loadDashboard(result.user);
-          }
-        } else {
-          monitorActiveUser();
         }
       }).catch(function (err) {
-        console.error('[App] Redirect error caught:', err.code || err.message || err);
-        monitorActiveUser();
+        console.error('[App] getRedirectResult error:', err.code || err.message || err);
       });
+
+      monitorActiveUser();
 
       bindGlobalUI();
     } catch (e) {
@@ -47,7 +38,6 @@
     }
   }
 
-  // 2. دالة مراقبة حالة المستخدم المستمرة
   function monitorActiveUser() {
     var route = window.__router.init();
     if (route === 'question') {
@@ -56,14 +46,20 @@
         window.__hideLoader();
       });
     } else {
+      var loginTimer = null;
       window.__auth.onStateChanged(function (user) {
         window.__hideLoader();
         if (user) {
+          if (loginTimer) { clearTimeout(loginTimer); loginTimer = null; }
+          if (currentUser) return;
           currentUser = user;
           loadDashboard(user);
-        } else {
-          currentUser = null;
-          window.__ui.showScreen('login-screen');
+        } else if (!loginTimer) {
+          loginTimer = setTimeout(function () {
+            loginTimer = null;
+            currentUser = null;
+            window.__ui.showScreen('login-screen');
+          }, 3000);
         }
       });
     }
