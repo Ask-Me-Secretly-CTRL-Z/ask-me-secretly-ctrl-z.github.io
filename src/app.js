@@ -5,7 +5,7 @@
 // ============================================================
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-app.js';
 import {
-  getAuth, GoogleAuthProvider, signInWithRedirect, signInWithPopup,
+  getAuth, GoogleAuthProvider, signInWithPopup,
   getRedirectResult, signOut, onAuthStateChanged, updateProfile
 } from 'https://www.gstatic.com/firebasejs/12.15.0/firebase-auth.js';
 import {
@@ -111,12 +111,9 @@ window.__fb = {
 // ============================================================
 window.__auth = {};
 window.__auth.signInWithGoogle = function () {
-  try { localStorage.setItem('__auth_method', 'redirect'); } catch (e) {}
-  return signInWithRedirect(auth, provider);
-};
-window.__auth.signInWithPopupFallback = function () {
-  try { localStorage.setItem('__auth_method', 'popup'); } catch (e) {}
-  return signInWithPopup(auth, provider);
+  return signInWithPopup(auth, provider).then(function () {
+    location.reload();
+  });
 };
 window.__auth.signOut = function () {
   return signOut(auth).catch(function (error) {
