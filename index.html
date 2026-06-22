@@ -562,32 +562,8 @@
     <!-- Team Tooltip -->
     <div id="team-tooltip" class="team-tooltip">الموقع ده من عمل فريق <span class="tooltip-highlight">CTRL-z</span> يا فنان 😎</div>
 
-    <!-- Firebase SDKs (compat builds work on static hosts) -->
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js" integrity="sha384-ZaR6mWzmJtrRibZ1Vm7SoHFr8OXjyAuGAXalGDKqbxFT18oi/z+oZLIRFkpeNor1" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js" integrity="sha384-I1LYojsZ5RM1cOda44Z2h42Qa6YfsQ1XkXxREnhp4ueYBR/4d1pG1K+NZM537Vsj" crossorigin="anonymous"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js" integrity="sha384-g5H2aNdtgRBYOBLsuOAuHvUXWnw4bswmU+tYjmGc1G3JfKxl79uWwV4sQarJsLwu" crossorigin="anonymous"></script>
-
     <!-- html2canvas for story generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
-
-    <script>
-      const firebaseConfig = {
-        apiKey: "AIzaSyDsieHa61z4_iz1r4TIkF8beceCFyfw-DY",
-        authDomain: "ctrl-z-4bfb3.firebaseapp.com",
-        databaseURL: "https://ctrl-z-4bfb3-default-rtdb.firebaseio.com",
-        projectId: "ctrl-z-4bfb3",
-        storageBucket: "ctrl-z-4bfb3.firebasestorage.app",
-        messagingSenderId: "870806670095",
-        appId: "1:870806670095:web:6dc5b90ae126411f4b0c7a",
-        measurementId: "G-3M7741FHBB"
-      };
-      firebase.initializeApp(firebaseConfig);
-      window.__firebase = {
-        auth: firebase.auth(),
-        database: firebase.database(),
-        googleProvider: new firebase.auth.GoogleAuthProvider()
-      };
-    </script>
 
     <!-- Conditional Turnstile — only loads when sitekey is configured -->
     <script>
@@ -628,17 +604,8 @@
       };
     </script>
 
-    <!-- App entry point (no type="module" - uses global firebase) -->
-    <script src="src/firebase-compat.js"></script>
-    <script src="src/auth-compat.js"></script>
-    <script src="src/questions-compat.js"></script>
-    <script src="src/themes-compat.js"></script>
-    <script src="src/story-compat.js"></script>
-    <script src="src/security-compat.js"></script>
-    <script src="src/ui-compat.js"></script>
-    <script src="src/errors-compat.js"></script>
-    <script src="src/router-compat.js"></script>
-    <script src="src/app-compat.js"></script>
+    <!-- App entry point (ES module - loads Firebase v12 + dynamically loads compat scripts) -->
+    <script type="module" src="src/app.js"></script>
 
     <script>
       if ('serviceWorker' in navigator) {
