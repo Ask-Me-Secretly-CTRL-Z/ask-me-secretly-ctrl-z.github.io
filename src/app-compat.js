@@ -283,13 +283,20 @@
         var key = window.__TURNSTILE_SITEKEY;
         return key && key.indexOf('__') !== 0;
       }
-      function validateForm() {
+      function checkFormValidity() {
         var len = qInput.value.trim().length;
-        var ready = len >= 3 && len <= 500 && (!turnstileConfigured() || window.__questions._turnstileToken);
-        qBtn.disabled = !ready;
+        var validLength = len >= 3 && len <= 500;
+        var turnstileOk = !turnstileConfigured() || window.__questions._turnstileToken;
+        qBtn.disabled = !(validLength && turnstileOk);
       }
-      window.__questions.validateForm = validateForm;
-      qInput.addEventListener('input', validateForm);
+      window.__questions.validateForm = checkFormValidity;
+      qInput.addEventListener('input', checkFormValidity);
+      qInput.addEventListener('keyup', checkFormValidity);
+      qInput.addEventListener('change', checkFormValidity);
+      qInput.addEventListener('paste', function () {
+        setTimeout(checkFormValidity, 0);
+      });
+      checkFormValidity();
       qInput.addEventListener('input', function () {
         var val = qInput.value;
         if (val.length === 0) { qInput.dir = 'rtl'; qInput.style.textAlign = 'right'; return; }
