@@ -279,24 +279,32 @@
       var qInput = document.getElementById('question-input');
       var qBtn = document.getElementById('submit-question-btn');
       window.__ui.charCount(qInput, document.getElementById('char-count'));
-      function turnstileConfigured() {
+      function isTurnstileActive() {
         var key = window.__TURNSTILE_SITEKEY;
         return key && key.indexOf('__') !== 0;
       }
-      function checkFormValidity() {
+      function forceValidateForm() {
         var len = qInput.value.trim().length;
-        var validLength = len >= 3 && len <= 500;
-        var turnstileOk = !turnstileConfigured() || window.__questions._turnstileToken;
-        qBtn.disabled = !(validLength && turnstileOk);
+        var turnstileOk = true;
+        if (isTurnstileActive()) {
+          turnstileOk = typeof turnstile !== 'undefined' && turnstile.getResponse ? !!turnstile.getResponse() : false;
+        }
+        if (len >= 3 && len <= 500 && turnstileOk) {
+          qBtn.removeAttribute('disabled');
+          qBtn.style.opacity = '1';
+          qBtn.style.cursor = 'pointer';
+        } else {
+          qBtn.setAttribute('disabled', 'true');
+          qBtn.style.opacity = '0.5';
+          qBtn.style.cursor = 'not-allowed';
+        }
       }
-      window.__questions.validateForm = checkFormValidity;
-      qInput.addEventListener('input', checkFormValidity);
-      qInput.addEventListener('keyup', checkFormValidity);
-      qInput.addEventListener('change', checkFormValidity);
+      qInput.addEventListener('input', forceValidateForm);
+      qInput.addEventListener('keyup', forceValidateForm);
       qInput.addEventListener('paste', function () {
-        setTimeout(checkFormValidity, 0);
+        setTimeout(forceValidateForm, 0);
       });
-      checkFormValidity();
+      window.__questions._intervalId = setInterval(forceValidateForm, 500);
       qInput.addEventListener('input', function () {
         var val = qInput.value;
         if (val.length === 0) { qInput.dir = 'rtl'; qInput.style.textAlign = 'right'; return; }

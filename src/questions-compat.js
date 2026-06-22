@@ -11,23 +11,14 @@ window.__questions.getTurnstileToken = function () {
 
 window.onTurnstileSuccess = function (token) {
   window.__questions._turnstileToken = token;
-  if (typeof window.__questions.validateForm === 'function') {
-    window.__questions.validateForm();
-  }
 };
 
 window.onTurnstileExpired = function () {
   window.__questions._turnstileToken = '';
-  if (typeof window.__questions.validateForm === 'function') {
-    window.__questions.validateForm();
-  }
 };
 
 window.onTurnstileError = function () {
   window.__questions._turnstileToken = '';
-  if (typeof window.__questions.validateForm === 'function') {
-    window.__questions.validateForm();
-  }
 };
 
 window.__questions._resetWidget = function () {
