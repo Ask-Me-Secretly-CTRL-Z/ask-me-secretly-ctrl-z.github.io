@@ -279,17 +279,11 @@
       var qInput = document.getElementById('question-input');
       var qBtn = document.getElementById('submit-question-btn');
       window.__ui.charCount(qInput, document.getElementById('char-count'));
-      function isTurnstileActive() {
-        var key = window.__TURNSTILE_SITEKEY;
-        return key && key.indexOf('__') !== 0;
-      }
       function forceValidateForm() {
         var len = qInput.value.trim().length;
-        var turnstileOk = true;
-        if (isTurnstileActive()) {
-          turnstileOk = typeof turnstile !== 'undefined' && turnstile.getResponse ? !!turnstile.getResponse() : false;
-        }
-        if (len >= 3 && len <= 500 && turnstileOk) {
+        var turnstileInput = document.querySelector('[name="cf-turnstile-response"]');
+        var hasToken = turnstileInput && turnstileInput.value && turnstileInput.value.trim() !== '';
+        if (len >= 3 && len <= 500 && hasToken) {
           qBtn.removeAttribute('disabled');
           qBtn.style.opacity = '1';
           qBtn.style.cursor = 'pointer';
