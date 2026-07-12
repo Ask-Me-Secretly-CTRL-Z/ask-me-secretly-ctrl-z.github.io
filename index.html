@@ -104,6 +104,12 @@
 
             <!-- Landing Content (visible for Google AdSense / SEO) -->
             <div class="landing-content">
+                <!-- Ad Top (Login) -->
+                <div class="ad-zone" style="text-align:center;margin:0 auto 24px;max-width:728px;">
+                    <div class="ad-desktop-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/b4bc1d206c5397c03ca440e8dc32ec9d/invoke.js" width="728" height="90" style="border:none;" loading="lazy"></iframe></div>
+                    <div class="ad-mobile-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/f866c30df233fbf3c9151a5f3713a6dc/invoke.js" width="320" height="50" style="border:none;" loading="lazy"></iframe></div>
+                </div>
+
                 <section class="landing-section">
                     <h2>إزاي تشتغل؟</h2>
                     <div class="steps-grid">
@@ -160,6 +166,12 @@
                 </section>
 
                 <section class="landing-section faq-section">
+                    <!-- Ad Middle (Login) -->
+                    <div class="ad-zone" style="text-align:center;margin:0 auto 24px;max-width:728px;">
+                        <div class="ad-desktop-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/b4bc1d206c5397c03ca440e8dc32ec9d/invoke.js" width="728" height="90" style="border:none;" loading="lazy"></iframe></div>
+                        <div class="ad-mobile-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/f866c30df233fbf3c9151a5f3713a6dc/invoke.js" width="320" height="50" style="border:none;" loading="lazy"></iframe></div>
+                    </div>
+
                     <h2>أسئلة بتتكرر</h2>
                     <div class="faq-list">
                         <div class="faq-item">
@@ -380,6 +392,12 @@
         </div>
             <div class="container">
 
+                <!-- Ad Top -->
+                <div class="ad-zone" style="text-align:center;margin:0 auto 16px;max-width:728px;">
+                    <div class="ad-desktop-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/b4bc1d206c5397c03ca440e8dc32ec9d/invoke.js" width="728" height="90" style="border:none;" loading="lazy"></iframe></div>
+                    <div class="ad-mobile-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/f866c30df233fbf3c9151a5f3713a6dc/invoke.js" width="320" height="50" style="border:none;" loading="lazy"></iframe></div>
+                </div>
+
                 <!-- Name Section (Centered Main Element) -->
                 <div class="profile-section card">
                     <div class="profile-name-container">
@@ -410,6 +428,12 @@
                     <div id="questions-list" class="questions-list">
                         <p class="empty-message">لسه مفيش حد عبرك.. ابعت اللينك لصحابك طيب!</p>
                     </div>
+                </div>
+
+                <!-- Ad Middle -->
+                <div class="ad-zone" style="text-align:center;margin:16px auto;max-width:728px;">
+                    <div class="ad-desktop-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/b4bc1d206c5397c03ca440e8dc32ec9d/invoke.js" width="728" height="90" style="border:none;" loading="lazy"></iframe></div>
+                    <div class="ad-mobile-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/f866c30df233fbf3c9151a5f3713a6dc/invoke.js" width="320" height="50" style="border:none;" loading="lazy"></iframe></div>
                 </div>
 
                 <div class="social-links card">
@@ -497,6 +521,12 @@
             <div class="container">
                 <div class="header">
                     <h1>اسأل من غير ما حد يعرف إنت مين 😉</h1>
+                </div>
+
+                <!-- Ad Top (Question) -->
+                <div class="ad-zone" style="text-align:center;margin:0 auto 16px;max-width:728px;">
+                    <div class="ad-desktop-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/b4bc1d206c5397c03ca440e8dc32ec9d/invoke.js" width="728" height="90" style="border:none;" loading="lazy"></iframe></div>
+                    <div class="ad-mobile-only" style="display:none;text-align:center;"><iframe src="https://www.highperformanceformat.com/f866c30df233fbf3c9151a5f3713a6dc/invoke.js" width="320" height="50" style="border:none;" loading="lazy"></iframe></div>
                 </div>
 
                 <div id="visitor-login" class="login-prompt">
@@ -666,5 +696,18 @@
 
     <script src="https://pl30331894.effectivecpmnetwork.com/4f/78/fa/4f78fa434f6fdf360d58e9db73ab22f8.js"></script>
     <!-- ===== ADS END ===== -->
+
+    <!-- ===== AD RESPONSIVE SCRIPT ===== -->
+    <script>
+    (function(){
+      function applyAdVisibility(){
+        var w = window.innerWidth;
+        document.querySelectorAll('.ad-desktop-only').forEach(function(el){ el.style.display = (w > 768) ? 'block' : 'none'; });
+        document.querySelectorAll('.ad-mobile-only').forEach(function(el){ el.style.display = (w <= 768) ? 'block' : 'none'; });
+      }
+      applyAdVisibility();
+      window.addEventListener('resize', applyAdVisibility);
+    })();
+    </script>
 </body>
 </html>
