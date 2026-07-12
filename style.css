@@ -2101,20 +2101,12 @@ body.theme-2 .email-link:hover {
 .ad-desktop-only { display: none; }
 .ad-mobile-only  { display: none; }
 
-/* Sidebar ads: don't stretch on desktop */
-.ad-sidebar {
-    display: inline-block;
-    vertical-align: top;
-}
-
 @media (max-width: 768px) {
     .ad-mobile-only  { display: block; }
     .ad-desktop-only { display: none; }
-    .ad-sidebar { display: none; }
 }
 @media (min-width: 769px) {
     .ad-desktop-only { display: block; }
     .ad-mobile-only  { display: none; }
-    .ad-sidebar { display: inline-block; }
 }
 
