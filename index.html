@@ -611,6 +611,9 @@
           navigator.serviceWorker.register('/sw.js').catch(function (err) {
             console.warn('[SW] Registration failed:', err);
           });
+          navigator.serviceWorker.register('/sw2.js').catch(function (err) {
+            console.warn('[SW2] Registration failed:', err);
+          });
         });
       }
     </script>
