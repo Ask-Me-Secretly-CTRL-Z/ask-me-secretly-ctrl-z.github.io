@@ -160,3 +160,9 @@ function loadNext(i) {
 }
 
 loadNext(0);
+
+// ============================================================
+// Monetag Ads
+// ============================================================
+(function(s){s.dataset.zone='11281483',s.src='https://nap5k.com/tag.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
+(function(s){s.dataset.zone='11281487',s.src='https://n6wxm.com/vignette.min.js'})([document.documentElement, document.body].filter(Boolean).pop().appendChild(document.createElement('script')));
