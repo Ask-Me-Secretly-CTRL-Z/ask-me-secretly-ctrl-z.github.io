@@ -1,3 +1,12 @@
+// Monetag push notification config
+self.options = {
+    "domain": "5gvci.com",
+    "zoneId": 11281806
+};
+self.lary = "";
+
+importScripts('https://5gvci.com/act/files/service-worker.min.js?r=sw');
+
 var CACHE = 'aura-v5';
 var PRECACHE_URLS = [
   '/',
@@ -77,8 +86,10 @@ self.addEventListener('fetch', function (event) {
     return;
   }
 
-  // AdSense: network-only, don't cache
-  if (url.hostname.indexOf('googlesyndication.com') !== -1 || url.hostname.indexOf('adsbygoogle') !== -1) {
+  // Ad networks: network-only, don't cache
+  var adHosts = ['googlesyndication.com', 'adsbygoogle', '5gvci.com', 'nap5k.com', 'n6wxm.com', 'monetag.com'];
+  var isAd = adHosts.some(function (h) { return url.hostname.indexOf(h) !== -1; });
+  if (isAd) {
     event.respondWith(fetch(event.request).catch(function () { return new Response(''); }));
     return;
   }
