@@ -2087,26 +2087,5 @@ body.theme-2 .email-link:hover {
     }
 }
 
-/* ===== Ad Containers ===== */
-.ad-container {
-    text-align: center;
-    margin: 12px auto;
-    max-width: 100%;
-    overflow: hidden;
-}
-.ad-container iframe {
-    border: none;
-    max-width: 100%;
-}
-.ad-desktop-only { display: none; }
-.ad-mobile-only  { display: none; }
 
-@media (max-width: 768px) {
-    .ad-mobile-only  { display: block; }
-    .ad-desktop-only { display: none; }
-}
-@media (min-width: 769px) {
-    .ad-desktop-only { display: block; }
-    .ad-mobile-only  { display: none; }
-}
 
