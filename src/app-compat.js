@@ -591,11 +591,10 @@
     try { isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true'; } catch (e) {}
     notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
 
-    notifToggle.addEventListener('click', async function(e) {
-      e.preventDefault();
-      var willBeEnabled = !this.checked;
+    notifToggle.addEventListener('change', async function() {
+      var isCheckedNow = this.checked;
 
-      if (willBeEnabled) {
+      if (isCheckedNow) {
         var confirmTurnOn = confirm('هل أنت متأكد من أنك تريد تفعيل الإشعارات ليصلك كل جديد؟');
         if (confirmTurnOn) {
           if (typeof Notification === 'undefined') {
@@ -605,7 +604,6 @@
           }
           var permission = await Notification.requestPermission();
           if (permission === 'granted') {
-            this.checked = true;
             enableMonetagPush();
             try { localStorage.setItem('notifications_enabled', 'true'); } catch (e) {}
           } else {
@@ -619,7 +617,6 @@
       } else {
         var confirmTurnOff = confirm('هل أنت متأكد من أنك تريد إيقاف تشغيل الإشعارات؟');
         if (confirmTurnOff) {
-          this.checked = false;
           try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
         } else {
           this.checked = true;
