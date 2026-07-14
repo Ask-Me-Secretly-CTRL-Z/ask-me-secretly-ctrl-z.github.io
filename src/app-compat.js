@@ -575,6 +575,22 @@
       if (!name || name === 'مستخدم') { name = user.uid.substring(0, 8); }
       enableShortUrl(name, user, btn, checkmark, linkEl);
     };
+
+    // Notification toggle
+    var notifToggle = document.getElementById('notif-toggle-input');
+    if (notifToggle) {
+      var saved = false;
+      try { saved = localStorage.getItem('pushEnabled') === 'true'; } catch (e) {}
+      notifToggle.checked = saved;
+
+      notifToggle.addEventListener('change', function () {
+        var enabled = this.checked;
+        try { localStorage.setItem('pushEnabled', enabled); } catch (e) {}
+        if (enabled) {
+          enablePushNotifications();
+        }
+      });
+    }
   }
 
   function bindGlobalUI() {
@@ -665,6 +681,29 @@
       };
     }
   }
+
+  function enablePushNotifications() {
+    if (document.getElementById('monetag-push-script')) return;
+    var script = document.createElement('script');
+    script.id = 'monetag-push-script';
+    script.src = 'https://5gvci.com/act/files/tag.min.js?z=11281806';
+    script.setAttribute('data-cfasync', 'false');
+    script.async = true;
+    document.head.appendChild(script);
+  }
+
+  // Auto-enable push if user had it on before
+  (function () {
+    try {
+      if (localStorage.getItem('pushEnabled') === 'true') {
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', enablePushNotifications);
+        } else {
+          enablePushNotifications();
+        }
+      }
+    } catch (e) {}
+  })();
 
   init();
 })();
