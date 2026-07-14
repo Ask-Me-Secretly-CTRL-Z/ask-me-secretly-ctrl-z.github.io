@@ -592,9 +592,9 @@
     notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
 
     notifToggle.addEventListener('change', async function() {
-      var isCheckedNow = this.checked;
+      var wantsToEnable = this.checked;
 
-      if (isCheckedNow) {
+      if (wantsToEnable) {
         var confirmTurnOn = confirm('هل أنت متأكد من أنك تريد تفعيل الإشعارات ليصلك كل جديد؟');
         if (confirmTurnOn) {
           if (typeof Notification === 'undefined') {
