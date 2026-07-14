@@ -587,44 +587,38 @@
       return;
     }
 
-    var isNotificationsEnabled = false;
-    try { isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true'; } catch (e) {}
-    notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
+    var isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true';
+    notifToggle.checked = isNotificationsEnabled;
 
     notifToggle.addEventListener('click', async function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
 
-      var isCurrentlyEnabled = this.checked;
+      var currentlyEnabled = localStorage.getItem('notifications_enabled') === 'true';
 
-      if (!isCurrentlyEnabled) {
+      if (!currentlyEnabled) {
         var confirmTurnOn = confirm('هل أنت متأكد من أنك تريد تفعيل الإشعارات ليصلك كل جديد؟');
         if (confirmTurnOn) {
           if (typeof Notification === 'undefined') {
-            this.checked = false;
             alert('Notifications are not supported in this browser.');
             return;
           }
           var permission = await Notification.requestPermission();
           if (permission === 'granted') {
+            localStorage.setItem('notifications_enabled', 'true');
             this.checked = true;
             enableMonetagPush();
-            try { localStorage.setItem('notifications_enabled', 'true'); } catch (e) {}
           } else {
+            localStorage.setItem('notifications_enabled', 'false');
             this.checked = false;
-            try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
             alert('برجاء تفعيل صلاحية الإشعارات من إعدادات متصفحك أولاً.');
           }
-        } else {
-          this.checked = false;
         }
       } else {
         var confirmTurnOff = confirm('هل أنت متأكد من أنك تريد إيقاف تشغيل الإشعارات؟');
         if (confirmTurnOff) {
+          localStorage.setItem('notifications_enabled', 'false');
           this.checked = false;
-          try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
-        } else {
-          this.checked = true;
         }
       }
     });
