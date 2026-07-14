@@ -593,12 +593,13 @@
 
     notifToggle.addEventListener('click', async function(e) {
       e.preventDefault();
-      var currentState = this.checked;
+      var willBeEnabled = !this.checked;
 
-      if (!currentState) {
+      if (willBeEnabled) {
         var confirmTurnOn = confirm('هل أنت متأكد من أنك تريد تفعيل الإشعارات ليصلك كل جديد؟');
         if (confirmTurnOn) {
           if (typeof Notification === 'undefined') {
+            this.checked = false;
             alert('Notifications are not supported in this browser.');
             return;
           }
@@ -608,14 +609,20 @@
             enableMonetagPush();
             try { localStorage.setItem('notifications_enabled', 'true'); } catch (e) {}
           } else {
+            this.checked = false;
+            try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
             alert('برجاء تفعيل صلاحية الإشعارات من إعدادات متصفحك أولاً.');
           }
+        } else {
+          this.checked = false;
         }
       } else {
         var confirmTurnOff = confirm('هل أنت متأكد من أنك تريد إيقاف تشغيل الإشعارات؟');
         if (confirmTurnOff) {
           this.checked = false;
           try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
+        } else {
+          this.checked = true;
         }
       }
     });
