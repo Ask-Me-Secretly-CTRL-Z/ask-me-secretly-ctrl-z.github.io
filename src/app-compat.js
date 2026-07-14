@@ -587,21 +587,67 @@
       return;
     }
 
+    var notifDeniedModal = document.getElementById('notif-denied-modal');
+    var notifDeniedClose = document.getElementById('notif-denied-close');
+    var notifDeniedOk = document.getElementById('notif-denied-ok');
+    var notifDesc = document.getElementById('notif-desc');
+
     function updateNotifVisual(isEnabled) {
       notifToggle.checked = isEnabled;
       if (isEnabled) {
         notifContainer.classList.add('active');
+        notifContainer.classList.remove('denied');
       } else {
         notifContainer.classList.remove('active');
       }
     }
 
-    var isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true';
-    updateNotifVisual(isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted');
+    function applyDeniedState() {
+      notifContainer.classList.add('denied');
+      notifContainer.classList.remove('active');
+      notifToggle.checked = false;
+      if (notifDesc) {
+        notifDesc.textContent = 'تم تعطيل الإشعارات من إعدادات المتصفح';
+        notifDesc.style.color = '#ef4444';
+        notifDesc.style.fontWeight = '600';
+      }
+    }
+
+    function showDeniedModal() {
+      if (notifDeniedModal) notifDeniedModal.style.display = 'flex';
+    }
+
+    function hideDeniedModal() {
+      if (notifDeniedModal) notifDeniedModal.style.display = 'none';
+    }
+
+    // Init: check actual browser permission state
+    var permissionDenied = typeof Notification !== 'undefined' && Notification.permission === 'denied';
+    if (permissionDenied) {
+      applyDeniedState();
+    } else {
+      var isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true';
+      updateNotifVisual(isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted');
+    }
+
+    // Modal dismiss handlers
+    if (notifDeniedClose) notifDeniedClose.addEventListener('click', hideDeniedModal);
+    if (notifDeniedOk) notifDeniedOk.addEventListener('click', hideDeniedModal);
+    if (notifDeniedModal) {
+      notifDeniedModal.addEventListener('click', function(e) {
+        if (e.target === notifDeniedModal) hideDeniedModal();
+      });
+    }
 
     notifToggle.addEventListener('click', async function(e) {
       e.preventDefault();
       e.stopImmediatePropagation();
+
+      // If browser permission is denied, show guide modal
+      if (typeof Notification !== 'undefined' && Notification.permission === 'denied') {
+        showDeniedModal();
+        return;
+      }
 
       var currentlyEnabled = localStorage.getItem('notifications_enabled') === 'true';
 
@@ -617,10 +663,13 @@
             localStorage.setItem('notifications_enabled', 'true');
             updateNotifVisual(true);
             enableMonetagPush();
+          } else if (permission === 'denied') {
+            localStorage.setItem('notifications_enabled', 'false');
+            applyDeniedState();
+            showDeniedModal();
           } else {
             localStorage.setItem('notifications_enabled', 'false');
             updateNotifVisual(false);
-            alert('برجاء تفعيل صلاحية الإشعارات من إعدادات متصفحك أولاً.');
           }
         }
       } else {

@@ -389,13 +389,61 @@
                             <span class="notif-settings-icon">🔔</span>
                             <div class="notif-settings-text">
                                 <span class="notif-settings-title">Push Notifications</span>
-                                <span class="notif-settings-desc">Get notified when someone sends you a question</span>
+                                <span class="notif-settings-desc" id="notif-desc">Get notified when someone sends you a question</span>
                             </div>
                         </div>
                         <label class="notif-toggle" for="notif-toggle-input">
                             <input type="checkbox" id="notif-toggle-input">
                             <span class="notif-toggle-slider"></span>
                         </label>
+                    </div>
+                </div>
+
+                <!-- Notification Permission Denied Guide Modal -->
+                <div id="notif-denied-modal" class="notif-denied-overlay" style="display:none;">
+                    <div class="notif-denied-modal">
+                        <button class="notif-denied-close" id="notif-denied-close" aria-label="Close">&times;</button>
+                        <div class="notif-denied-icon">🔕</div>
+                        <h3 class="notif-denied-title">الإشعارات معطّلة من المتصفح</h3>
+                        <p class="notif-denied-desc">المتصفح بيرفض يبعتلك إشعارات لأنك (أو حد تاني) عطّلها من إعدادات المتصفح. بس متقلقش، الحل سهل!</p>
+
+                        <div class="notif-denied-steps">
+                            <div class="notif-denied-step">
+                                <div class="notif-step-num">١</div>
+                                <div class="notif-step-body">
+                                    <strong>اضغط على أيقونة القفل 🔒</strong>
+                                    <span>اللي جنب رابط الموقع في شريط العنوان فوق</span>
+                                </div>
+                            </div>
+                            <div class="notif-denied-step">
+                                <div class="notif-step-num">٢</div>
+                                <div class="notif-step-body">
+                                    <strong>دور على "الإشعارات" (Notifications)</strong>
+                                    <span>واختار "倧ذ" أو "السماح" (Allow)</span>
+                                </div>
+                            </div>
+                            <div class="notif-denied-step">
+                                <div class="notif-step-num">٣</div>
+                                <div class="notif-step-body">
+                                    <strong>ارجع اضغط على الزر تاني</strong>
+                                    <span>وهتلاقي الإشعارات اتفتحت!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="notif-denied-visual">
+                            <div class="notif-denied-url-bar">
+                                <span class="notif-denied-lock">🔒</span>
+                                <span class="notif-denied-url-text">ask-me-secretly-ctrl-z.github.io</span>
+                            </div>
+                            <div class="notif-denied-arrow">↓</div>
+                            <div class="notif-denied-permission-row">
+                                <span>الإشعارات</span>
+                                <span class="notif-denied-badge">倧ذ</span>
+                            </div>
+                        </div>
+
+                        <button class="notif-denied-btn" id="notif-denied-ok">فهمت، شكراً!</button>
                     </div>
                 </div>
 
