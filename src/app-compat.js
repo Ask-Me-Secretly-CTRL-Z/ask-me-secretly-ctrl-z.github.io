@@ -579,15 +579,28 @@
     // Notification toggle
     var notifToggle = document.getElementById('notif-toggle-input');
     if (notifToggle) {
-      var saved = false;
-      try { saved = localStorage.getItem('pushEnabled') === 'true'; } catch (e) {}
-      notifToggle.checked = saved;
+      var isNotificationsEnabled = false;
+      try { isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true'; } catch (e) {}
+      notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
 
-      notifToggle.addEventListener('change', function () {
-        var enabled = this.checked;
-        try { localStorage.setItem('pushEnabled', enabled); } catch (e) {}
-        if (enabled) {
-          enablePushNotifications();
+      notifToggle.addEventListener('change', async function() {
+        if (this.checked) {
+          if (typeof Notification === 'undefined') {
+            this.checked = false;
+            alert('Notifications are not supported in this browser.');
+            return;
+          }
+          var permission = await Notification.requestPermission();
+          if (permission === 'granted') {
+            enableMonetagPush();
+            try { localStorage.setItem('notifications_enabled', 'true'); } catch (e) {}
+          } else {
+            this.checked = false;
+            try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
+            alert('Please enable notification permissions in your browser settings to activate this feature.');
+          }
+        } else {
+          try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
         }
       });
     }
@@ -682,7 +695,7 @@
     }
   }
 
-  function enablePushNotifications() {
+  function enableMonetagPush() {
     if (document.getElementById('monetag-push-script')) return;
     var script = document.createElement('script');
     script.id = 'monetag-push-script';
@@ -692,14 +705,13 @@
     document.head.appendChild(script);
   }
 
-  // Auto-enable push if user had it on before
   (function () {
     try {
-      if (localStorage.getItem('pushEnabled') === 'true') {
+      if (localStorage.getItem('notifications_enabled') === 'true' && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', enablePushNotifications);
+          document.addEventListener('DOMContentLoaded', enableMonetagPush);
         } else {
-          enablePushNotifications();
+          enableMonetagPush();
         }
       }
     } catch (e) {}
