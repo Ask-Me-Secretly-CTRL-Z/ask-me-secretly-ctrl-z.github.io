@@ -587,8 +587,17 @@
       return;
     }
 
+    function updateNotifVisual(isEnabled) {
+      notifToggle.checked = isEnabled;
+      if (isEnabled) {
+        notifContainer.classList.add('active');
+      } else {
+        notifContainer.classList.remove('active');
+      }
+    }
+
     var isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true';
-    notifToggle.checked = isNotificationsEnabled;
+    updateNotifVisual(isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted');
 
     notifToggle.addEventListener('click', async function(e) {
       e.preventDefault();
@@ -606,11 +615,11 @@
           var permission = await Notification.requestPermission();
           if (permission === 'granted') {
             localStorage.setItem('notifications_enabled', 'true');
-            this.checked = true;
+            updateNotifVisual(true);
             enableMonetagPush();
           } else {
             localStorage.setItem('notifications_enabled', 'false');
-            this.checked = false;
+            updateNotifVisual(false);
             alert('برجاء تفعيل صلاحية الإشعارات من إعدادات متصفحك أولاً.');
           }
         }
@@ -618,7 +627,7 @@
         var confirmTurnOff = confirm('هل أنت متأكد من أنك تريد إيقاف تشغيل الإشعارات؟');
         if (confirmTurnOff) {
           localStorage.setItem('notifications_enabled', 'false');
-          this.checked = false;
+          updateNotifVisual(false);
         }
       }
     });

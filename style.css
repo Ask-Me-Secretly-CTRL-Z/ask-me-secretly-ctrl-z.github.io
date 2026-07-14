@@ -534,12 +534,14 @@ body {
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
-.notif-toggle input:checked + .notif-toggle-slider {
+.notif-toggle input:checked + .notif-toggle-slider,
+.notif-settings.active .notif-toggle-slider {
     background: var(--accent);
     box-shadow: 0 0 0 3px rgba(30, 41, 59, 0.1);
 }
 
-.notif-toggle input:checked + .notif-toggle-slider::before {
+.notif-toggle input:checked + .notif-toggle-slider::before,
+.notif-settings.active .notif-toggle-slider::before {
     transform: translateX(24px);
 }
 
