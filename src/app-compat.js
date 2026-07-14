@@ -577,33 +577,48 @@
     };
 
     // Notification toggle
+    var notifContainer = document.querySelector('.notif-settings');
     var notifToggle = document.getElementById('notif-toggle-input');
-    if (notifToggle) {
-      var isNotificationsEnabled = false;
-      try { isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true'; } catch (e) {}
-      notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
+    if (!notifContainer || !notifToggle) return;
 
-      notifToggle.addEventListener('change', async function() {
-        if (this.checked) {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS) {
+      notifContainer.style.display = 'none';
+      return;
+    }
+
+    var isNotificationsEnabled = false;
+    try { isNotificationsEnabled = localStorage.getItem('notifications_enabled') === 'true'; } catch (e) {}
+    notifToggle.checked = isNotificationsEnabled && typeof Notification !== 'undefined' && Notification.permission === 'granted';
+
+    notifToggle.addEventListener('click', async function(e) {
+      e.preventDefault();
+      var currentState = this.checked;
+
+      if (!currentState) {
+        var confirmTurnOn = confirm('هل أنت متأكد من أنك تريد تفعيل الإشعارات ليصلك كل جديد؟');
+        if (confirmTurnOn) {
           if (typeof Notification === 'undefined') {
-            this.checked = false;
             alert('Notifications are not supported in this browser.');
             return;
           }
           var permission = await Notification.requestPermission();
           if (permission === 'granted') {
+            this.checked = true;
             enableMonetagPush();
             try { localStorage.setItem('notifications_enabled', 'true'); } catch (e) {}
           } else {
-            this.checked = false;
-            try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
-            alert('Please enable notification permissions in your browser settings to activate this feature.');
+            alert('برجاء تفعيل صلاحية الإشعارات من إعدادات متصفحك أولاً.');
           }
-        } else {
+        }
+      } else {
+        var confirmTurnOff = confirm('هل أنت متأكد من أنك تريد إيقاف تشغيل الإشعارات؟');
+        if (confirmTurnOff) {
+          this.checked = false;
           try { localStorage.setItem('notifications_enabled', 'false'); } catch (e) {}
         }
-      });
-    }
+      }
+    });
   }
 
   function bindGlobalUI() {
@@ -706,6 +721,8 @@
   }
 
   (function () {
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (isIOS) return;
     try {
       if (localStorage.getItem('notifications_enabled') === 'true' && typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         if (document.readyState === 'loading') {
