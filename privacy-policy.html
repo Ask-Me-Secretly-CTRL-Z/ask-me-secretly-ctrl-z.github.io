@@ -262,47 +262,84 @@
                 direction: ltr;
             }
 
+            .disclaimer-container {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                max-width: 800px;
+                margin: 30px auto;
+                padding: 0 15px;
+                font-family: sans-serif;
+                direction: ltr;
+                text-align: left;
+            }
+
             .disclaimer-box {
-                background: #fef2f2;
-                border: 1.5px solid #fecaca;
+                background-color: #1a1a1a;
                 border-radius: 12px;
-                padding: 24px 28px;
-                margin-bottom: 28px;
-                position: relative;
-                box-shadow: 0 2px 8px rgba(239, 68, 68, 0.08);
+                padding: 20px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                transition: transform 0.2s ease;
             }
 
-            .disclaimer-box::before {
-                content: "";
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 4px;
-                height: 100%;
-                background: #ef4444;
-                border-radius: 12px 0 0 12px;
+            .disclaimer-box:hover {
+                transform: translateY(-2px);
             }
 
-            .disclaimer-title {
-                font-size: 13px;
-                color: #b91c1c;
-                font-weight: 700;
-                letter-spacing: 1px;
-                text-transform: uppercase;
-                margin-bottom: 10px;
+            .disclaimer-header {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-bottom: 12px;
             }
 
-            .disclaimer-text {
-                font-size: 15px;
-                color: #292524;
-                font-weight: 500;
-                line-height: 1.8;
+            .disclaimer-header h3 {
                 margin: 0;
+                font-size: 1.1rem;
+                font-weight: 700;
             }
 
-            .disclaimer-text strong {
-                color: #b91c1c;
-                font-weight: 700;
+            .disclaimer-box p {
+                margin: 0;
+                font-size: 0.95rem;
+                line-height: 1.6;
+                color: #e0e0e0;
+            }
+
+            .warning-border {
+                border: 2px solid #ff4d4d;
+            }
+
+            .warning-border h3 {
+                color: #ff4d4d;
+            }
+
+            .danger-border {
+                border: 2px solid #d32f2f;
+                background-color: rgba(211, 47, 47, 0.05);
+            }
+
+            .danger-border h3 {
+                color: #f44336;
+            }
+
+            .disclaimer-box strong {
+                color: #ff4d4d;
+                font-weight: bold;
+            }
+
+            .red-link {
+                color: #ff4d4d;
+                text-decoration: underline;
+                transition: color 0.2s;
+            }
+
+            .red-link:hover {
+                color: #ff1a1a;
+            }
+
+            .warning-icon, .danger-icon {
+                font-size: 1.3rem;
             }
 
         .policy-card strong {
@@ -453,9 +490,21 @@
             <h4>No Control Over Ad Content</h4>
             <p>The advertisements displayed on our website are automatically generated and served by Monetag. We do not manually curate, endorse, or have direct control over the specific services, products, or websites promoted in these ads.</p>
 
-            <div class="disclaimer-box">
-                <p class="disclaimer-title">Limitation of Liability</p>
-                <p class="disclaimer-text">We are absolutely <strong>not responsible or liable</strong> for any content, redirection, products, or services offered through these advertisements. Any interaction, registration, or transaction you conduct on third-party ad sites is <strong>solely at your own risk</strong>.</p>
+            <div class="disclaimer-container">
+                <div class="disclaimer-box warning-border">
+                    <div class="disclaimer-header">
+                        <span class="warning-icon">⚠️</span>
+                        <h3>Monetag Notice</h3>
+                    </div>
+                    <p>We use <strong>Monetag</strong> for third-party advertising. Monetag may collect non-personal data via cookies to serve and improve relevant ads. For more details, please review the <a href="https://monetag.com/privacy-policy/" target="_blank" rel="noopener noreferrer" class="red-link">Monetag Privacy Policy</a>.</p>
+                </div>
+                <div class="disclaimer-box danger-border">
+                    <div class="disclaimer-header">
+                        <span class="danger-icon">🛑</span>
+                        <h3>Limitation of Liability</h3>
+                    </div>
+                    <p>This website is <strong>absolutely not responsible or liable</strong> for any content, redirection, products, or services offered through these advertisements. Any interaction, registration, or transaction you conduct on third-party ad sites is <strong>solely at your own risk</strong>.</p>
+                </div>
             </div>
 
             <h2>Links to Other Websites</h2>
