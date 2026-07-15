@@ -2089,5 +2089,85 @@ body.theme-2 .email-link:hover {
     }
 }
 
+/* Disclaimer Section */
+.disclaimer-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 15px;
+    font-family: sans-serif;
+    direction: ltr;
+    text-align: left;
+}
+
+.disclaimer-box {
+    background-color: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.2s ease;
+}
+
+.disclaimer-box:hover {
+    transform: translateY(-2px);
+}
+
+.disclaimer-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.disclaimer-header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.disclaimer-box p {
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+}
+
+.warning-border {
+    border: 2px solid #ff4d4d;
+}
+
+.warning-border h3 {
+    color: #ff4d4d;
+}
+
+.danger-border {
+    border: 2px solid #d32f2f;
+    background-color: rgba(211, 47, 47, 0.05);
+}
+
+.danger-border h3 {
+    color: #f44336;
+}
+
+.disclaimer-box strong {
+    color: #ff4d4d;
+    font-weight: bold;
+}
+
+.red-link {
+    color: #ff4d4d;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.red-link:hover {
+    color: #ff1a1a;
+}
+
+.warning-icon, .danger-icon {
+    font-size: 1.3rem;
+}
 
 
