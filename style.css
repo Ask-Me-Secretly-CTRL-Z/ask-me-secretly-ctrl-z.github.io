@@ -2135,35 +2135,35 @@ body.theme-2 .email-link:hover {
 }
 
 .warning-border {
-    border: 2px solid #ff4d4d;
+    border: 2px solid #2563eb;
 }
 
 .warning-border h3 {
-    color: #ff4d4d;
+    color: #2563eb;
 }
 
-.danger-border {
-    border: 2px solid #d32f2f;
-    background-color: rgba(211, 47, 47, 0.05);
+.info-border {
+    border: 2px solid #16a34a;
+    background-color: rgba(22, 163, 74, 0.04);
 }
 
-.danger-border h3 {
-    color: #f44336;
+.info-border h3 {
+    color: #16a34a;
 }
 
 .disclaimer-box strong {
-    color: #ff4d4d;
-    font-weight: bold;
+    color: #c8d6e5;
+    font-weight: 600;
 }
 
 .red-link {
-    color: #ff4d4d;
+    color: #2563eb;
     text-decoration: underline;
     transition: color 0.2s;
 }
 
 .red-link:hover {
-    color: #ff1a1a;
+    color: #3b82f6;
 }
 
 .warning-icon, .danger-icon {
