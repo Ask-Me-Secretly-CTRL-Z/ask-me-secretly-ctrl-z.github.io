@@ -120,24 +120,23 @@
     window.__ui.showScreen('dashboard-screen');
 
     window.__fb.getUserRef(user.uid).once('value').then(function (snap) {
-      if (!snap.exists()) {
-        var shortName = 'user-' + user.uid.substring(0, 5);
-        var newData = {
-          displayName: user.displayName || 'مستخدم',
-          email: user.email || '',
-          shortName: shortName,
-          theme: 2,
-          createdAt: Date.now(),
-          lastLogin: Date.now()
-        };
-        window.__fb.getUserRef(user.uid).set(newData).catch(function (err) {
-          console.error('[App] Failed to create user data:', err);
-        });
-      } else {
-        window.__fb.getUserRef(user.uid).child('lastLogin').set(Date.now()).catch(function (err) {
-          console.error('[App] Failed to update lastLogin:', err);
-        });
+      var data = snap.val();
+      var now = Date.now();
+      var updates = { lastLogin: now };
+      if (!data || !data.displayName || !data.email || !data.createdAt) {
+        updates.displayName = user.displayName || 'مستخدم';
+        updates.email = user.email || '';
+        updates.createdAt = now;
       }
+      if (!data || !data.shortName) {
+        updates.shortName = 'user-' + user.uid.substring(0, 5);
+      }
+      if (!data || data.theme === undefined || data.theme === null) {
+        updates.theme = 2;
+      }
+      window.__fb.getUserRef(user.uid).update(updates).catch(function (err) {
+        console.error('[App] Failed to update user data:', err);
+      });
     }).catch(function (err) {
       console.error('[App] Failed to read user data:', err);
     });
