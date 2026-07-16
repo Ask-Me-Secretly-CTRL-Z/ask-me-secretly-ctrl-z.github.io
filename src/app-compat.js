@@ -119,19 +119,27 @@
     if (themeBtn) themeBtn.style.display = '';
     window.__ui.showScreen('dashboard-screen');
 
-    window.__fb.getUserRef(user.uid).child('lastLogin').set(new Date().toISOString());
     window.__fb.getUserRef(user.uid).once('value').then(function (snap) {
-      if (!snap.exists() || !snap.val().displayName) {
-        var initialData = {};
-        if (user.displayName) initialData.displayName = user.displayName;
-        if (user.email) initialData.email = user.email;
-        if (!snap.exists() || !snap.val().createdAt) initialData.createdAt = new Date().toISOString();
-        window.__fb.getUserRef(user.uid).update(initialData).catch(function (err) {
-          console.error('[App] Failed to init user data:', err);
-        });
+      var data = snap.val();
+      var patches = {
+        lastLogin: Date.now()
+      };
+      if (!data || !data.displayName) {
+        patches.displayName = user.displayName || 'مستخدم';
+        patches.email = user.email || '';
+        patches.createdAt = Date.now();
       }
+      if (!data || !data.shortName) {
+        patches.shortName = '';
+      }
+      if (!data || data.theme === undefined || data.theme === null) {
+        patches.theme = 2;
+      }
+      window.__fb.getUserRef(user.uid).update(patches).catch(function (err) {
+        console.error('[App] Failed to update user data:', err);
+      });
     }).catch(function (err) {
-      console.error('[App] Failed to check user data:', err);
+      console.error('[App] Failed to read user data:', err);
     });
 
     var nameEl = document.getElementById('user-display-name');
