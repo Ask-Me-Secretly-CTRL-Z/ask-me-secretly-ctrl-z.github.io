@@ -22,6 +22,12 @@
     _syncRetryCount = 0;
     user.getIdToken().then(function (idToken) {
       var payload = { idToken: idToken };
+      // Always send the latest displayName from Firebase Auth (reflects
+      // the most recent updateProfile call) so the backend never falls
+      // back to the Google-account name and overwrites a custom name.
+      if (user.displayName) {
+        payload.displayName = user.displayName;
+      }
       if (extraPayload) {
         if (extraPayload.displayName) payload.displayName = extraPayload.displayName;
         if (extraPayload.username) payload.username = extraPayload.username;
