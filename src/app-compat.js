@@ -4,6 +4,45 @@
   var selectedTheme = null;
   var initError = null;
 
+  // ── Backend User Sync (fail-safe email registration) ──────────────
+  var _syncRetryCount = 0;
+  var _SYNC_MAX_RETRIES = 10;
+  function syncUserToBackend(user, extraPayload) {
+    if (!user || !user.getIdToken) return;
+    var backendBase = window.__BACKEND_API_URL
+      ? window.__BACKEND_API_URL.replace(/\/api\/questions$/, '')
+      : '';
+    if (!backendBase) {
+      _syncRetryCount++;
+      if (_syncRetryCount <= _SYNC_MAX_RETRIES) {
+        setTimeout(function () { syncUserToBackend(user, extraPayload); }, 2000);
+      }
+      return;
+    }
+    _syncRetryCount = 0;
+    user.getIdToken().then(function (idToken) {
+      var payload = { idToken: idToken };
+      if (extraPayload) {
+        if (extraPayload.displayName) payload.displayName = extraPayload.displayName;
+        if (extraPayload.username) payload.username = extraPayload.username;
+        if (extraPayload.shortName) payload.shortName = extraPayload.shortName;
+      }
+      return fetch(backendBase + '/api/users/sync', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    }).then(function (resp) {
+      if (resp.ok) {
+        console.log('[App] Backend user sync OK');
+      } else {
+        console.warn('[App] Backend user sync responded with', resp.status);
+      }
+    }).catch(function (err) {
+      console.error('[App] Backend user sync failed:', err);
+    });
+  }
+
   async function init() {
     try {
       window.__fb.database.ref('shortUrls/_backend_/url').once('value').then(function (snap) {
@@ -24,6 +63,7 @@
       // 2. لو الـ redirect رجع بمستخدم — ادخله الداشبورد وخلاص
       if (result && result.user) {
         console.log('[App] Redirect login successful');
+        syncUserToBackend(result.user);
         safelyShowDashboard(result.user);
         bindGlobalUI();
         return;
@@ -32,6 +72,7 @@
       // 3. تحقق من جلسة سابقة (متزامن)
       var existing = window.__fb.auth.currentUser;
       if (existing) {
+        syncUserToBackend(existing);
         safelyShowDashboard(existing);
         bindGlobalUI();
         return;
@@ -85,6 +126,7 @@
         unsub();
         window.__hideLoader();
         if (user) {
+          syncUserToBackend(user);
           currentUser = user;
           loadDashboard(user);
         } else {
@@ -163,6 +205,12 @@
         if (checkmark) checkmark.style.display = 'none';
         if (shortBtn) { shortBtn.innerHTML = '🔗 الرابط القصير'; shortBtn.style.background = '#1e293b'; }
       }
+
+      // ── Sync shortName to backend registry (fail-safe) ──────────
+      syncUserToBackend(user, {
+        displayName: nameEl.textContent,
+        shortName: shortName || ''
+      });
     }).catch(function (err) {
       console.error('[App] Failed to load user data:', err);
       nameEl.textContent = user.displayName || 'مستخدم';
@@ -462,6 +510,8 @@
           btn.style.background = '#16a34a';
           btn.disabled = false;
           window.__ui.showToast('تم تفعيل الرابط القصير!');
+          // ── Re-sync to backend registry after claiming shortName ──
+          syncUserToBackend(user, { shortName: code });
         }).catch(function (err) {
           console.error('[App] Short URL error:', err);
           window.__errors.show('فيه مشكلة حصلت، حاول تاني');
@@ -505,6 +555,8 @@
           if (checkmark && checkmark.style.display !== 'none') {
             enableShortUrl(name, user, document.getElementById('short-url-toggle-btn'), checkmark, document.getElementById('user-link'));
           }
+          // ── Re-sync displayName to backend registry ────────────
+          syncUserToBackend(user, { displayName: name });
         }).catch(function (err) {
           window.__errors.handle(err);
         }).finally(function () {
