@@ -26,11 +26,15 @@ window.__security.sanitizeHtml = function (html) {
   doc.innerHTML = html;
   var scripts = doc.querySelectorAll('script');
   for (var i = 0; i < scripts.length; i++) scripts[i].remove();
+  var dangerous = doc.querySelectorAll('iframe, object, embed, form');
+  for (var i = 0; i < dangerous.length; i++) dangerous[i].remove();
   var all = doc.querySelectorAll('*');
   for (var i = 0; i < all.length; i++) {
     var attrs = all[i].attributes;
     for (var j = attrs.length - 1; j >= 0; j--) {
-      if (attrs[j].name.startsWith('on')) {
+      var name = attrs[j].name.toLowerCase();
+      var val = (attrs[j].value || '').toLowerCase().trim();
+      if (name.startsWith('on') || val.startsWith('javascript:')) {
         all[i].removeAttribute(attrs[j].name);
       }
     }

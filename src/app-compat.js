@@ -91,9 +91,10 @@
       document.body.innerHTML = '<div style="padding:60px 30px;text-align:center;font-family:Cairo,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;">' +
         '<div style="font-size:64px;margin-bottom:20px;">😅</div>' +
         '<h2 style="font-size:24px;margin-bottom:10px;color:#1e293b;">عذرًا، الموقع تعب شوية</h2>' +
-        '<p style="color:#64748b;margin-bottom:30px;font-size:16px;">' + e.message + '</p>' +
+        '<p id="init-error-msg" style="color:#64748b;margin-bottom:30px;font-size:16px;"></p>' +
         '<button onclick="location.reload()" style="padding:14px 40px;border:none;border-radius:16px;background:linear-gradient(135deg,#1e293b,#0f172a);color:white;font-size:16px;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(30,41,59,0.3);">حاول مرة أخرى 🔄</button>' +
         '</div>';
+      document.getElementById('init-error-msg').textContent = e.message || 'Unknown error';
     }
   }
 
@@ -266,17 +267,23 @@
         window.__router.fuzzyMatch(input).then(function (fuzzy) {
           if (fuzzy.closest && fuzzy.distance > 0 && fuzzy.distance <= 3) {
             var link = window.__router.buildLink(fuzzy.closest);
-            var msg = '';
+            warnEl.textContent = '';
             if (fuzzy.diffType === 'missing-dash') {
-              msg = '⚠️ اللينك ناقص علامة (-) يا باشا، اكتبها بعد الحرف كذا.<br>';
+              warnEl.appendChild(document.createTextNode('⚠️ اللينك ناقص علامة (-) يا باشا، اكتبها بعد الحرف كذا.'));
             } else {
-              msg = '⚠️ أنت كتبت "' + input + '" غلط، قصدك "' + fuzzy.closest + '"؟<br>';
+              warnEl.appendChild(document.createTextNode('⚠️ أنت كتبت "' + input + '" غلط، قصدك "' + fuzzy.closest + '"؟'));
             }
-            msg += '🤔 جرب: <a href="' + link + '" style="color:#dc2626;text-decoration:underline;font-weight:700;">' + fuzzy.closest + '</a>';
-            if (warnEl) { warnEl.innerHTML = msg; warnEl.style.display = 'block'; }
+            warnEl.appendChild(document.createElement('br'));
+            warnEl.appendChild(document.createTextNode('🤔 جرب: '));
+            var a = document.createElement('a');
+            a.href = link;
+            a.textContent = fuzzy.closest;
+            a.style.cssText = 'color:#dc2626;text-decoration:underline;font-weight:700;';
+            warnEl.appendChild(a);
+            if (warnEl) { warnEl.style.display = 'block'; }
           } else if (!fuzzy.closest && (!syncProblemCount || syncProblemCount === 0)) {
             if (warnEl) {
-              warnEl.innerHTML = '⚠️ اللينك ده ملوش أي أساس في السيستم، اتأكد من الحروف يا باشا.';
+              warnEl.textContent = '⚠️ اللينك ده ملوش أي أساس في السيستم، اتأكد من الحروف يا باشا.';
               warnEl.style.display = 'block';
             }
           }

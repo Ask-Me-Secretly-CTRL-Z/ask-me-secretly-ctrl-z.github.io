@@ -1,11 +1,10 @@
 {
   "rules": {
     "users": {
-      ".read": false,
       "$uid": {
-        ".read": "auth != null && (auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
-        ".write": "auth != null && (auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
-        ".validate": "newData.exists() && (!newData.hasChild('name') || (newData.child('name').isString() && newData.child('name').val().length > 0)) && (!newData.hasChild('email') || newData.child('email').isString())"
+        ".read": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".write": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".validate": "newData.exists() && (!newData.hasChild('name') || (newData.child('name').isString() && newData.child('name').val().length > 0)) && (!newData.hasChild('displayName') || (newData.child('displayName').isString() && newData.child('displayName').val().length <= 100)) && (!newData.hasChild('username') || (newData.child('username').isString() && newData.child('username').val().length <= 30))"
       }
     },
     "questions": {
@@ -14,33 +13,18 @@
         ".read": "auth.uid == $recipientId || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
         ".indexOn": ["timestamp"],
         "$questionId": {
-          ".write": "auth != null && ((!data.exists() && newData.hasChildren(['text', 'timestamp']) && !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now && newData.child('timestamp').val() > (now - 300000)) || (data.exists() && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')))"
+          ".write": "(!data.exists() && newData.hasChildren(['text', 'timestamp']) && !newData.hasChildren(['from', 'fromName', 'sender', 'senderId']) && newData.child('text').isString() && newData.child('text').val().length > 0 && newData.child('text').val().length <= 500 && newData.child('timestamp').isNumber() && newData.child('timestamp').val() <= now && newData.child('timestamp').val() > (now - 300000)) || (data.exists() && (auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'))"
         }
       }
     },
     "shortUrls": {
       ".read": true,
       "_backend_": {
-        ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
         ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
       },
       "$shortName": {
-        ".write": "auth != null && (!data.exists() || data.child('uid').val() == auth.uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2')",
-        ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val().length > 0 && newData.child('uid').val() == auth.uid"
-      }
-    },
-    "_backend_": {
-      ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
-      ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
-      "userRegistry": {
-        "$uid": {
-          ".validate": "newData.hasChildren(['email']) && newData.child('email').isString() && newData.child('email').val().length > 0"
-        }
-      },
-      "shortNameRegistry": {
-        "$shortName": {
-          ".validate": "newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val().length > 0"
-        }
+        ".write": "auth != null || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".validate": "(auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2') || (newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid)"
       }
     },
     "submissions": {
