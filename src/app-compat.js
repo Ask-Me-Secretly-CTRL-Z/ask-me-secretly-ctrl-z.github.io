@@ -1,6 +1,7 @@
 ;(function () {
   var currentUser = null;
   var questionsListener = null;
+  var userDataListener = null;
   var selectedTheme = null;
   var initError = null;
 
@@ -40,7 +41,18 @@
       });
     }).then(function (resp) {
       if (resp.ok) {
-        console.log('[App] Backend user sync OK');
+        return resp.json().then(function (data) {
+          console.log('[App] Backend user sync OK');
+          // ── Apply profileUrl / shortUrl from backend ──
+          var link = data && (data.profileUrl || data.link || data.shortUrl);
+          if (link) {
+            var userLinkEl = document.getElementById('user-link');
+            if (userLinkEl) { userLinkEl.value = link; }
+          }
+          if (data && (data.shortUrl || data.profileUrl || data.link)) {
+            window.__SHORT_URL = data.shortUrl || data.profileUrl || data.link;
+          }
+        });
       } else {
         console.warn('[App] Backend user sync responded with', resp.status);
       }
@@ -54,6 +66,7 @@
       window.__fb.database.ref('shortUrls/_backend_/url').once('value').then(function (snap) {
         var val = snap.val();
         if (val) {
+          window.__BACKEND_BASE_URL = val;
           window.__BACKEND_API_URL = val + '/api/questions';
         }
       }).catch(function () {});
@@ -138,6 +151,7 @@
           loadDashboard(user);
         } else {
           currentUser = null;
+          if (userDataListener) { userDataListener(); userDataListener = null; }
           window.__ui.showScreen('login-screen');
         }
       });
@@ -191,7 +205,12 @@
     });
 
     var nameEl = document.getElementById('user-display-name');
-    window.__fb.getUserRef(user.uid).once('value').then(function (snap) {
+    // ── Reactive listener on users/{uid} — updates link input whenever
+    //    profileUrl / slug / shortName changes (e.g. after backend sync
+    //    writes them).
+    if (userDataListener) { userDataListener(); userDataListener = null; }
+    var userRef = window.__fb.getUserRef(user.uid);
+    function _onUserData(snap) {
       var data = snap.val();
       if (data && data.displayName) {
         nameEl.textContent = data.displayName;
@@ -200,31 +219,56 @@
       }
 
       var shortName = data && data.shortName ? data.shortName : null;
+      var slug = data && data.slug ? data.slug : null;
+      var profileUrl = data && data.profileUrl ? data.profileUrl : null;
+      var shortUrl = data && data.shortUrl ? data.shortUrl : null;
       var userLinkEl = document.getElementById('user-link');
-      if (userLinkEl) { userLinkEl.value = window.__router.buildLink(user.uid, shortName); }
+      if (userLinkEl) {
+        if (profileUrl) {
+          userLinkEl.value = profileUrl;
+        } else {
+          userLinkEl.value = window.__router.buildLink(user.uid, shortName || slug);
+        }
+      }
 
       var checkmark = document.getElementById('short-url-checkmark');
       var shortBtn = document.getElementById('short-url-toggle-btn');
-      if (shortName) {
+      if (shortName || slug) {
         if (checkmark) checkmark.style.display = 'inline';
         if (shortBtn) { shortBtn.innerHTML = '✓ الرابط القصير'; shortBtn.style.background = '#16a34a'; }
+        if (shortUrl) { window.__SHORT_URL = shortUrl; }
       } else {
         if (checkmark) checkmark.style.display = 'none';
         if (shortBtn) { shortBtn.innerHTML = '🔗 الرابط القصير'; shortBtn.style.background = '#1e293b'; }
       }
+    }
+    userRef.on('value', _onUserData);
+    userDataListener = function () { userRef.off('value', _onUserData); };
 
-      // ── Sync shortName to backend registry (fail-safe) ──────────
+    // ── Sync shortName to backend registry (fail-safe) ──────────
+    // Read shortName once for the initial sync payload
+    userRef.once('value').then(function (snap) {
+      var data = snap.val();
+      var shortName = data && data.shortName ? data.shortName : '';
       syncUserToBackend(user, {
         displayName: nameEl.textContent,
-        shortName: shortName || ''
+        shortName: shortName
       });
     }).catch(function (err) {
-      console.error('[App] Failed to load user data:', err);
-      nameEl.textContent = user.displayName || 'مستخدم';
+      console.error('[App] Failed to read user data for sync:', err);
+      syncUserToBackend(user, { displayName: nameEl.textContent });
     });
 
     if (questionsListener) questionsListener();
-    questionsListener = window.__questions.listen(user.uid, renderQuestions);
+    questionsListener = null;
+
+    window.__questions.fetchFromBackend(user.uid).then(function (questions) {
+      renderQuestions(questions);
+    }).catch(function (err) {
+      console.error('[App] Failed to fetch questions from backend:', err);
+      // Fallback to Firebase real-time listener
+      questionsListener = window.__questions.listen(user.uid, renderQuestions);
+    });
 
     window.__themes.load(user.uid).then(function (themeId) {
       if (themeId !== null && themeId !== undefined) {
@@ -658,6 +702,16 @@
 
       btn.disabled = true;
       btn.innerHTML = 'جاري...';
+      // Use backend-generated shortUrl if available
+      if (window.__SHORT_URL) {
+        linkEl.value = window.__SHORT_URL;
+        checkmark.style.display = 'inline';
+        btn.innerHTML = '✓ الرابط القصير';
+        btn.style.background = '#16a34a';
+        btn.disabled = false;
+        window.__ui.showToast('تم تفعيل الرابط القصير!');
+        return;
+      }
       var name = document.getElementById('user-display-name').textContent.trim();
       if (!name || name === 'مستخدم') { name = user.uid.substring(0, 8); }
       enableShortUrl(name, user, btn, checkmark, linkEl);

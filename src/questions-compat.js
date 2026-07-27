@@ -113,6 +113,33 @@ window.__questions.listen = function (uid, callback) {
   };
 };
 
+window.__questions.fetchFromBackend = function (uid) {
+  var baseUrl = window.__BACKEND_BASE_URL;
+  if (!baseUrl) {
+    return Promise.reject(new Error('Backend URL not available'));
+  }
+  var user = window.__fb.auth.currentUser;
+  if (!user) {
+    return Promise.reject(new Error('Not authenticated'));
+  }
+  return user.getIdToken().then(function (idToken) {
+    var url = baseUrl + '/api/questions?uid=' + encodeURIComponent(uid);
+    return fetch(url, {
+      method: 'GET',
+      headers: {
+        'Authorization': 'Bearer ' + idToken
+      }
+    });
+  }).then(function (response) {
+    if (!response.ok) {
+      throw new Error('Failed to fetch questions: ' + response.status);
+    }
+    return response.json();
+  }).then(function (data) {
+    return data.questions || [];
+  });
+};
+
 window.__questions.togglePublish = function (recipientUid, questionId, currentStatus) {
   return window.__fb.getQuestionRef(recipientUid, questionId).child('published').set(!currentStatus);
 };
