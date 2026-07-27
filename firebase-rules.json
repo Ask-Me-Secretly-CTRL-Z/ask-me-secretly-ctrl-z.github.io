@@ -1,12 +1,16 @@
 {
   "rules": {
+    ".read": false,
+    ".write": false,
+
     "users": {
       "$uid": {
-        ".read": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
+        ".read": "auth != null && auth.uid == $uid",
         ".write": "auth.uid == $uid || auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
         ".validate": "newData.exists() && (!newData.hasChild('name') || (newData.child('name').isString() && newData.child('name').val().length > 0)) && (!newData.hasChild('displayName') || (newData.child('displayName').isString() && newData.child('displayName').val().length <= 100)) && (!newData.hasChild('username') || (newData.child('username').isString() && newData.child('username').val().length <= 30))"
       }
     },
+
     "questions": {
       ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
       "$recipientId": {
@@ -17,6 +21,7 @@
         }
       }
     },
+
     "shortUrls": {
       ".read": true,
       "_backend_": {
@@ -27,10 +32,12 @@
         ".validate": "(auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2') || (newData.hasChildren(['uid']) && newData.child('uid').isString() && newData.child('uid').val() == auth.uid)"
       }
     },
+
     "submissions": {
       ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
       ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
     },
+
     "leaderboard": {
       ".read": true,
       ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
@@ -38,10 +45,12 @@
         ".validate": "newData.hasChildren(['score', 'name']) && newData.child('score').isNumber() && newData.child('score').val() >= 0 && newData.child('name').isString()"
       }
     },
+
     "config": {
       ".read": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
       ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'"
     },
+
     "event_2026": {
       ".read": true,
       ".write": "auth.uid == '7td18WjFT5ZMGLaoXS0Ht1JveJe2' || auth.uid == 'OV3VRZ0uD9c3BRMRbgmeUHm31Xt2'",
