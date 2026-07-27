@@ -5,6 +5,7 @@ window.__errors.messages = {
   'auth/cancelled-popup-request': 'تم إلغاء الطلب',
   'auth/network-request-failed': 'مشكلة في الاتصال. تأكد من النت',
   'auth/popup-blocked': 'الرجاء السماح للنوافذ المنبثقة ثم حاول مرة أخرى',
+  'auth/not-configured': 'تسجيل الدخول غير مُعد — برجاء إعداد Google Client ID',
   'permission-denied': 'ليس لديك صلاحية لهذا الإجراء',
   'backend/400': 'السؤال غير صالح، حاول تاني',
   'backend/429': 'تمهل شوية كده... فيه ناس كتير بتبعت في نفس الوقت',

@@ -18,8 +18,6 @@ var PRECACHE_URLS = [
   '/img/logo.jpeg',
   '/img/tiktok qr.jpeg',
   '/img/instgram qr.jpeg',
-  '/src/firebase-compat.js',
-  '/src/auth-compat.js',
   '/src/questions-compat.js',
   '/src/themes-compat.js',
   '/src/story-compat.js',
@@ -60,8 +58,8 @@ self.addEventListener('fetch', function (event) {
 
   var url = new URL(event.request.url);
 
-  // Network-only for Firebase and Google APIs
-  if (url.hostname.indexOf('firebaseio.com') !== -1 || url.hostname.indexOf('googleapis.com') !== -1) {
+  // Network-only for Google APIs
+  if (url.hostname.indexOf('googleapis.com') !== -1) {
     event.respondWith(
       fetch(event.request).catch(function () {
         return new Response('', { status: 503, statusText: 'Offline' });

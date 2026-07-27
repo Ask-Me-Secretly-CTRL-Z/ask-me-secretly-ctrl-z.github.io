@@ -58,7 +58,7 @@ window.__questions.submit = function (toUid, text) {
     }
   }
 
-  var apiUrl = window.__BACKEND_API_URL || '/api/questions';
+  var apiUrl = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '') + '/api/questions';
 
   return fetch(apiUrl, {
     method: 'POST',
@@ -93,43 +93,38 @@ window.__questions.submit = function (toUid, text) {
 };
 
 window.__questions.listen = function (uid, callback) {
-  var ref = window.__fb.getRecipientQuestionsRef(uid);
-  ref.orderByChild('timestamp').on('value', function (snapshot) {
-    var questions = [];
-    snapshot.forEach(function (child) {
-      questions.push({
-        id: child.key,
-        text: child.val().text,
-        timestamp: child.val().timestamp,
-        published: child.val().published || false,
-        archived: child.val().archived
-      });
+  var _intervalId = null;
+  var _stopped = false;
+
+  function poll() {
+    window.__questions.fetchFromBackend(uid).then(function (questions) {
+      if (!_stopped) callback(questions);
+    }).catch(function (err) {
+      console.error('[Questions] Poll error:', err);
     });
-    questions.reverse();
-    callback(questions);
-  });
+  }
+
+  poll();
+  _intervalId = setInterval(poll, 5000);
+
   return function () {
-    ref.off('value');
+    _stopped = true;
+    if (_intervalId) clearInterval(_intervalId);
   };
 };
 
 window.__questions.fetchFromBackend = function (uid) {
-  var baseUrl = window.__BACKEND_BASE_URL;
-  if (!baseUrl) {
-    return Promise.reject(new Error('Backend URL not available'));
-  }
-  var user = window.__fb.auth.currentUser;
-  if (!user) {
+  var baseUrl = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+  var storedUid = localStorage.getItem('uid');
+  if (!storedUid) {
     return Promise.reject(new Error('Not authenticated'));
   }
-  return user.getIdToken().then(function (idToken) {
-    var url = baseUrl + '/api/questions?uid=' + encodeURIComponent(uid);
-    return fetch(url, {
-      method: 'GET',
-      headers: {
-        'Authorization': 'Bearer ' + idToken
-      }
-    });
+  var url = baseUrl + '/api/questions?uid=' + encodeURIComponent(uid);
+  return fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': 'Bearer ' + storedUid
+    }
   }).then(function (response) {
     if (!response.ok) {
       throw new Error('Failed to fetch questions: ' + response.status);
@@ -141,11 +136,20 @@ window.__questions.fetchFromBackend = function (uid) {
 };
 
 window.__questions.togglePublish = function (recipientUid, questionId, currentStatus) {
-  return window.__fb.getQuestionRef(recipientUid, questionId).child('published').set(!currentStatus);
+  return window.__api.post('/api/questions/' + questionId + '/toggle-publish', {
+    uid: recipientUid,
+    published: !currentStatus
+  });
 };
 
 window.__questions.getRecipientName = function (uid) {
-  return window.__fb.getUserRef(uid).child('displayName').once('value').then(function (snap) {
-    return snap.val();
+  var base = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+  return fetch(base + '/api/users/me?uid=' + encodeURIComponent(uid)).then(function (resp) {
+    if (!resp.ok) return null;
+    return resp.json();
+  }).then(function (data) {
+    return data && data.user && data.user.displayName ? data.user.displayName : null;
+  }).catch(function () {
+    return null;
   });
 };

@@ -1,106 +1,22 @@
 ;(function () {
   var currentUser = null;
   var questionsListener = null;
-  var userDataListener = null;
   var selectedTheme = null;
   var initError = null;
 
-  // ── Backend User Sync (fail-safe email registration) ──────────────
-  var _syncRetryCount = 0;
-  var _SYNC_MAX_RETRIES = 10;
-  function syncUserToBackend(user, extraPayload) {
-    if (!user || !user.getIdToken) return;
-    var backendBase = window.__BACKEND_API_URL
-      ? window.__BACKEND_API_URL.replace(/\/api\/questions$/, '')
-      : '';
-    if (!backendBase) {
-      _syncRetryCount++;
-      if (_syncRetryCount <= _SYNC_MAX_RETRIES) {
-        setTimeout(function () { syncUserToBackend(user, extraPayload); }, 2000);
-      }
-      return;
-    }
-    _syncRetryCount = 0;
-    user.getIdToken().then(function (idToken) {
-      var payload = { idToken: idToken };
-      // Always send the latest displayName from Firebase Auth (reflects
-      // the most recent updateProfile call) so the backend never falls
-      // back to the Google-account name and overwrites a custom name.
-      if (user.displayName) {
-        payload.displayName = user.displayName;
-      }
-      if (extraPayload) {
-        if (extraPayload.displayName) payload.displayName = extraPayload.displayName;
-        if (extraPayload.username) payload.username = extraPayload.username;
-        if (extraPayload.shortName) payload.shortName = extraPayload.shortName;
-      }
-      return fetch(backendBase + '/api/users/sync', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-    }).then(function (resp) {
-      if (resp.ok) {
-        return resp.json().then(function (data) {
-          console.log('[App] Backend user sync OK');
-          // ── Apply profileUrl / shortUrl from backend ──
-          var link = data && (data.profileUrl || data.link || data.shortUrl);
-          if (link) {
-            var userLinkEl = document.getElementById('user-link');
-            if (userLinkEl) { userLinkEl.value = link; }
-          }
-          if (data && (data.shortUrl || data.profileUrl || data.link)) {
-            window.__SHORT_URL = data.shortUrl || data.profileUrl || data.link;
-          }
-        });
-      } else {
-        console.warn('[App] Backend user sync responded with', resp.status);
-      }
-    }).catch(function (err) {
-      console.error('[App] Backend user sync failed:', err);
-    });
-  }
-
   async function init() {
     try {
-      window.__fb.database.ref('shortUrls/_backend_/url').once('value').then(function (snap) {
-        var val = snap.val();
-        if (val) {
-          window.__BACKEND_BASE_URL = val;
-          window.__BACKEND_API_URL = val + '/api/questions';
-        }
-      }).catch(function () {});
-
-      // 1. BLOCK كل حاجة لحد ما getRedirectResult يخلص
-      var result;
-      try {
-        result = await window.__fb.auth.getRedirectResult();
-      } catch (err) {
-        console.error('[App] getRedirectResult error:', err.code || err.message || err);
-      }
-
-      // 2. لو الـ redirect رجع بمستخدم — ادخله الداشبورد وخلاص
-      if (result && result.user) {
-        console.log('[App] Redirect login successful');
-        syncUserToBackend(result.user);
-        safelyShowDashboard(result.user);
-        bindGlobalUI();
-        return;
-      }
-
-      // 3. تحقق من جلسة سابقة (متزامن)
-      var existing = window.__fb.auth.currentUser;
+      // 1. Check for existing session (synchronous from localStorage)
+      var existing = window.__auth.getCurrentUser();
       if (existing) {
-        syncUserToBackend(existing);
+        currentUser = existing;
         safelyShowDashboard(existing);
         bindGlobalUI();
         return;
       }
 
-      // 3.5. مفيش مستخدم — استمع للتغيرات
+      // 2. No user — listen for auth changes
       try { localStorage.removeItem('__auth_method'); } catch (e) {}
-
-      // 4. مفيش مستخدم — استمع للتغيرات
       setupAuthObserver();
       bindGlobalUI();
     } catch (e) {
@@ -129,8 +45,6 @@
       }
     } catch (e) {
       console.error('[App] safelyShowDashboard error:', e);
-      // لو حصل أي خطأ في عرض الداشبورد، متظهرش اللوجين
-      // الداشبورد باين فعلًا (showScreen اشتغل) والخطأ في البيانات بس
     }
   }
 
@@ -142,16 +56,14 @@
         window.__hideLoader();
       });
     } else {
-      var unsub = window.__fb.auth.onAuthStateChanged(function (user) {
+      var unsub = window.__auth.onStateChanged(function (user) {
         unsub();
         window.__hideLoader();
         if (user) {
-          syncUserToBackend(user);
           currentUser = user;
           loadDashboard(user);
         } else {
           currentUser = null;
-          if (userDataListener) { userDataListener(); userDataListener = null; }
           window.__ui.showScreen('login-screen');
         }
       });
@@ -182,46 +94,21 @@
     if (themeBtn) themeBtn.style.display = '';
     window.__ui.showScreen('dashboard-screen');
 
-    window.__fb.getUserRef(user.uid).once('value').then(function (snap) {
-      var data = snap.val();
-      var now = Date.now();
-      var updates = { lastLogin: now };
-      if (!data || !data.displayName || !data.email || !data.createdAt) {
-        updates.displayName = user.displayName || 'مستخدم';
-        updates.email = user.email || '';
-        updates.createdAt = now;
-      }
-      if (!data || !data.shortName) {
-        updates.shortName = 'user-' + user.uid.substring(0, 5);
-      }
-      if (!data || data.theme === undefined || data.theme === null) {
-        updates.theme = 2;
-      }
-      window.__fb.getUserRef(user.uid).update(updates).catch(function (err) {
-        console.error('[App] Failed to update user data:', err);
-      });
-    }).catch(function (err) {
-      console.error('[App] Failed to read user data:', err);
-    });
-
     var nameEl = document.getElementById('user-display-name');
-    // ── Reactive listener on users/{uid} — updates link input whenever
-    //    profileUrl / slug / shortName changes (e.g. after backend sync
-    //    writes them).
-    if (userDataListener) { userDataListener(); userDataListener = null; }
-    var userRef = window.__fb.getUserRef(user.uid);
-    function _onUserData(snap) {
-      var data = snap.val();
-      if (data && data.displayName) {
-        nameEl.textContent = data.displayName;
+
+    // Fetch user data from backend API
+    window.__api.get('/api/users/me').then(function (data) {
+      var userData = data && data.user ? data.user : {};
+      if (userData.displayName) {
+        nameEl.textContent = userData.displayName;
       } else {
         nameEl.textContent = user.displayName || 'مستخدم';
       }
 
-      var shortName = data && data.shortName ? data.shortName : null;
-      var slug = data && data.slug ? data.slug : null;
-      var profileUrl = data && data.profileUrl ? data.profileUrl : null;
-      var shortUrl = data && data.shortUrl ? data.shortUrl : null;
+      var shortName = userData.shortName || null;
+      var slug = userData.slug || null;
+      var profileUrl = userData.profileUrl || null;
+      var shortUrl = userData.shortUrl || null;
       var userLinkEl = document.getElementById('user-link');
       if (userLinkEl) {
         if (profileUrl) {
@@ -241,22 +128,9 @@
         if (checkmark) checkmark.style.display = 'none';
         if (shortBtn) { shortBtn.innerHTML = '🔗 الرابط القصير'; shortBtn.style.background = '#1e293b'; }
       }
-    }
-    userRef.on('value', _onUserData);
-    userDataListener = function () { userRef.off('value', _onUserData); };
-
-    // ── Sync shortName to backend registry (fail-safe) ──────────
-    // Read shortName once for the initial sync payload
-    userRef.once('value').then(function (snap) {
-      var data = snap.val();
-      var shortName = data && data.shortName ? data.shortName : '';
-      syncUserToBackend(user, {
-        displayName: nameEl.textContent,
-        shortName: shortName
-      });
     }).catch(function (err) {
-      console.error('[App] Failed to read user data for sync:', err);
-      syncUserToBackend(user, { displayName: nameEl.textContent });
+      console.error('[App] Failed to fetch user data:', err);
+      nameEl.textContent = user.displayName || 'مستخدم';
     });
 
     if (questionsListener) questionsListener();
@@ -266,8 +140,6 @@
       renderQuestions(questions);
     }).catch(function (err) {
       console.error('[App] Failed to fetch questions from backend:', err);
-      // Fallback to Firebase real-time listener
-      questionsListener = window.__questions.listen(user.uid, renderQuestions);
     });
 
     window.__themes.load(user.uid).then(function (themeId) {
@@ -305,7 +177,6 @@
 
       var warnEl = document.getElementById('uid-warning');
 
-      // Force-hide fuzzy warning area (leave sync-validation warnings visible if any)
       if (warnEl && !syncProblemCount) { warnEl.style.display = 'none'; warnEl.innerHTML = ''; }
 
       function keyToLabel(key) {
@@ -344,32 +215,41 @@
         document.getElementById('recipient-name').textContent = label;
       }
 
-      // Check if the original input exists as a short URL key (no auth needed)
       if (originalInput) {
-        window.__fb.database.ref('shortUrls/' + originalInput).once('value').then(function (snap) {
-          if (snap.exists()) {
-            // Exact short URL match — success
-            var data = snap.val();
-            showName(data.name || keyToLabel(originalInput));
-            if (warnEl) { warnEl.style.display = 'none'; warnEl.innerHTML = ''; }
-          } else {
-            // Not a short URL key — fall back to raw UID lookup (requires auth)
-            window.__questions.getRecipientName(targetUid).then(function (name) {
-              if (name) {
-                showName(name);
+        var base = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+        fetch(base + '/api/short-urls/resolve?slug=' + encodeURIComponent(originalInput)).then(function (resp) {
+          if (resp.ok) {
+            return resp.json().then(function (data) {
+              if (data && data.uid) {
+                showName(keyToLabel(originalInput));
+                if (warnEl) { warnEl.style.display = 'none'; warnEl.innerHTML = ''; }
               } else {
-                showName('حساب غير مسجل');
-                runFuzzyMatch(originalInput);
+                _fallbackNameLookup();
               }
-            }).catch(function (err) {
-              console.error('[App] Failed to load recipient name:', err);
-              showName('حساب غير مسجل');
-              if (syncProblemCount === 0) { runFuzzyMatch(originalInput); }
             });
+          } else {
+            _fallbackNameLookup();
           }
+        }).catch(function () {
+          _fallbackNameLookup();
         });
       } else {
         showName('حساب غير مسجل');
+      }
+
+      function _fallbackNameLookup() {
+        window.__questions.getRecipientName(targetUid).then(function (name) {
+          if (name) {
+            showName(name);
+          } else {
+            showName('حساب غير مسجل');
+            runFuzzyMatch(originalInput);
+          }
+        }).catch(function (err) {
+          console.error('[App] Failed to load recipient name:', err);
+          showName('حساب غير مسجل');
+          if (syncProblemCount === 0) { runFuzzyMatch(originalInput); }
+        });
       }
 
       document.getElementById('submit-question-btn').onclick = function () {
@@ -548,33 +428,49 @@
         btn.innerHTML = '🔗 الرابط القصير';
         return;
       }
-      window.__fb.getShortUrlRef(code).once('value').then(function (snap) {
-        if (snap.exists() && snap.val().uid !== user.uid) {
-          trySave(baseCode + '-' + retries, retries - 1);
-          return;
+      var base = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+      fetch(base + '/api/short-urls/resolve?slug=' + encodeURIComponent(code)).then(function (resp) {
+        if (resp.ok) {
+          return resp.json().then(function (data) {
+            if (data && data.uid && data.uid !== user.uid) {
+              trySave(baseCode + '-' + retries, retries - 1);
+              return;
+            }
+            _claimShortName(code);
+          });
+        } else {
+          _claimShortName(code);
         }
-        window.__fb.getUserRef(user.uid).child('shortName').once('value').then(function (oldSnap) {
-          var ops = [];
-          var old = oldSnap.val();
-          if (old) ops.push(window.__fb.getShortUrlRef(old).remove());
-          ops.push(window.__fb.getShortUrlRef(code).set({ uid: user.uid }));
-          ops.push(window.__fb.getUserRef(user.uid).child('shortName').set(code));
-          return Promise.all(ops);
-        }).then(function () {
-          linkEl.value = window.__router.buildLink(user.uid, code);
-          checkmark.style.display = 'inline';
-          btn.innerHTML = '✓ الرابط القصير';
-          btn.style.background = '#16a34a';
-          btn.disabled = false;
-          window.__ui.showToast('تم تفعيل الرابط القصير!');
-          // ── Re-sync to backend registry after claiming shortName ──
-          syncUserToBackend(user, { shortName: code });
-        }).catch(function (err) {
-          console.error('[App] Short URL error:', err);
-          window.__errors.show('فيه مشكلة حصلت، حاول تاني');
-          btn.disabled = false;
-          btn.innerHTML = '🔗 الرابط القصير';
-        });
+      }).catch(function () {
+        _claimShortName(code);
+      });
+    }
+
+    function _claimShortName(code) {
+      // Update profile via backend API
+      window.__auth.updateDisplayName(user.uid, document.getElementById('user-display-name').textContent).then(function () {
+        // Reload user data to reflect changes
+        setTimeout(function () {
+          window.__api.get('/api/users/me').then(function (data) {
+            var userData = data && data.user ? data.user : {};
+            var shortUrl = userData.shortUrl || window.__router.buildLink(user.uid, code);
+            linkEl.value = shortUrl;
+            window.__SHORT_URL = shortUrl;
+            checkmark.style.display = 'inline';
+            btn.innerHTML = '✓ الرابط القصير';
+            btn.style.background = '#16a34a';
+            btn.disabled = false;
+            window.__ui.showToast('تم تفعيل الرابط القصير!');
+          }).catch(function (err) {
+            console.error('[App] Short URL error:', err);
+            linkEl.value = window.__router.buildLink(user.uid, code);
+            checkmark.style.display = 'inline';
+            btn.innerHTML = '✓ الرابط القصير';
+            btn.style.background = '#16a34a';
+            btn.disabled = false;
+            window.__ui.showToast('تم تفعيل الرابط القصير!');
+          });
+        }, 500);
       });
     }
     trySave(baseCode, 5);
@@ -612,8 +508,6 @@
           if (checkmark && checkmark.style.display !== 'none') {
             enableShortUrl(name, user, document.getElementById('short-url-toggle-btn'), checkmark, document.getElementById('user-link'));
           }
-          // ── Re-sync displayName to backend registry ────────────
-          syncUserToBackend(user, { displayName: name });
         }).catch(function (err) {
           window.__errors.handle(err);
         }).finally(function () {
@@ -702,7 +596,6 @@
 
       btn.disabled = true;
       btn.innerHTML = 'جاري...';
-      // Use backend-generated shortUrl if available
       if (window.__SHORT_URL) {
         linkEl.value = window.__SHORT_URL;
         checkmark.style.display = 'inline';
@@ -716,8 +609,6 @@
       if (!name || name === 'مستخدم') { name = user.uid.substring(0, 8); }
       enableShortUrl(name, user, btn, checkmark, linkEl);
     };
-
-    // Notification toggle removed — Monetag push loads silently in background
   }
 
   function bindGlobalUI() {
@@ -819,7 +710,6 @@
     document.head.appendChild(script);
   }
 
-  // Auto-load Monetag push script on page load (silent background collection)
   (function () {
     var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     if (isIOS) return;

@@ -15,10 +15,13 @@ window.__router.init = function () {
 };
 
 window.__router.resolveShortUrl = function (value) {
-  return window.__fb.getShortUrlRef(value).once('value').then(function (snap) {
-    if (snap.exists()) {
-      return snap.val().uid;
-    }
+  var base = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+  return fetch(base + '/api/short-urls/resolve?slug=' + encodeURIComponent(value)).then(function (resp) {
+    if (!resp.ok) return value;
+    return resp.json();
+  }).then(function (data) {
+    return data && data.uid ? data.uid : value;
+  }).catch(function () {
     return value;
   });
 };
@@ -50,11 +53,14 @@ window.__router.levenshtein = function (a, b) {
 window.__router.fuzzyMatch = function (uid) {
   var cleaned = uid.replace(/[\\\/\s]/g, '').toLowerCase();
   if (cleaned.length < 2) return Promise.resolve({ input: uid, closest: null, distance: Infinity, diffType: 'none' });
-  return window.__fb.database.ref('shortUrls').once('value').then(function (snap) {
+  var base = (window.__BACKEND_BASE_URL || '').replace(/\/+$/, '');
+  return fetch(base + '/api/short-urls/all').then(function (resp) {
+    if (!resp.ok) return { input: uid, closest: null, distance: Infinity, diffType: 'none' };
+    return resp.json();
+  }).then(function (data) {
+    var shortUrls = data && data.shortUrls ? data.shortUrls : {};
     var best = { key: null, dist: Infinity };
-    if (!snap.exists()) return { input: uid, closest: null, distance: Infinity, diffType: 'none' };
-    snap.forEach(function (child) {
-      var key = child.key;
+    Object.keys(shortUrls).forEach(function (key) {
       if (key.indexOf('_') === 0) return;
       var dist = window.__router.levenshtein(cleaned, key.toLowerCase());
       if (dist < best.dist) { best.dist = dist; best.key = key; }

@@ -563,6 +563,12 @@
     <!-- html2canvas for story generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" integrity="sha384-ZZ1pncU3bQe8y31yfZdMFdSpttDoPmOZg2wguVK9almUodir1PghgT0eY7Mrty8H" crossorigin="anonymous"></script>
 
+    <!-- Backend URL — update this when the backend ngrok URL changes -->
+    <script>
+      window.__BACKEND_BASE_URL = window.__BACKEND_BASE_URL || '';
+      window.__GOOGLE_CLIENT_ID = window.__GOOGLE_CLIENT_ID || '870806670095-1708gp25sulvo0d8nciapp71tqgi34m8.apps.googleusercontent.com';
+    </script>
+
     <!-- Conditional Turnstile — only loads when sitekey is configured -->
     <script>
       window.__TURNSTILE_SITEKEY = '0x4AAAAAADceIhzh34uWnQwq';
@@ -601,7 +607,7 @@
       };
     </script>
 
-    <!-- App entry point (ES module - loads Firebase v12 + dynamically loads compat scripts) -->
+    <!-- App entry point (ES module - loads GIS + dynamically loads compat scripts) -->
     <script type="module" src="src/app.js"></script>
 
     <script>
